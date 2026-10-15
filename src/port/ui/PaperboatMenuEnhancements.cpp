@@ -251,6 +251,45 @@ void PaperboatMenu::AddMenuEnhancements() {
             )
         );
 
+    AddWidget(path, "Dynamic Lights (Torches/Lanterns)", WIDGET_SEPARATOR_TEXT);
+
+    AddWidget(path, "Enable Dynamic Lights", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCED_SHADING("DynamicLights"))
+        .PreFunc([](WidgetInfo& info) {
+            info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1);
+        })
+        .Options(
+            CheckboxOptions().DefaultValue(true).Tooltip(
+                "Enables dynamic lights from torches, lanterns, candles, and other light sources. "
+                "These are attached to entities in the world."
+            )
+        );
+
+    AddWidget(path, "Dynamic Light Flicker", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCED_SHADING("DynamicLightFlicker"))
+        .PreFunc([](WidgetInfo& info) {
+            info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1) 
+                || !CVarGetInteger(CVAR_ENHANCED_SHADING("DynamicLights"), 1);
+        })
+        .Options(
+            CheckboxOptions().DefaultValue(true).Tooltip(
+                "Enables flickering animation for torch and candle lights."
+            )
+        );
+
+    AddWidget(path, "Max Dynamic Lights", WIDGET_CVAR_SLIDER_INT)
+        .CVar(CVAR_ENHANCED_SHADING("MaxDynamicLights"))
+        .PreFunc([](WidgetInfo& info) {
+            info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1) 
+                || !CVarGetInteger(CVAR_ENHANCED_SHADING("DynamicLights"), 1);
+        })
+        .Options(
+            IntSliderOptions().Min(4).Max(32).DefaultValue(16).Tooltip(
+                "Maximum number of dynamic lights that can be active at once. "
+                "Higher values may impact performance."
+            )
+        );
+
     AddWidget(path, "Rim Light Intensity", WIDGET_CVAR_SLIDER_FLOAT)
         .CVar(CVAR_ENHANCED_SHADING("RimIntensity"))
         .PreFunc([](WidgetInfo& info) {

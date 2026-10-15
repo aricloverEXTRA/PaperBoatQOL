@@ -4,8 +4,9 @@
 #include "common.h"
 #include "common_structs.h"
 
-#define ENHANCED_SHADING_MAX_LIGHTS 8
-#define ENHANCED_SHADING_MAX_PRESETS 128
+#define ENHANCED_SHADING_MAX_LIGHTS 16
+#define ENHANCED_SHADING_MAX_PRESETS 512
+#define ENHANCED_SHADING_MAX_DYNAMIC_LIGHTS 64
 
 typedef enum EnhancedShadingPresetType {
     ENHANCED_SHADING_PRESET_NONE = 0,
@@ -35,6 +36,7 @@ typedef enum EnhancedShadingFlags {
     ENHANCED_SHADING_FLAG_AMBIENT_OCCLUSION = (1 << 5),
     ENHANCED_SHADING_FLAG_FALLOFF_SMOOTH  = (1 << 6),
     ENHANCED_SHADING_FLAG_TEMPORAL_STABILITY = (1 << 7),
+    ENHANCED_SHADING_FLAG_DYNAMIC_LIGHTS  = (1 << 8),
 } EnhancedShadingFlags;
 
 typedef enum EnhancedLightType {
@@ -43,6 +45,28 @@ typedef enum EnhancedLightType {
     ENHANCED_LIGHT_SPOT,
     ENHANCED_LIGHT_HEMISPHERE,
 } EnhancedLightType;
+
+typedef enum DynamicLightType {
+    DYNAMIC_LIGHT_TORCH = 0,
+    DYNAMIC_LIGHT_LANTERN,
+    DYNAMIC_LIGHT_CANDLE,
+    DYNAMIC_LIGHT_MAGIC,
+    DYNAMIC_LIGHT_FIRE,
+    DYNAMIC_LIGHT_CUSTOM,
+} DynamicLightType;
+
+typedef struct DynamicLight {
+    DynamicLightType type;
+    u8 flags;
+    Vec3f pos;
+    Color_RGB8 color;
+    f32 intensity;
+    f32 radius;
+    f32 flickerSpeed;
+    f32 flickerAmount;
+    s32 ownerEntityID;
+    u8 unk_padding[4];
+} DynamicLight;
 
 typedef struct EnhancedLightSource {
     EnhancedLightType type;
@@ -75,7 +99,9 @@ typedef struct EnhancedShadingProfile {
     f32 aoIntensity;
     f32 aoRadius;
     f32 temporalBlendFactor;
-    u8 unk_padding[8];
+    DynamicLight dynamicLights[ENHANCED_SHADING_MAX_DYNAMIC_LIGHTS];
+    u8 dynamicLightCount;
+    u8 unk_padding[7];
 } EnhancedShadingProfile;
 
 typedef struct EnhancedShadingPreset {
@@ -107,5 +133,13 @@ void enhanced_shading_load_area_defaults(const char* areaName, s32 mapID, s32 en
 b32 enhanced_shading_is_area_supported(const char* areaName, s32 mapID);
 void enhanced_shading_set_fallback_to_vanilla(b32 enabled);
 b32 enhanced_shading_get_fallback_to_vanilla(void);
+
+// Dynamic light functions
+s32 enhanced_shading_add_dynamic_light(const DynamicLight* light);
+void enhanced_shading_remove_dynamic_light(s32 lightIndex);
+void enhanced_shading_update_dynamic_light(s32 lightIndex, const DynamicLight* light);
+DynamicLight* enhanced_shading_get_dynamic_light(s32 lightIndex);
+void enhanced_shading_clear_dynamic_lights(void);
+void enhanced_shading_register_default_dynamic_lights(const char* areaName, s32 mapID);
 
 #endif

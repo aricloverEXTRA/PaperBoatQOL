@@ -5,6 +5,8 @@
 #include "port/ui/cvar_prefixes.h"
 #include "sprite/sprite_enhanced_shading.h"
 
+extern GameStatus* gGameStatusPtr;
+
 #define ENHANCED_SHADING_PALETTE_COUNT 512
 static PAL_BIN sEnhancedShadingPalettes[ENHANCED_SHADING_PALETTE_COUNT][16];
 static s32 sEnhancedShadingPaletteIdx = 0;
@@ -68,6 +70,8 @@ void create_enhanced_shading_palette(Matrix4f mtx, s32 uls, s32 ult, s32 lrs, s3
     b32 aoEnabled = CVarGetInteger(CVAR_ENHANCED_SHADING("AmbientOcclusion"), 0);
     b32 smoothFalloffEnabled = CVarGetInteger(CVAR_ENHANCED_SHADING("SmoothFalloff"), 1);
     b32 temporalEnabled = CVarGetInteger(CVAR_ENHANCED_SHADING("TemporalStability"), 1);
+    b32 dynamicLightsEnabled = CVarGetInteger(CVAR_ENHANCED_SHADING("DynamicLights"), 1);
+    b32 dynamicLightFlickerEnabled = CVarGetInteger(CVAR_ENHANCED_SHADING("DynamicLightFlicker"), 1);
     
     if (hemisphereEnabled) {
         profile->flags |= ENHANCED_SHADING_FLAG_HEMISPHERE;
@@ -106,6 +110,12 @@ void create_enhanced_shading_palette(Matrix4f mtx, s32 uls, s32 ult, s32 lrs, s3
         profile->flags |= ENHANCED_SHADING_FLAG_TEMPORAL_STABILITY;
     } else {
         profile->flags &= ~ENHANCED_SHADING_FLAG_TEMPORAL_STABILITY;
+    }
+    
+    if (dynamicLightsEnabled) {
+        profile->flags |= ENHANCED_SHADING_FLAG_DYNAMIC_LIGHTS;
+    } else {
+        profile->flags &= ~ENHANCED_SHADING_FLAG_DYNAMIC_LIGHTS;
     }
     
     f32 shadowDirX = 0.0f;
@@ -283,6 +293,66 @@ void create_enhanced_shading_palette(Matrix4f mtx, s32 uls, s32 ult, s32 lrs, s3
         
         totalShadowIntensity += shadowIntensity;
         totalLightIntensity += lightIntensity;
+    }
+    
+    // Process dynamic lights (torches, lanterns, candles, etc.)
+    if (profile->flags & ENHANCED_SHADING_FLAG_DYNAMIC_LIGHTS) {
+        for (s32 i = 0; i < profile->dynamicLightCount; i++) {
+            DynamicLight* dynLight = &profile->dynamicLights[i];
+            if (!(dynLight->flags & 1)) continue;
+            
+            f32 dx = posX - dynLight->pos.x;
+            f32 dy = posY - dynLight->pos.y;
+            f32 dz = posZ - dynLight->pos.z;
+            f32 dist = sqrtf(dx*dx + dy*dy + dz*dz);
+            
+            if (dist > dynLight->radius) continue;
+            
+            Vec3f lightDir;
+            if (dist > 0.0f) {
+                lightDir.x = dx / dist;
+                lightDir.y = dy / dist;
+                lightDir.z = dz / dist;
+            } else {
+                lightDir.x = lightDir.y = lightDir.z = 0.0f;
+            }
+            
+            f32 intensityScale = 1.0f;
+            if (profile->flags & ENHANCED_SHADING_FLAG_FALLOFF_SMOOTH) {
+                intensityScale = 1.0f / (1.0f + dist * 0.01f + dist * dist * 0.0001f);
+            } else {
+                intensityScale = 1.0f / (1.0f + dist * 0.01f);
+            }
+            
+            // Apply flicker for torches/candles
+            if (dynamicLightFlickerEnabled && (dynLight->type == DYNAMIC_LIGHT_TORCH || dynLight->type == DYNAMIC_LIGHT_CANDLE)) {
+                f32 flicker = sinf(gGameStatusPtr->frameCounter * dynLight->flickerSpeed * 0.1f) * dynLight->flickerAmount;
+                intensityScale *= (1.0f + flicker);
+            }
+            
+            if (intensityScale <= 0.0f) continue;
+            if (intensityScale > 1.0f) intensityScale = 1.0f;
+            
+            f32 ndotl = worldNormal.x * lightDir.x + worldNormal.y * lightDir.y + worldNormal.z * lightDir.z;
+            
+            f32 shadowIntensity = intensityScale * (ndotl > 0.0f ? ndotl : -ndotl * 0.3f) * dynLight->intensity;
+            f32 lightIntensity = intensityScale * (ndotl > 0.0f ? ndotl : 0.0f) * dynLight->intensity;
+            
+            shadowDirX += lightDir.x * shadowIntensity;
+            shadowDirY += lightDir.y * shadowIntensity;
+            shadowDirZ += lightDir.z * shadowIntensity;
+            
+            finalShadowColor.r = (u8)MIN(255, (s32)finalShadowColor.r + dynLight->color.r * shadowIntensity * 0.5f);
+            finalShadowColor.g = (u8)MIN(255, (s32)finalShadowColor.g + dynLight->color.g * shadowIntensity * 0.5f);
+            finalShadowColor.b = (u8)MIN(255, (s32)finalShadowColor.b + dynLight->color.b * shadowIntensity * 0.5f);
+            
+            finalHighlightColor.r = (u8)MIN(255, (s32)finalHighlightColor.r + dynLight->color.r * lightIntensity);
+            finalHighlightColor.g = (u8)MIN(255, (s32)finalHighlightColor.g + dynLight->color.g * lightIntensity);
+            finalHighlightColor.b = (u8)MIN(255, (s32)finalHighlightColor.b + dynLight->color.b * lightIntensity);
+            
+            totalShadowIntensity += shadowIntensity;
+            totalLightIntensity += lightIntensity;
+        }
     }
     
     if (profile->flags & ENHANCED_SHADING_FLAG_AMBIENT_OCCLUSION) {

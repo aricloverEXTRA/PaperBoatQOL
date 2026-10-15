@@ -1,5 +1,6 @@
 #include "common.h"
 #include "sprite.h"
+#include "string.h"
 #include "port/patches/Patches.h"
 #include "port/save/SaveManager.h"
 #include "port/hooks/Events.h"
@@ -7,6 +8,9 @@
 #include "sprite/sprite_enhanced_shading.h"
 
 extern void register_all_area_presets(void);
+
+static DynamicLight sDynamicLights[ENHANCED_SHADING_MAX_DYNAMIC_LIGHTS];
+static u8 sDynamicLightCount = 0;
 
 EnhancedShadingProfile* gEnhancedShadingProfile;
 EnhancedShadingProfile* gAuxEnhancedShadingProfile;
@@ -188,9 +192,16 @@ void enhanced_shading_load_area_defaults(const char* areaName, s32 mapID, s32 en
     b32 fallback = CVarGetInteger(CVAR_ENHANCED_SHADING("FallbackToVanilla"), 1);
     enhanced_shading_set_fallback_to_vanilla(fallback);
     
+    enhanced_shading_clear_dynamic_lights();
+    
     EnhancedShadingPreset* preset = find_enhanced_shading_preset_by_area(areaName, mapID);
     if (preset != NULL) {
         apply_enhanced_shading_profile(&preset->profile);
+        
+        // Register default dynamic lights for this area
+        if (CVarGetInteger(CVAR_ENHANCED_SHADING("DynamicLights"), 1)) {
+            enhanced_shading_register_default_dynamic_lights(areaName, mapID);
+        }
     } else if (sFallbackToVanilla) {
         clear_enhanced_shading_data();
     }
@@ -206,4 +217,184 @@ void enhanced_shading_set_fallback_to_vanilla(b32 enabled) {
 
 b32 enhanced_shading_get_fallback_to_vanilla(void) {
     return sFallbackToVanilla;
+}
+
+s32 enhanced_shading_add_dynamic_light(const DynamicLight* light) {
+    if (light == NULL || sDynamicLightCount >= ENHANCED_SHADING_MAX_DYNAMIC_LIGHTS) {
+        return -1;
+    }
+    
+    s32 index = sDynamicLightCount;
+    sDynamicLights[index] = *light;
+    sDynamicLightCount++;
+    
+    if (gEnhancedShadingProfile != NULL) {
+        gEnhancedShadingProfile->dynamicLights[index] = *light;
+        gEnhancedShadingProfile->dynamicLightCount = sDynamicLightCount;
+        gEnhancedShadingProfile->flags |= ENHANCED_SHADING_FLAG_DYNAMIC_LIGHTS;
+    }
+    
+    return index;
+}
+
+void enhanced_shading_remove_dynamic_light(s32 lightIndex) {
+    if (lightIndex < 0 || lightIndex >= sDynamicLightCount) {
+        return;
+    }
+    
+    for (s32 i = lightIndex; i < sDynamicLightCount - 1; i++) {
+        sDynamicLights[i] = sDynamicLights[i + 1];
+    }
+    sDynamicLightCount--;
+    
+    if (gEnhancedShadingProfile != NULL) {
+        for (s32 i = lightIndex; i < sDynamicLightCount; i++) {
+            gEnhancedShadingProfile->dynamicLights[i] = sDynamicLights[i];
+        }
+        gEnhancedShadingProfile->dynamicLightCount = sDynamicLightCount;
+        if (sDynamicLightCount == 0) {
+            gEnhancedShadingProfile->flags &= ~ENHANCED_SHADING_FLAG_DYNAMIC_LIGHTS;
+        }
+    }
+}
+
+void enhanced_shading_update_dynamic_light(s32 lightIndex, const DynamicLight* light) {
+    if (lightIndex < 0 || lightIndex >= sDynamicLightCount || light == NULL) {
+        return;
+    }
+    
+    sDynamicLights[lightIndex] = *light;
+    
+    if (gEnhancedShadingProfile != NULL) {
+        gEnhancedShadingProfile->dynamicLights[lightIndex] = *light;
+    }
+}
+
+DynamicLight* enhanced_shading_get_dynamic_light(s32 lightIndex) {
+    if (lightIndex < 0 || lightIndex >= sDynamicLightCount) {
+        return NULL;
+    }
+    return &sDynamicLights[lightIndex];
+}
+
+void enhanced_shading_clear_dynamic_lights(void) {
+    sDynamicLightCount = 0;
+    if (gEnhancedShadingProfile != NULL) {
+        gEnhancedShadingProfile->dynamicLightCount = 0;
+        gEnhancedShadingProfile->flags &= ~ENHANCED_SHADING_FLAG_DYNAMIC_LIGHTS;
+    }
+}
+
+void enhanced_shading_register_default_dynamic_lights(const char* areaName, s32 mapID) {
+    // Register default torches/lanterns for known indoor areas
+    // This is a simple implementation - in practice, these would be loaded from area data
+    
+    if (strstr(areaName, "hos_") != NULL || strstr(areaName, "jan_") != NULL || 
+        strstr(areaName, "tik_") != NULL || strstr(areaName, "sam_") != NULL) {
+        // Toad Town houses - add a few lanterns
+        DynamicLight lantern1 = {
+            .type = DYNAMIC_LIGHT_LANTERN,
+            .flags = 1,
+            .pos = { -200.0f, 50.0f, -100.0f },
+            .color = { 255, 180, 100 },
+            .intensity = 0.8f,
+            .radius = 300.0f,
+            .flickerSpeed = 0.0f,
+            .flickerAmount = 0.0f,
+            .ownerEntityID = -1,
+        };
+        DynamicLight lantern2 = {
+            .type = DYNAMIC_LIGHT_LANTERN,
+            .flags = 1,
+            .pos = { 200.0f, 50.0f, -100.0f },
+            .color = { 255, 180, 100 },
+            .intensity = 0.8f,
+            .radius = 300.0f,
+            .flickerSpeed = 0.0f,
+            .flickerAmount = 0.0f,
+            .ownerEntityID = -1,
+        };
+        enhanced_shading_add_dynamic_light(&lantern1);
+        enhanced_shading_add_dynamic_light(&lantern2);
+    } else if (strstr(areaName, "dgb_") != NULL) {
+        // Tubba Blubba's Manor - add torches
+        DynamicLight torch1 = {
+            .type = DYNAMIC_LIGHT_TORCH,
+            .flags = 1,
+            .pos = { -150.0f, 80.0f, -50.0f },
+            .color = { 255, 120, 40 },
+            .intensity = 1.0f,
+            .radius = 400.0f,
+            .flickerSpeed = 15.0f,
+            .flickerAmount = 0.3f,
+            .ownerEntityID = -1,
+        };
+        DynamicLight torch2 = {
+            .type = DYNAMIC_LIGHT_TORCH,
+            .flags = 1,
+            .pos = { 150.0f, 80.0f, -50.0f },
+            .color = { 255, 120, 40 },
+            .intensity = 1.0f,
+            .radius = 400.0f,
+            .flickerSpeed = 13.0f,
+            .flickerAmount = 0.3f,
+            .ownerEntityID = -1,
+        };
+        enhanced_shading_add_dynamic_light(&torch1);
+        enhanced_shading_add_dynamic_light(&torch2);
+    } else if (strstr(areaName, "osr_") != NULL) {
+        // Boo's Mansion - add candles
+        DynamicLight candle1 = {
+            .type = DYNAMIC_LIGHT_CANDLE,
+            .flags = 1,
+            .pos = { -100.0f, 40.0f, -80.0f },
+            .color = { 255, 200, 150 },
+            .intensity = 0.6f,
+            .radius = 200.0f,
+            .flickerSpeed = 20.0f,
+            .flickerAmount = 0.4f,
+            .ownerEntityID = -1,
+        };
+        DynamicLight candle2 = {
+            .type = DYNAMIC_LIGHT_CANDLE,
+            .flags = 1,
+            .pos = { 100.0f, 40.0f, -80.0f },
+            .color = { 255, 200, 150 },
+            .intensity = 0.6f,
+            .radius = 200.0f,
+            .flickerSpeed = 18.0f,
+            .flickerAmount = 0.4f,
+            .ownerEntityID = -1,
+        };
+        enhanced_shading_add_dynamic_light(&candle1);
+        enhanced_shading_add_dynamic_light(&candle2);
+    } else if (strstr(areaName, "kkj_") != NULL || strstr(areaName, "kpa_") != NULL) {
+        // Koopa Bros Fortress - add torches
+        DynamicLight torch = {
+            .type = DYNAMIC_LIGHT_TORCH,
+            .flags = 1,
+            .pos = { 0.0f, 100.0f, 0.0f },
+            .color = { 255, 100, 30 },
+            .intensity = 1.2f,
+            .radius = 500.0f,
+            .flickerSpeed = 12.0f,
+            .flickerAmount = 0.35f,
+            .ownerEntityID = -1,
+        };
+        enhanced_shading_add_dynamic_light(&torch);
+    } else if (strstr(areaName, "kzn_") != NULL || strstr(areaName, "iwa_") != NULL) {
+        // Mt. Lavalava - add lava glow lights
+        DynamicLight lavaGlow = {
+            .type = DYNAMIC_LIGHT_FIRE,
+            .flags = 1,
+            .pos = { 0.0f, 50.0f, 0.0f },
+            .color = { 255, 80, 20 },
+            .intensity = 1.5f,
+            .radius = 600.0f,
+            .flickerSpeed = 10.0f,
+            .flickerAmount = 0.2f,
+            .ownerEntityID = -1,
+        };
+        enhanced_shading_add_dynamic_light(&lavaGlow);
+    }
 }
