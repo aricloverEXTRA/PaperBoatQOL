@@ -157,6 +157,13 @@ void enhanced_shading_set_light(u32 idx, const EnhancedLightSource* light) {
 }
 
 EnhancedShadingPreset* find_enhanced_shading_preset_by_area(const char* areaName, s32 mapID) {
+    // Try exact name match first (mapConfig->id format like "kmr_00")
+    for (s32 i = 0; i < gEnhancedShadingPresetCount; i++) {
+        if (strcmp(gEnhancedShadingPresets[i].name, areaName) == 0) {
+            return &gEnhancedShadingPresets[i];
+        }
+    }
+    // Fallback to numeric ID match
     for (s32 i = 0; i < gEnhancedShadingPresetCount; i++) {
         if (gEnhancedShadingPresets[i].id == (u32)mapID) {
             return &gEnhancedShadingPresets[i];

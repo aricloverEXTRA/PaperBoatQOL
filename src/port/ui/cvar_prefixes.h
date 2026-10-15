@@ -22,4 +22,7 @@
 #define CVAR_TIME_DISPLAY(var) CVAR_PREFIX_TIME_DISPLAY "." var
 #define CVAR_2D_TEXTURE_FILTER CVAR_SETTING("2DTextureFilter")
 #define CVAR_DIALOGUE_TEXT_FILTER CVAR_SETTING("DialogueTextFilter")
+<<<<<<< HEAD
 #define CVAR_ENHANCED_SHADING(var) CVAR_ENHANCEMENT("EnhancedShading." var)
+=======
+>>>>>>> origin/main

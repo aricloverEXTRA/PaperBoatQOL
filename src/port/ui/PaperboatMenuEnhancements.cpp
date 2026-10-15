@@ -137,6 +137,7 @@ void PaperboatMenu::AddMenuEnhancements() {
         .CVar(CVAR_ENHANCEMENT("Graphics.DisableMipmaps"))
         .Options(CheckboxOptions().Tooltip("Just like emulator!"));
 
+<<<<<<< HEAD
     AddWidget(path, "Enhanced Shading", WIDGET_SEPARATOR_TEXT);
 
     AddWidget(path, "Enable Enhanced Shading", WIDGET_CVAR_CHECKBOX)
@@ -326,6 +327,8 @@ void PaperboatMenu::AddMenuEnhancements() {
             )
         );
 
+=======
+>>>>>>> origin/main
     // Enhancements > Status Bar
     path = { "Enhancements", "Status Bar", SECTION_COLUMN_1 };
     AddSidebarEntry("Enhancements", path.sidebarName, 2);

@@ -6,8 +6,11 @@
 #include "port/patches/Patches.h"
 #include "assets/imgfx.h"
 
+<<<<<<< HEAD
 extern void create_enhanced_shading_palette(Matrix4f mtx, s32 uls, s32 ult, s32 lrs, s32 lrt, s32 alpha, s32 otherModeLBits);
 
+=======
+>>>>>>> origin/main
 typedef union ImgFXIntVars {
     s32 raw[2][4];
     struct {
@@ -1550,7 +1553,11 @@ void imgfx_appendGfx_mesh_basic(ImgFXState* state, Matrix4f mtx) {
                     gSP2Triangles(gMainGfxPos++, 0, 2, 1, 0, 1, 2, 3, 0);
                     gDPPipeSync(gMainGfxPos++);
                 }
+<<<<<<< HEAD
                 create_enhanced_shading_palette(mtx, uls, ult, lrs, lrt, alpha, state->otherModeL);
+=======
+                create_shading_palette(mtx, uls, ult, lrs, lrt, alpha, state->otherModeL);
+>>>>>>> origin/main
             } else {
                 gDPScrollTextureTile_4b(gMainGfxPos++,
                     ImgFXCurrentTexturePtr->tex.raster, G_IM_FMT_CI,

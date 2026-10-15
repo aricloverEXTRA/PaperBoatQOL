@@ -2,8 +2,8 @@
 
 static EnhancedShadingPreset gAreaPresets[] = {
     {
-        .id = 0x50252995,
-        .name = "area_arn_arn_02",
+        .id = 0xB5CDE2E1,
+        .name = "arn_02",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -51,8 +51,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x50257E94,
-        .name = "area_arn_arn_03",
+        .id = 0xB5CDAE93,
+        .name = "arn_03",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -100,8 +100,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x50252189,
-        .name = "area_arn_arn_04",
+        .id = 0xB5CD63FC,
+        .name = "arn_04",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -149,8 +149,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x50251B6F,
-        .name = "area_arn_arn_05",
+        .id = 0xB5CDC9A0,
+        .name = "arn_05",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -198,8 +198,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x5025CFA6,
-        .name = "area_arn_arn_07",
+        .id = 0xB5CDDD76,
+        .name = "arn_07",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -247,8 +247,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x5025196E,
-        .name = "area_arn_arn_08",
+        .id = 0xB5CD3DEB,
+        .name = "arn_08",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -296,8 +296,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x50252E70,
-        .name = "area_arn_arn_09",
+        .id = 0xB5CDD5FE,
+        .name = "arn_09",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -345,8 +345,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x50254DCE,
-        .name = "area_arn_arn_10",
+        .id = 0xB5CD98B5,
+        .name = "arn_10",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -394,8 +394,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x502515E9,
-        .name = "area_arn_arn_11",
+        .id = 0xB5CDF8E2,
+        .name = "arn_11",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -443,8 +443,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x5025F752,
-        .name = "area_arn_arn_12",
+        .id = 0xB5CD952F,
+        .name = "arn_12",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -492,8 +492,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x50257C4D,
-        .name = "area_arn_arn_13",
+        .id = 0xB5CDFEA0,
+        .name = "arn_13",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -541,8 +541,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x8861C53C,
-        .name = "area_dgb_dgb_00",
+        .id = 0x6E23CD3D,
+        .name = "dgb_00",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -590,8 +590,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x8861C442,
-        .name = "area_dgb_dgb_01",
+        .id = 0x6E23E310,
+        .name = "dgb_01",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -639,8 +639,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x8861B11F,
-        .name = "area_dgb_dgb_02",
+        .id = 0x6E23796F,
+        .name = "dgb_02",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -688,8 +688,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x886134C1,
-        .name = "area_dgb_dgb_03",
+        .id = 0x6E23822C,
+        .name = "dgb_03",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -737,8 +737,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x88615355,
-        .name = "area_dgb_dgb_04",
+        .id = 0x6E234C01,
+        .name = "dgb_04",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -786,8 +786,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x8861FF3B,
-        .name = "area_dgb_dgb_05",
+        .id = 0x6E23FBBA,
+        .name = "dgb_05",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -835,8 +835,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x8861FD66,
-        .name = "area_dgb_dgb_06",
+        .id = 0x6E23CA9E,
+        .name = "dgb_06",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -884,8 +884,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x8861E4C2,
-        .name = "area_dgb_dgb_07",
+        .id = 0x6E236254,
+        .name = "dgb_07",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -933,8 +933,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x88612DC5,
-        .name = "area_dgb_dgb_08",
+        .id = 0x6E23D42D,
+        .name = "dgb_08",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -982,8 +982,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x88617F57,
-        .name = "area_dgb_dgb_09",
+        .id = 0x6E235531,
+        .name = "dgb_09",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -1031,8 +1031,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x88617A8B,
-        .name = "area_dgb_dgb_10",
+        .id = 0x6E2318A6,
+        .name = "dgb_10",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -1080,8 +1080,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x8861E00D,
-        .name = "area_dgb_dgb_11",
+        .id = 0x6E23EFF3,
+        .name = "dgb_11",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -1129,8 +1129,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x886102DB,
-        .name = "area_dgb_dgb_12",
+        .id = 0x6E230896,
+        .name = "dgb_12",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -1178,8 +1178,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x8861AA02,
-        .name = "area_dgb_dgb_13",
+        .id = 0x6E23D22B,
+        .name = "dgb_13",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -1227,8 +1227,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x88616E54,
-        .name = "area_dgb_dgb_14",
+        .id = 0x6E23C322,
+        .name = "dgb_14",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -1276,8 +1276,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x88616150,
-        .name = "area_dgb_dgb_15",
+        .id = 0x6E239A8D,
+        .name = "dgb_15",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -1325,8 +1325,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x8861CF8F,
-        .name = "area_dgb_dgb_16",
+        .id = 0x6E23EEF2,
+        .name = "dgb_16",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -1374,8 +1374,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x8861638F,
-        .name = "area_dgb_dgb_17",
+        .id = 0x6E2328D2,
+        .name = "dgb_17",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -1423,8 +1423,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x8861AF72,
-        .name = "area_dgb_dgb_18",
+        .id = 0x6E23A9CB,
+        .name = "dgb_18",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -1472,8 +1472,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xD2F110E1,
-        .name = "area_dro_dro_01",
+        .id = 0x95E697BF,
+        .name = "dro_01",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -1521,8 +1521,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xD2F1FB40,
-        .name = "area_dro_dro_02",
+        .id = 0x95E6E018,
+        .name = "dro_02",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -1570,8 +1570,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x50502967,
-        .name = "area_end_end_00",
+        .id = 0xD0D35C9E,
+        .name = "end_00",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -1619,8 +1619,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x5050FD66,
-        .name = "area_end_end_01",
+        .id = 0xD0D30FB4,
+        .name = "end_01",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -1668,8 +1668,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x30F92574,
-        .name = "area_flo_flo_00",
+        .id = 0x7E60B98D,
+        .name = "flo_00",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -1717,8 +1717,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x30F9A5D4,
-        .name = "area_flo_flo_03",
+        .id = 0x7E60FD38,
+        .name = "flo_03",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -1766,8 +1766,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x30F9ED2D,
-        .name = "area_flo_flo_07",
+        .id = 0x7E60ABD5,
+        .name = "flo_07",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -1815,8 +1815,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x30F99A25,
-        .name = "area_flo_flo_08",
+        .id = 0x7E60940E,
+        .name = "flo_08",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -1864,8 +1864,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x30F91459,
-        .name = "area_flo_flo_09",
+        .id = 0x7E60802D,
+        .name = "flo_09",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -1913,8 +1913,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x30F9D89F,
-        .name = "area_flo_flo_10",
+        .id = 0x7E604B51,
+        .name = "flo_10",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -1962,8 +1962,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x30F985D0,
-        .name = "area_flo_flo_11",
+        .id = 0x7E601756,
+        .name = "flo_11",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -2011,8 +2011,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x30F9A36C,
-        .name = "area_flo_flo_12",
+        .id = 0x7E60E691,
+        .name = "flo_12",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -2060,8 +2060,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x30F9628D,
-        .name = "area_flo_flo_13",
+        .id = 0x7E606288,
+        .name = "flo_13",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -2109,8 +2109,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x30F9D194,
-        .name = "area_flo_flo_14",
+        .id = 0x7E6075C8,
+        .name = "flo_14",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -2158,8 +2158,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x30F9428A,
-        .name = "area_flo_flo_15",
+        .id = 0x7E608EB7,
+        .name = "flo_15",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -2207,8 +2207,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x30F984BF,
-        .name = "area_flo_flo_16",
+        .id = 0x7E60F96A,
+        .name = "flo_16",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -2256,8 +2256,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x30F9E45C,
-        .name = "area_flo_flo_17",
+        .id = 0x7E60EC97,
+        .name = "flo_17",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -2305,8 +2305,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x30F95723,
-        .name = "area_flo_flo_18",
+        .id = 0x7E607D27,
+        .name = "flo_18",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -2354,8 +2354,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x30F9A5E2,
-        .name = "area_flo_flo_19",
+        .id = 0x7E60EC22,
+        .name = "flo_19",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -2403,8 +2403,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x30F9172E,
-        .name = "area_flo_flo_21",
+        .id = 0x7E60C1B8,
+        .name = "flo_21",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -2452,8 +2452,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x30F95402,
-        .name = "area_flo_flo_22",
+        .id = 0x7E605781,
+        .name = "flo_22",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -2501,8 +2501,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x30F9AAFC,
-        .name = "area_flo_flo_23",
+        .id = 0x7E60B664,
+        .name = "flo_23",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -2550,8 +2550,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x30F98DD3,
-        .name = "area_flo_flo_24",
+        .id = 0x7E601416,
+        .name = "flo_24",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -2599,8 +2599,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x30F99EAF,
-        .name = "area_flo_flo_25",
+        .id = 0x7E6016D2,
+        .name = "flo_25",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -2648,8 +2648,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x9E2E0FBA,
-        .name = "area_gv_gv_01",
+        .id = 0x6976E847,
+        .name = "gv_01",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -2697,8 +2697,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xB5DF6CB1,
-        .name = "area_hos_hos_00",
+        .id = 0x1F8B5556,
+        .name = "hos_00",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -2746,8 +2746,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xB5DF2EE1,
-        .name = "area_hos_hos_01",
+        .id = 0x1F8BF972,
+        .name = "hos_01",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -2795,8 +2795,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xB5DF5FA6,
-        .name = "area_hos_hos_02",
+        .id = 0x1F8BC497,
+        .name = "hos_02",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -2844,8 +2844,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xB5DF7086,
-        .name = "area_hos_hos_03",
+        .id = 0x1F8BE703,
+        .name = "hos_03",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -2893,8 +2893,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xB5DF57C3,
-        .name = "area_hos_hos_04",
+        .id = 0x1F8BD5DB,
+        .name = "hos_04",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -2942,8 +2942,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xB5DF53B5,
-        .name = "area_hos_hos_05",
+        .id = 0x1F8B0710,
+        .name = "hos_05",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -2991,8 +2991,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xB5DFD4F7,
-        .name = "area_hos_hos_06",
+        .id = 0x1F8B57C0,
+        .name = "hos_06",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -3040,8 +3040,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xB5DFEF3F,
-        .name = "area_hos_hos_10",
+        .id = 0x1F8B3334,
+        .name = "hos_10",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -3089,8 +3089,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xB5DF9007,
-        .name = "area_hos_hos_20",
+        .id = 0x1F8B5807,
+        .name = "hos_20",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -3138,8 +3138,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x07D9E8AD,
-        .name = "area_isk_isk_01",
+        .id = 0x93CFA19A,
+        .name = "isk_01",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -3187,8 +3187,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x07D99E67,
-        .name = "area_isk_isk_02",
+        .id = 0x93CFB9DF,
+        .name = "isk_02",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -3236,8 +3236,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x07D9A308,
-        .name = "area_isk_isk_03",
+        .id = 0x93CFC93A,
+        .name = "isk_03",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -3285,8 +3285,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x07D935BF,
-        .name = "area_isk_isk_04",
+        .id = 0x93CF9A20,
+        .name = "isk_04",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -3334,8 +3334,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x07D9DD8C,
-        .name = "area_isk_isk_05",
+        .id = 0x93CF030B,
+        .name = "isk_05",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -3383,8 +3383,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x07D947A3,
-        .name = "area_isk_isk_06",
+        .id = 0x93CF95AD,
+        .name = "isk_06",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -3432,8 +3432,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x07D977F2,
-        .name = "area_isk_isk_07",
+        .id = 0x93CF9468,
+        .name = "isk_07",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -3481,8 +3481,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x07D9CD85,
-        .name = "area_isk_isk_08",
+        .id = 0x93CF88B6,
+        .name = "isk_08",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -3530,8 +3530,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x07D9F5FC,
-        .name = "area_isk_isk_09",
+        .id = 0x93CFC24E,
+        .name = "isk_09",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -3579,8 +3579,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x07D9FE70,
-        .name = "area_isk_isk_10",
+        .id = 0x93CF2554,
+        .name = "isk_10",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -3628,8 +3628,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x07D9B286,
-        .name = "area_isk_isk_11",
+        .id = 0x93CF7DD1,
+        .name = "isk_11",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -3677,8 +3677,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x07D9D566,
-        .name = "area_isk_isk_12",
+        .id = 0x93CFAB9F,
+        .name = "isk_12",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -3726,8 +3726,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x07D94949,
-        .name = "area_isk_isk_13",
+        .id = 0x93CF6797,
+        .name = "isk_13",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -3775,8 +3775,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x07D9F254,
-        .name = "area_isk_isk_14",
+        .id = 0x93CF89D9,
+        .name = "isk_14",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -3824,8 +3824,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x07D9064E,
-        .name = "area_isk_isk_16",
+        .id = 0x93CF5DAC,
+        .name = "isk_16",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -3873,8 +3873,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x07D9867C,
-        .name = "area_isk_isk_18",
+        .id = 0x93CFDF5D,
+        .name = "isk_18",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -3922,8 +3922,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x07D9844E,
-        .name = "area_isk_isk_19",
+        .id = 0x93CF391F,
+        .name = "isk_19",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -3971,8 +3971,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x1A4A7678,
-        .name = "area_iwa_iwa_00",
+        .id = 0xB01B34D5,
+        .name = "iwa_00",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -4020,8 +4020,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x1A4A36B2,
-        .name = "area_iwa_iwa_01",
+        .id = 0xB01BDDF2,
+        .name = "iwa_01",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -4069,8 +4069,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x1A4A53AB,
-        .name = "area_iwa_iwa_02",
+        .id = 0xB01B346F,
+        .name = "iwa_02",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -4118,8 +4118,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x1A4ABF63,
-        .name = "area_iwa_iwa_03",
+        .id = 0xB01B684A,
+        .name = "iwa_03",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -4167,8 +4167,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x1A4A673A,
-        .name = "area_iwa_iwa_04",
+        .id = 0xB01BC100,
+        .name = "iwa_04",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -4216,8 +4216,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x1A4AFA01,
-        .name = "area_iwa_iwa_10",
+        .id = 0xB01B83D8,
+        .name = "iwa_10",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -4265,8 +4265,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x1A4A4A7E,
-        .name = "area_iwa_iwa_11",
+        .id = 0xB01B1873,
+        .name = "iwa_11",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -4314,8 +4314,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x8AB3DB61,
-        .name = "area_jan_jan_00",
+        .id = 0x4B6EFF07,
+        .name = "jan_00",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -4363,8 +4363,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x8AB32124,
-        .name = "area_jan_jan_01",
+        .id = 0x4B6E0918,
+        .name = "jan_01",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -4412,8 +4412,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x8AB30A1A,
-        .name = "area_jan_jan_02",
+        .id = 0x4B6E9001,
+        .name = "jan_02",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -4461,8 +4461,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x8AB35966,
-        .name = "area_jan_jan_03",
+        .id = 0x4B6E2D50,
+        .name = "jan_03",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -4510,8 +4510,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x8AB375F6,
-        .name = "area_jan_jan_04",
+        .id = 0x4B6EF404,
+        .name = "jan_04",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -4559,8 +4559,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x8AB3BC5F,
-        .name = "area_jan_jan_05",
+        .id = 0x4B6E72E2,
+        .name = "jan_05",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -4608,8 +4608,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x8AB36042,
-        .name = "area_jan_jan_06",
+        .id = 0x4B6EB969,
+        .name = "jan_06",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -4657,8 +4657,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x8AB3CECD,
-        .name = "area_jan_jan_07",
+        .id = 0x4B6E94FF,
+        .name = "jan_07",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -4706,8 +4706,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x8AB3EBD8,
-        .name = "area_jan_jan_08",
+        .id = 0x4B6EAFD8,
+        .name = "jan_08",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -4755,8 +4755,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x8AB30673,
-        .name = "area_jan_jan_09",
+        .id = 0x4B6E6971,
+        .name = "jan_09",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -4804,8 +4804,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x8AB30A52,
-        .name = "area_jan_jan_10",
+        .id = 0x4B6EB232,
+        .name = "jan_10",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -4853,8 +4853,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x8AB32FB5,
-        .name = "area_jan_jan_11",
+        .id = 0x4B6E9D91,
+        .name = "jan_11",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -4902,8 +4902,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x8AB3C521,
-        .name = "area_jan_jan_12",
+        .id = 0x4B6EF4FB,
+        .name = "jan_12",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -4951,8 +4951,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x8AB3619E,
-        .name = "area_jan_jan_13",
+        .id = 0x4B6E63A6,
+        .name = "jan_13",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -5000,8 +5000,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x8AB37AF9,
-        .name = "area_jan_jan_14",
+        .id = 0x4B6E50C0,
+        .name = "jan_14",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -5049,8 +5049,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x8AB31F0D,
-        .name = "area_jan_jan_15",
+        .id = 0x4B6EA58C,
+        .name = "jan_15",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -5098,8 +5098,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x8AB36BD0,
-        .name = "area_jan_jan_16",
+        .id = 0x4B6EAB09,
+        .name = "jan_16",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -5147,8 +5147,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x8AB3CC04,
-        .name = "area_jan_jan_17",
+        .id = 0x4B6E3F4A,
+        .name = "jan_17",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -5196,8 +5196,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x8AB3B69A,
-        .name = "area_jan_jan_18",
+        .id = 0x4B6E1100,
+        .name = "jan_18",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -5245,8 +5245,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x8AB3561A,
-        .name = "area_jan_jan_19",
+        .id = 0x4B6E61CC,
+        .name = "jan_19",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -5294,8 +5294,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x8AB39BCA,
-        .name = "area_jan_jan_22",
+        .id = 0x4B6E3407,
+        .name = "jan_22",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -5343,8 +5343,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x8AB3F360,
-        .name = "area_jan_jan_23",
+        .id = 0x4B6E1657,
+        .name = "jan_23",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -5392,8 +5392,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x739AFD95,
-        .name = "area_kgr_kgr_01",
+        .id = 0x3B99401F,
+        .name = "kgr_01",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -5441,8 +5441,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x739A54A0,
-        .name = "area_kgr_kgr_02",
+        .id = 0x3B99D6E0,
+        .name = "kgr_02",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -5490,8 +5490,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE22489C2,
-        .name = "area_kkj_kkj_00",
+        .id = 0x16AB9AF9,
+        .name = "kkj_00",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -5539,8 +5539,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE224A25C,
-        .name = "area_kkj_kkj_01",
+        .id = 0x16AB72C4,
+        .name = "kkj_01",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -5588,8 +5588,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE224D3D4,
-        .name = "area_kkj_kkj_02",
+        .id = 0x16ABE6A2,
+        .name = "kkj_02",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -5637,8 +5637,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE22488DE,
-        .name = "area_kkj_kkj_03",
+        .id = 0x16AB9386,
+        .name = "kkj_03",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -5686,8 +5686,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE224093A,
-        .name = "area_kkj_kkj_10",
+        .id = 0x16ABE1DC,
+        .name = "kkj_10",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -5735,8 +5735,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE2244B4D,
-        .name = "area_kkj_kkj_11",
+        .id = 0x16AB4FDD,
+        .name = "kkj_11",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -5784,8 +5784,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE2247B7F,
-        .name = "area_kkj_kkj_12",
+        .id = 0x16ABE234,
+        .name = "kkj_12",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -5833,8 +5833,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE2245B15,
-        .name = "area_kkj_kkj_13",
+        .id = 0x16ABF026,
+        .name = "kkj_13",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -5882,8 +5882,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE2248E8F,
-        .name = "area_kkj_kkj_14",
+        .id = 0x16AB86A5,
+        .name = "kkj_14",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -5931,8 +5931,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE22468C6,
-        .name = "area_kkj_kkj_15",
+        .id = 0x16ABCB5A,
+        .name = "kkj_15",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -5980,8 +5980,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE22498AC,
-        .name = "area_kkj_kkj_16",
+        .id = 0x16AB204D,
+        .name = "kkj_16",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -6029,8 +6029,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE224DC07,
-        .name = "area_kkj_kkj_17",
+        .id = 0x16ABC6FF,
+        .name = "kkj_17",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -6078,8 +6078,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE224CEBF,
-        .name = "area_kkj_kkj_18",
+        .id = 0x16AB4545,
+        .name = "kkj_18",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -6127,8 +6127,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE224E2E7,
-        .name = "area_kkj_kkj_19",
+        .id = 0x16AB8E23,
+        .name = "kkj_19",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -6176,8 +6176,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE2242D87,
-        .name = "area_kkj_kkj_20",
+        .id = 0x16ABDF06,
+        .name = "kkj_20",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -6225,8 +6225,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE22470E8,
-        .name = "area_kkj_kkj_21",
+        .id = 0x16ABBA5D,
+        .name = "kkj_21",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -6274,8 +6274,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE22404A6,
-        .name = "area_kkj_kkj_22",
+        .id = 0x16AB6D3A,
+        .name = "kkj_22",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -6323,8 +6323,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE2247F06,
-        .name = "area_kkj_kkj_23",
+        .id = 0x16AB1D7C,
+        .name = "kkj_23",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -6372,8 +6372,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE2248495,
-        .name = "area_kkj_kkj_24",
+        .id = 0x16ABEE21,
+        .name = "kkj_24",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -6421,8 +6421,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE224293F,
-        .name = "area_kkj_kkj_25",
+        .id = 0x16ABE97D,
+        .name = "kkj_25",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -6470,8 +6470,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE22418F9,
-        .name = "area_kkj_kkj_26",
+        .id = 0x16ABB7DC,
+        .name = "kkj_26",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -6519,8 +6519,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE2246F7E,
-        .name = "area_kkj_kkj_27",
+        .id = 0x16AB388A,
+        .name = "kkj_27",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -6568,8 +6568,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE22455B1,
-        .name = "area_kkj_kkj_28",
+        .id = 0x16ABBC7A,
+        .name = "kkj_28",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -6617,8 +6617,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE224E78E,
-        .name = "area_kkj_kkj_29",
+        .id = 0x16ABDD21,
+        .name = "kkj_29",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -6666,8 +6666,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xDA057815,
-        .name = "area_kmr_kmr_00",
+        .id = 0xF4AFD55F,
+        .name = "kmr_00",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -6715,8 +6715,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xDA051CA6,
-        .name = "area_kmr_kmr_02",
+        .id = 0xF4AF73AC,
+        .name = "kmr_02",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -6764,8 +6764,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xDA05668E,
-        .name = "area_kmr_kmr_03",
+        .id = 0xF4AF27E1,
+        .name = "kmr_03",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -6813,8 +6813,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xDA05DDB9,
-        .name = "area_kmr_kmr_04",
+        .id = 0xF4AF744F,
+        .name = "kmr_04",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -6862,8 +6862,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xDA05FC4A,
-        .name = "area_kmr_kmr_05",
+        .id = 0xF4AFAE34,
+        .name = "kmr_05",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -6911,8 +6911,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xDA056E57,
-        .name = "area_kmr_kmr_06",
+        .id = 0xF4AF011A,
+        .name = "kmr_06",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -6960,8 +6960,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xDA05A98E,
-        .name = "area_kmr_kmr_07",
+        .id = 0xF4AF7211,
+        .name = "kmr_07",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -7009,8 +7009,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xDA05F1F6,
-        .name = "area_kmr_kmr_09",
+        .id = 0xF4AFAADB,
+        .name = "kmr_09",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -7058,8 +7058,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xDA05D1D8,
-        .name = "area_kmr_kmr_10",
+        .id = 0xF4AF014C,
+        .name = "kmr_10",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -7107,8 +7107,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xDA05248B,
-        .name = "area_kmr_kmr_11",
+        .id = 0xF4AF909C,
+        .name = "kmr_11",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -7156,8 +7156,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xDA05A9B4,
-        .name = "area_kmr_kmr_12",
+        .id = 0xF4AF4030,
+        .name = "kmr_12",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -7205,8 +7205,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xDA05BE27,
-        .name = "area_kmr_kmr_20",
+        .id = 0xF4AF2746,
+        .name = "kmr_20",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -7254,8 +7254,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xDA05EDCF,
-        .name = "area_kmr_kmr_21",
+        .id = 0xF4AF0275,
+        .name = "kmr_21",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -7303,8 +7303,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xDA054910,
-        .name = "area_kmr_kmr_22",
+        .id = 0xF4AF9C04,
+        .name = "kmr_22",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -7352,8 +7352,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xDA05BA8D,
-        .name = "area_kmr_kmr_23",
+        .id = 0xF4AF7A45,
+        .name = "kmr_23",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -7401,8 +7401,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xDA053973,
-        .name = "area_kmr_kmr_24",
+        .id = 0xF4AF62BB,
+        .name = "kmr_24",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -7450,8 +7450,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xDA05F61B,
-        .name = "area_kmr_kmr_30",
+        .id = 0xF4AFCA51,
+        .name = "kmr_30",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -7499,8 +7499,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CEF90C,
-        .name = "area_kpa_kpa_01",
+        .id = 0x5186CA94,
+        .name = "kpa_01",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -7548,8 +7548,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CE5DFC,
-        .name = "area_kpa_kpa_03",
+        .id = 0x51865788,
+        .name = "kpa_03",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -7597,8 +7597,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CE3FEE,
-        .name = "area_kpa_kpa_04",
+        .id = 0x5186784C,
+        .name = "kpa_04",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -7646,8 +7646,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CE0CC9,
-        .name = "area_kpa_kpa_08",
+        .id = 0x5186B0AA,
+        .name = "kpa_08",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -7695,8 +7695,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CEAE5E,
-        .name = "area_kpa_kpa_09",
+        .id = 0x51865E3B,
+        .name = "kpa_09",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -7744,8 +7744,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CEB485,
-        .name = "area_kpa_kpa_10",
+        .id = 0x518692F5,
+        .name = "kpa_10",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -7793,8 +7793,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CEB33B,
-        .name = "area_kpa_kpa_100",
+        .id = 0x5186DBD5,
+        .name = "kpa_100",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -7842,8 +7842,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CECA56,
-        .name = "area_kpa_kpa_101",
+        .id = 0x5186CA13,
+        .name = "kpa_101",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -7891,8 +7891,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CEDCE9,
-        .name = "area_kpa_kpa_102",
+        .id = 0x5186F8E9,
+        .name = "kpa_102",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -7940,8 +7940,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CE8BBD,
-        .name = "area_kpa_kpa_11",
+        .id = 0x5186E5F4,
+        .name = "kpa_11",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -7989,8 +7989,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CE836D,
-        .name = "area_kpa_kpa_111",
+        .id = 0x51862AAC,
+        .name = "kpa_111",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -8038,8 +8038,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CE87DD,
-        .name = "area_kpa_kpa_112",
+        .id = 0x51860024,
+        .name = "kpa_112",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -8087,8 +8087,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CE5260,
-        .name = "area_kpa_kpa_113",
+        .id = 0x51861BDD,
+        .name = "kpa_113",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -8136,8 +8136,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CEC76E,
-        .name = "area_kpa_kpa_114",
+        .id = 0x518632C4,
+        .name = "kpa_114",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -8185,8 +8185,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CEBF34,
-        .name = "area_kpa_kpa_115",
+        .id = 0x51862D80,
+        .name = "kpa_115",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -8234,8 +8234,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CE6668,
-        .name = "area_kpa_kpa_116",
+        .id = 0x51860815,
+        .name = "kpa_116",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -8283,8 +8283,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CEBE75,
-        .name = "area_kpa_kpa_117",
+        .id = 0x51860B45,
+        .name = "kpa_117",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -8332,8 +8332,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CE4D6A,
-        .name = "area_kpa_kpa_118",
+        .id = 0x5186632C,
+        .name = "kpa_118",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -8381,8 +8381,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CEC67E,
-        .name = "area_kpa_kpa_119",
+        .id = 0x518633C4,
+        .name = "kpa_119",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -8430,8 +8430,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CEF24F,
-        .name = "area_kpa_kpa_12",
+        .id = 0x5186C598,
+        .name = "kpa_12",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -8479,8 +8479,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CEC91B,
-        .name = "area_kpa_kpa_121",
+        .id = 0x5186A9FF,
+        .name = "kpa_121",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -8528,8 +8528,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CE597A,
-        .name = "area_kpa_kpa_13",
+        .id = 0x5186F30E,
+        .name = "kpa_13",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -8577,8 +8577,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CE8C1A,
-        .name = "area_kpa_kpa_130",
+        .id = 0x5186DAC2,
+        .name = "kpa_130",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -8626,8 +8626,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CEC289,
-        .name = "area_kpa_kpa_133",
+        .id = 0x5186B62D,
+        .name = "kpa_133",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -8675,8 +8675,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CE45BD,
-        .name = "area_kpa_kpa_134",
+        .id = 0x51863B05,
+        .name = "kpa_134",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -8724,8 +8724,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CE2E23,
-        .name = "area_kpa_kpa_14",
+        .id = 0x5186D419,
+        .name = "kpa_14",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -8773,8 +8773,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CE071D,
-        .name = "area_kpa_kpa_15",
+        .id = 0x5186DFB3,
+        .name = "kpa_15",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -8822,8 +8822,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CE5D46,
-        .name = "area_kpa_kpa_16",
+        .id = 0x51865B1C,
+        .name = "kpa_16",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -8871,8 +8871,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CE49A7,
-        .name = "area_kpa_kpa_17",
+        .id = 0x5186855A,
+        .name = "kpa_17",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -8920,8 +8920,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CE0F15,
-        .name = "area_kpa_kpa_32",
+        .id = 0x518673B7,
+        .name = "kpa_32",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -8969,8 +8969,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CEA370,
-        .name = "area_kpa_kpa_33",
+        .id = 0x51864A91,
+        .name = "kpa_33",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -9018,8 +9018,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CE8AEF,
-        .name = "area_kpa_kpa_40",
+        .id = 0x5186C97D,
+        .name = "kpa_40",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -9067,8 +9067,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CEB996,
-        .name = "area_kpa_kpa_41",
+        .id = 0x5186C3F8,
+        .name = "kpa_41",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -9116,8 +9116,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CE5092,
-        .name = "area_kpa_kpa_50",
+        .id = 0x51868173,
+        .name = "kpa_50",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -9165,8 +9165,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CE75B6,
-        .name = "area_kpa_kpa_51",
+        .id = 0x51866C47,
+        .name = "kpa_51",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -9214,8 +9214,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CE58BE,
-        .name = "area_kpa_kpa_52",
+        .id = 0x51861087,
+        .name = "kpa_52",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -9263,8 +9263,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CE13C0,
-        .name = "area_kpa_kpa_53",
+        .id = 0x51863F56,
+        .name = "kpa_53",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -9312,8 +9312,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CE7146,
-        .name = "area_kpa_kpa_60",
+        .id = 0x518683B4,
+        .name = "kpa_60",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -9361,8 +9361,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CEC6D3,
-        .name = "area_kpa_kpa_61",
+        .id = 0x5186DD45,
+        .name = "kpa_61",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -9410,8 +9410,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CE8B47,
-        .name = "area_kpa_kpa_62",
+        .id = 0x5186BC71,
+        .name = "kpa_62",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -9459,8 +9459,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CEE369,
-        .name = "area_kpa_kpa_63",
+        .id = 0x51863855,
+        .name = "kpa_63",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -9508,8 +9508,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CEF681,
-        .name = "area_kpa_kpa_70",
+        .id = 0x5186A76A,
+        .name = "kpa_70",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -9557,8 +9557,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CE6651,
-        .name = "area_kpa_kpa_81",
+        .id = 0x51866473,
+        .name = "kpa_81",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -9606,8 +9606,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CEE658,
-        .name = "area_kpa_kpa_82",
+        .id = 0x51866E0F,
+        .name = "kpa_82",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -9655,8 +9655,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CED57F,
-        .name = "area_kpa_kpa_83",
+        .id = 0x518680C0,
+        .name = "kpa_83",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -9704,8 +9704,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CEBE63,
-        .name = "area_kpa_kpa_90",
+        .id = 0x5186EA57,
+        .name = "kpa_90",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -9753,8 +9753,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CEE427,
-        .name = "area_kpa_kpa_91",
+        .id = 0x51867B9F,
+        .name = "kpa_91",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -9802,8 +9802,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CEF878,
-        .name = "area_kpa_kpa_94",
+        .id = 0x518622B0,
+        .name = "kpa_94",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -9851,8 +9851,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CEEC32,
-        .name = "area_kpa_kpa_95",
+        .id = 0x5186FFC7,
+        .name = "kpa_95",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -9900,8 +9900,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xE1CE1AE5,
-        .name = "area_kpa_kpa_96",
+        .id = 0x518653E0,
+        .name = "kpa_96",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -9949,8 +9949,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x3DAF9E6D,
-        .name = "area_kzn_kzn_01",
+        .id = 0x48617F25,
+        .name = "kzn_01",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -9998,8 +9998,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x3DAFA5A5,
-        .name = "area_kzn_kzn_02",
+        .id = 0x48611633,
+        .name = "kzn_02",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -10047,8 +10047,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x3DAF6208,
-        .name = "area_kzn_kzn_03",
+        .id = 0x48614A89,
+        .name = "kzn_03",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -10096,8 +10096,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x3DAFD0B1,
-        .name = "area_kzn_kzn_04",
+        .id = 0x4861AE9A,
+        .name = "kzn_04",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -10145,8 +10145,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x3DAF2804,
-        .name = "area_kzn_kzn_05",
+        .id = 0x486196BB,
+        .name = "kzn_05",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -10194,8 +10194,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x3DAF948C,
-        .name = "area_kzn_kzn_06",
+        .id = 0x4861B474,
+        .name = "kzn_06",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -10243,8 +10243,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x3DAFBEC6,
-        .name = "area_kzn_kzn_07",
+        .id = 0x4861CEE1,
+        .name = "kzn_07",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -10292,8 +10292,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x3DAF64BD,
-        .name = "area_kzn_kzn_08",
+        .id = 0x4861EC70,
+        .name = "kzn_08",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -10341,8 +10341,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x3DAF6157,
-        .name = "area_kzn_kzn_09",
+        .id = 0x486179B6,
+        .name = "kzn_09",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -10390,8 +10390,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x3DAF96C8,
-        .name = "area_kzn_kzn_10",
+        .id = 0x486150BB,
+        .name = "kzn_10",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -10439,8 +10439,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x3DAF82C6,
-        .name = "area_kzn_kzn_11",
+        .id = 0x4861C44C,
+        .name = "kzn_11",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -10488,8 +10488,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x3DAF6EED,
-        .name = "area_kzn_kzn_17",
+        .id = 0x48612F13,
+        .name = "kzn_17",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -10537,8 +10537,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x3DAFB747,
-        .name = "area_kzn_kzn_18",
+        .id = 0x486186F3,
+        .name = "kzn_18",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -10586,8 +10586,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x3DAFA70F,
-        .name = "area_kzn_kzn_19",
+        .id = 0x4861ED8F,
+        .name = "kzn_19",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -10635,8 +10635,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x3DAF7F45,
-        .name = "area_kzn_kzn_20",
+        .id = 0x48616FC7,
+        .name = "kzn_20",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -10684,8 +10684,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x3DAF8D08,
-        .name = "area_kzn_kzn_22",
+        .id = 0x48613B4B,
+        .name = "kzn_22",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -10733,8 +10733,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x3DAFD854,
-        .name = "area_kzn_kzn_23",
+        .id = 0x4861EEF1,
+        .name = "kzn_23",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -10782,8 +10782,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xDCCCAEC5,
-        .name = "area_mac_mac_00",
+        .id = 0xF02A701A,
+        .name = "mac_00",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -10831,8 +10831,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xDCCCA900,
-        .name = "area_mac_mac_01",
+        .id = 0xF02AE9C6,
+        .name = "mac_01",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -10880,8 +10880,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xDCCCA745,
-        .name = "area_mac_mac_02",
+        .id = 0xF02AE253,
+        .name = "mac_02",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -10929,8 +10929,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xDCCCE29B,
-        .name = "area_mac_mac_03",
+        .id = 0xF02A8068,
+        .name = "mac_03",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -10978,8 +10978,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xDCCC02A0,
-        .name = "area_mac_mac_04",
+        .id = 0xF02AD9F3,
+        .name = "mac_04",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -11027,8 +11027,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xDCCCB901,
-        .name = "area_mac_mac_05",
+        .id = 0xF02A79B7,
+        .name = "mac_05",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -11076,8 +11076,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xDCCCFDDF,
-        .name = "area_mac_mac_06",
+        .id = 0xF02AA0EA,
+        .name = "mac_06",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -11125,8 +11125,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xDCCC6A73,
-        .name = "area_mac_machi",
+        .id = 0xF02AF147,
+        .name = "mac_machi",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -11174,8 +11174,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x8523F2A5,
-        .name = "area_mgm_mgm_00",
+        .id = 0x0889C108,
+        .name = "mgm_00",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -11223,8 +11223,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x8523B4FA,
-        .name = "area_mgm_mgm_01",
+        .id = 0x08896EC8,
+        .name = "mgm_01",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -11272,8 +11272,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x8523D042,
-        .name = "area_mgm_mgm_02",
+        .id = 0x0889CE62,
+        .name = "mgm_02",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -11321,8 +11321,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x85235465,
-        .name = "area_mgm_mgm_03",
+        .id = 0x0889DD83,
+        .name = "mgm_03",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -11370,8 +11370,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x9AE0155E,
-        .name = "area_mim_mim_01",
+        .id = 0xC274F38B,
+        .name = "mim_01",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -11419,8 +11419,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x9AE0AD5B,
-        .name = "area_mim_mim_02",
+        .id = 0xC274C712,
+        .name = "mim_02",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -11468,8 +11468,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x9AE03484,
-        .name = "area_mim_mim_03",
+        .id = 0xC274D7C2,
+        .name = "mim_03",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -11517,8 +11517,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x9AE07746,
-        .name = "area_mim_mim_04",
+        .id = 0xC27454EE,
+        .name = "mim_04",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -11566,8 +11566,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x9AE0C08E,
-        .name = "area_mim_mim_05",
+        .id = 0xC2747E4F,
+        .name = "mim_05",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -11615,8 +11615,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x9AE0276A,
-        .name = "area_mim_mim_06",
+        .id = 0xC274CD07,
+        .name = "mim_06",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -11664,8 +11664,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x9AE04047,
-        .name = "area_mim_mim_07",
+        .id = 0xC274D0A7,
+        .name = "mim_07",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -11713,8 +11713,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x9AE0AB1D,
-        .name = "area_mim_mim_08",
+        .id = 0xC274D53F,
+        .name = "mim_08",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -11762,8 +11762,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x9AE08C6F,
-        .name = "area_mim_mim_09",
+        .id = 0xC27411A7,
+        .name = "mim_09",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -11811,8 +11811,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x9AE02583,
-        .name = "area_mim_mim_10",
+        .id = 0xC274523F,
+        .name = "mim_10",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -11860,8 +11860,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x9AE010DA,
-        .name = "area_mim_mim_11",
+        .id = 0xC2746454,
+        .name = "mim_11",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -11909,8 +11909,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x9AE051AC,
-        .name = "area_mim_mim_12",
+        .id = 0xC2748368,
+        .name = "mim_12",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -11958,8 +11958,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x9E3A4CB0,
-        .name = "area_nok_nok_01",
+        .id = 0x043FFB83,
+        .name = "nok_01",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -12007,8 +12007,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x9E3A92F8,
-        .name = "area_nok_nok_02",
+        .id = 0x043F903A,
+        .name = "nok_02",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -12056,8 +12056,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x9E3A3358,
-        .name = "area_nok_nok_03",
+        .id = 0x043F2F09,
+        .name = "nok_03",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -12105,8 +12105,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x9E3A9BBB,
-        .name = "area_nok_nok_04",
+        .id = 0x043F63D5,
+        .name = "nok_04",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -12154,8 +12154,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x9E3A6F3A,
-        .name = "area_nok_nok_11",
+        .id = 0x043F757F,
+        .name = "nok_11",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -12203,8 +12203,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x9E3A6C3F,
-        .name = "area_nok_nok_12",
+        .id = 0x043F9C40,
+        .name = "nok_12",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -12252,8 +12252,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x9E3A6CBD,
-        .name = "area_nok_nok_13",
+        .id = 0x043F7717,
+        .name = "nok_13",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -12301,8 +12301,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x9E3AD8BB,
-        .name = "area_nok_nok_14",
+        .id = 0x043F81C9,
+        .name = "nok_14",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -12350,8 +12350,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x9E3AEDAC,
-        .name = "area_nok_nok_15",
+        .id = 0x043F0A24,
+        .name = "nok_15",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -12399,8 +12399,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xB82B6845,
-        .name = "area_obk_obk_01",
+        .id = 0xBCEEB62B,
+        .name = "obk_01",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -12448,8 +12448,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xB82BCA0C,
-        .name = "area_obk_obk_02",
+        .id = 0xBCEE74DD,
+        .name = "obk_02",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -12497,8 +12497,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xB82B19EE,
-        .name = "area_obk_obk_03",
+        .id = 0xBCEE4558,
+        .name = "obk_03",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -12546,8 +12546,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xB82B4600,
-        .name = "area_obk_obk_04",
+        .id = 0xBCEEC245,
+        .name = "obk_04",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -12595,8 +12595,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xB82B80A1,
-        .name = "area_obk_obk_05",
+        .id = 0xBCEE4B2C,
+        .name = "obk_05",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -12644,8 +12644,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xB82B96A5,
-        .name = "area_obk_obk_06",
+        .id = 0xBCEEF167,
+        .name = "obk_06",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -12693,8 +12693,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xB82B76CD,
-        .name = "area_obk_obk_07",
+        .id = 0xBCEE7F09,
+        .name = "obk_07",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -12742,8 +12742,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xB82B6F4D,
-        .name = "area_obk_obk_08",
+        .id = 0xBCEEBA50,
+        .name = "obk_08",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -12791,8 +12791,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xB82B19B0,
-        .name = "area_obk_obk_09",
+        .id = 0xBCEED940,
+        .name = "obk_09",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -12840,8 +12840,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x1A74EA10,
-        .name = "area_omo_omo_01",
+        .id = 0x73695728,
+        .name = "omo_01",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -12889,8 +12889,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x1A740EC2,
-        .name = "area_omo_omo_02",
+        .id = 0x7369B03A,
+        .name = "omo_02",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -12938,8 +12938,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x1A74E7AF,
-        .name = "area_omo_omo_03",
+        .id = 0x7369BEDF,
+        .name = "omo_03",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -12987,8 +12987,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x1A748530,
-        .name = "area_omo_omo_04",
+        .id = 0x73696270,
+        .name = "omo_04",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -13036,8 +13036,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x1A748924,
-        .name = "area_omo_omo_05",
+        .id = 0x73697CDE,
+        .name = "omo_05",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -13085,8 +13085,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x1A741C19,
-        .name = "area_omo_omo_06",
+        .id = 0x7369D8F8,
+        .name = "omo_06",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -13134,8 +13134,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x1A748D45,
-        .name = "area_omo_omo_07",
+        .id = 0x73698427,
+        .name = "omo_07",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -13183,8 +13183,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x1A747F6E,
-        .name = "area_omo_omo_08",
+        .id = 0x73698FBD,
+        .name = "omo_08",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -13232,8 +13232,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x1A7440B8,
-        .name = "area_omo_omo_09",
+        .id = 0x7369C38C,
+        .name = "omo_09",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -13281,8 +13281,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x1A748067,
-        .name = "area_omo_omo_10",
+        .id = 0x7369EF42,
+        .name = "omo_10",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -13330,8 +13330,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x1A74D19C,
-        .name = "area_omo_omo_11",
+        .id = 0x7369C528,
+        .name = "omo_11",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -13379,8 +13379,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x1A74A08F,
-        .name = "area_omo_omo_12",
+        .id = 0x73693780,
+        .name = "omo_12",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -13428,8 +13428,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x1A7484B0,
-        .name = "area_omo_omo_13",
+        .id = 0x7369072A,
+        .name = "omo_13",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -13477,8 +13477,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x1A741A30,
-        .name = "area_omo_omo_14",
+        .id = 0x7369B87D,
+        .name = "omo_14",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -13526,8 +13526,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x1A747591,
-        .name = "area_omo_omo_15",
+        .id = 0x7369F5E3,
+        .name = "omo_15",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -13575,8 +13575,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x1A74F616,
-        .name = "area_omo_omo_16",
+        .id = 0x73696D93,
+        .name = "omo_16",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -13624,8 +13624,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x1A749C26,
-        .name = "area_omo_omo_17",
+        .id = 0x7369F49D,
+        .name = "omo_17",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -13673,8 +13673,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x05F099DC,
-        .name = "area_osr_osr_00",
+        .id = 0xDB54E85F,
+        .name = "osr_00",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -13722,8 +13722,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x05F0CF97,
-        .name = "area_osr_osr_01",
+        .id = 0xDB54852B,
+        .name = "osr_01",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -13771,8 +13771,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x05F09812,
-        .name = "area_osr_osr_02",
+        .id = 0xDB5487AF,
+        .name = "osr_02",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -13820,8 +13820,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x05F0E007,
-        .name = "area_osr_osr_03",
+        .id = 0xDB544428,
+        .name = "osr_03",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -13869,8 +13869,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x05F008F2,
-        .name = "area_osr_osr_04",
+        .id = 0xDB54BD41,
+        .name = "osr_04",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -13918,8 +13918,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x559EC27D,
-        .name = "area_pra_pra_01",
+        .id = 0x506923EF,
+        .name = "pra_01",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -13967,8 +13967,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x559EFEDB,
-        .name = "area_pra_pra_02",
+        .id = 0x50690EC8,
+        .name = "pra_02",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -14016,8 +14016,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x559EF3A8,
-        .name = "area_pra_pra_03",
+        .id = 0x50698F55,
+        .name = "pra_03",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -14065,8 +14065,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x559EBBC6,
-        .name = "area_pra_pra_04",
+        .id = 0x50690B22,
+        .name = "pra_04",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -14114,8 +14114,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x559EBCA7,
-        .name = "area_pra_pra_05",
+        .id = 0x5069E514,
+        .name = "pra_05",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -14163,8 +14163,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x559EB414,
-        .name = "area_pra_pra_06",
+        .id = 0x50692EF2,
+        .name = "pra_06",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -14212,8 +14212,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x559EE5CF,
-        .name = "area_pra_pra_09",
+        .id = 0x50698853,
+        .name = "pra_09",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -14261,8 +14261,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x559EDD20,
-        .name = "area_pra_pra_10",
+        .id = 0x5069F60A,
+        .name = "pra_10",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -14310,8 +14310,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x559E4963,
-        .name = "area_pra_pra_11",
+        .id = 0x50690C51,
+        .name = "pra_11",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -14359,8 +14359,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x559ED4D1,
-        .name = "area_pra_pra_12",
+        .id = 0x50696B1A,
+        .name = "pra_12",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -14408,8 +14408,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x559E858E,
-        .name = "area_pra_pra_13",
+        .id = 0x50698AE3,
+        .name = "pra_13",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -14457,8 +14457,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x559ECE73,
-        .name = "area_pra_pra_14",
+        .id = 0x5069030C,
+        .name = "pra_14",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -14506,8 +14506,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x559EDC6C,
-        .name = "area_pra_pra_15",
+        .id = 0x5069FD21,
+        .name = "pra_15",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -14555,8 +14555,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x559E6885,
-        .name = "area_pra_pra_16",
+        .id = 0x50696E08,
+        .name = "pra_16",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -14604,8 +14604,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x559EFBBC,
-        .name = "area_pra_pra_18",
+        .id = 0x50692A46,
+        .name = "pra_18",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -14653,8 +14653,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x559EBF3D,
-        .name = "area_pra_pra_19",
+        .id = 0x5069E3E8,
+        .name = "pra_19",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -14702,8 +14702,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x559EA3B2,
-        .name = "area_pra_pra_20",
+        .id = 0x506965AD,
+        .name = "pra_20",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -14751,8 +14751,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x559E9130,
-        .name = "area_pra_pra_21",
+        .id = 0x50697ADF,
+        .name = "pra_21",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -14800,8 +14800,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x559E1153,
-        .name = "area_pra_pra_22",
+        .id = 0x5069BEAE,
+        .name = "pra_22",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -14849,8 +14849,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x559E7FF6,
-        .name = "area_pra_pra_27",
+        .id = 0x506962E7,
+        .name = "pra_27",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -14898,8 +14898,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x559EBCFA,
-        .name = "area_pra_pra_28",
+        .id = 0x50694933,
+        .name = "pra_28",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -14947,8 +14947,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x559E2157,
-        .name = "area_pra_pra_29",
+        .id = 0x50690400,
+        .name = "pra_29",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -14996,8 +14996,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x559E5302,
-        .name = "area_pra_pra_31",
+        .id = 0x5069D4A1,
+        .name = "pra_31",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -15045,8 +15045,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x559E7E04,
-        .name = "area_pra_pra_32",
+        .id = 0x50697D11,
+        .name = "pra_32",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -15094,8 +15094,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x559EAFAC,
-        .name = "area_pra_pra_33",
+        .id = 0x5069C1DB,
+        .name = "pra_33",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -15143,8 +15143,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x559E0157,
-        .name = "area_pra_pra_34",
+        .id = 0x5069A613,
+        .name = "pra_34",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -15192,8 +15192,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x559E4DCB,
-        .name = "area_pra_pra_35",
+        .id = 0x50694061,
+        .name = "pra_35",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -15241,8 +15241,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x559EA673,
-        .name = "area_pra_pra_36",
+        .id = 0x5069A347,
+        .name = "pra_36",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -15290,8 +15290,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x559E4C9D,
-        .name = "area_pra_pra_37",
+        .id = 0x506900C4,
+        .name = "pra_37",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -15339,8 +15339,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x559E7FAC,
-        .name = "area_pra_pra_38",
+        .id = 0x50690728,
+        .name = "pra_38",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -15388,8 +15388,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x559ECC32,
-        .name = "area_pra_pra_39",
+        .id = 0x5069E067,
+        .name = "pra_39",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -15437,8 +15437,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x559ED9E2,
-        .name = "area_pra_pra_40",
+        .id = 0x50693193,
+        .name = "pra_40",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -15486,8 +15486,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xCDEB750F,
-        .name = "area_sam_sam_01",
+        .id = 0x618FE39F,
+        .name = "sam_01",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -15535,8 +15535,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xCDEB1F52,
-        .name = "area_sam_sam_02",
+        .id = 0x618FA4AC,
+        .name = "sam_02",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -15584,8 +15584,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xCDEB97A1,
-        .name = "area_sam_sam_03",
+        .id = 0x618F3F6B,
+        .name = "sam_03",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -15633,8 +15633,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xCDEB22BB,
-        .name = "area_sam_sam_04",
+        .id = 0x618F5EF6,
+        .name = "sam_04",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -15682,8 +15682,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xCDEB3CF5,
-        .name = "area_sam_sam_05",
+        .id = 0x618FE431,
+        .name = "sam_05",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -15731,8 +15731,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xCDEB870C,
-        .name = "area_sam_sam_06",
+        .id = 0x618F7F2C,
+        .name = "sam_06",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -15780,8 +15780,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xCDEBF077,
-        .name = "area_sam_sam_07",
+        .id = 0x618FA285,
+        .name = "sam_07",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -15829,8 +15829,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xCDEB4424,
-        .name = "area_sam_sam_08",
+        .id = 0x618F757C,
+        .name = "sam_08",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -15878,8 +15878,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xCDEB2451,
-        .name = "area_sam_sam_09",
+        .id = 0x618F54C9,
+        .name = "sam_09",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -15927,8 +15927,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xCDEB280C,
-        .name = "area_sam_sam_10",
+        .id = 0x618FEA88,
+        .name = "sam_10",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -15976,8 +15976,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xCDEB3544,
-        .name = "area_sam_sam_11",
+        .id = 0x618F3CC2,
+        .name = "sam_11",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -16025,8 +16025,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0xCDEB732D,
-        .name = "area_sam_sam_12",
+        .id = 0x618F4284,
+        .name = "sam_12",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -16074,8 +16074,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B75CE0B,
-        .name = "area_sbk_sbk_00",
+        .id = 0x6A0D04BA,
+        .name = "sbk_00",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -16123,8 +16123,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B751C49,
-        .name = "area_sbk_sbk_01",
+        .id = 0x6A0D3230,
+        .name = "sbk_01",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -16172,8 +16172,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B75DD4D,
-        .name = "area_sbk_sbk_02",
+        .id = 0x6A0D9685,
+        .name = "sbk_02",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -16221,8 +16221,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B75DFBB,
-        .name = "area_sbk_sbk_03",
+        .id = 0x6A0DD0E9,
+        .name = "sbk_03",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -16270,8 +16270,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B751569,
-        .name = "area_sbk_sbk_04",
+        .id = 0x6A0D7F44,
+        .name = "sbk_04",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -16319,8 +16319,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B758093,
-        .name = "area_sbk_sbk_05",
+        .id = 0x6A0D74A6,
+        .name = "sbk_05",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -16368,8 +16368,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B75C07C,
-        .name = "area_sbk_sbk_06",
+        .id = 0x6A0D7FB7,
+        .name = "sbk_06",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -16417,8 +16417,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B758EDD,
-        .name = "area_sbk_sbk_10",
+        .id = 0x6A0D794B,
+        .name = "sbk_10",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -16466,8 +16466,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B75EEEE,
-        .name = "area_sbk_sbk_11",
+        .id = 0x6A0DE261,
+        .name = "sbk_11",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -16515,8 +16515,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B750BEC,
-        .name = "area_sbk_sbk_12",
+        .id = 0x6A0D1F1D,
+        .name = "sbk_12",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -16564,8 +16564,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B750FF0,
-        .name = "area_sbk_sbk_13",
+        .id = 0x6A0D9BC0,
+        .name = "sbk_13",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -16613,8 +16613,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B750E0D,
-        .name = "area_sbk_sbk_14",
+        .id = 0x6A0DEB8F,
+        .name = "sbk_14",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -16662,8 +16662,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B752641,
-        .name = "area_sbk_sbk_15",
+        .id = 0x6A0D3001,
+        .name = "sbk_15",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -16711,8 +16711,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B75BC78,
-        .name = "area_sbk_sbk_16",
+        .id = 0x6A0D6E3A,
+        .name = "sbk_16",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -16760,8 +16760,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B75C406,
-        .name = "area_sbk_sbk_20",
+        .id = 0x6A0DA21C,
+        .name = "sbk_20",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -16809,8 +16809,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B75AF7E,
-        .name = "area_sbk_sbk_21",
+        .id = 0x6A0D0334,
+        .name = "sbk_21",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -16858,8 +16858,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B759636,
-        .name = "area_sbk_sbk_22",
+        .id = 0x6A0DB04B,
+        .name = "sbk_22",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -16907,8 +16907,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B756E3C,
-        .name = "area_sbk_sbk_23",
+        .id = 0x6A0DB6EA,
+        .name = "sbk_23",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -16956,8 +16956,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B7547AF,
-        .name = "area_sbk_sbk_24",
+        .id = 0x6A0DA686,
+        .name = "sbk_24",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -17005,8 +17005,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B75E37E,
-        .name = "area_sbk_sbk_25",
+        .id = 0x6A0D977B,
+        .name = "sbk_25",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -17054,8 +17054,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B7581C7,
-        .name = "area_sbk_sbk_26",
+        .id = 0x6A0D58EE,
+        .name = "sbk_26",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -17103,8 +17103,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B757045,
-        .name = "area_sbk_sbk_30",
+        .id = 0x6A0D409D,
+        .name = "sbk_30",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -17152,8 +17152,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B75987D,
-        .name = "area_sbk_sbk_31",
+        .id = 0x6A0D2401,
+        .name = "sbk_31",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -17201,8 +17201,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B752DD8,
-        .name = "area_sbk_sbk_32",
+        .id = 0x6A0DA508,
+        .name = "sbk_32",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -17250,8 +17250,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B75DE7C,
-        .name = "area_sbk_sbk_33",
+        .id = 0x6A0DE2FF,
+        .name = "sbk_33",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -17299,8 +17299,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B750DC7,
-        .name = "area_sbk_sbk_34",
+        .id = 0x6A0D0C7B,
+        .name = "sbk_34",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -17348,8 +17348,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B756B5D,
-        .name = "area_sbk_sbk_35",
+        .id = 0x6A0DF5E9,
+        .name = "sbk_35",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -17397,8 +17397,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B750B9B,
-        .name = "area_sbk_sbk_36",
+        .id = 0x6A0D35D4,
+        .name = "sbk_36",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -17446,8 +17446,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B75AD98,
-        .name = "area_sbk_sbk_40",
+        .id = 0x6A0D4DFF,
+        .name = "sbk_40",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -17495,8 +17495,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B7528E0,
-        .name = "area_sbk_sbk_41",
+        .id = 0x6A0DA0FB,
+        .name = "sbk_41",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -17544,8 +17544,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B75F31E,
-        .name = "area_sbk_sbk_42",
+        .id = 0x6A0DE48B,
+        .name = "sbk_42",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -17593,8 +17593,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B757F11,
-        .name = "area_sbk_sbk_43",
+        .id = 0x6A0DFBD6,
+        .name = "sbk_43",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -17642,8 +17642,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B75CD70,
-        .name = "area_sbk_sbk_44",
+        .id = 0x6A0D19F8,
+        .name = "sbk_44",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -17691,8 +17691,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B754D1E,
-        .name = "area_sbk_sbk_45",
+        .id = 0x6A0D02BC,
+        .name = "sbk_45",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -17740,8 +17740,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B755E7A,
-        .name = "area_sbk_sbk_46",
+        .id = 0x6A0D1D18,
+        .name = "sbk_46",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -17789,8 +17789,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B752DB7,
-        .name = "area_sbk_sbk_50",
+        .id = 0x6A0D4B09,
+        .name = "sbk_50",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -17838,8 +17838,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B7540CF,
-        .name = "area_sbk_sbk_51",
+        .id = 0x6A0D99C8,
+        .name = "sbk_51",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -17887,8 +17887,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B7507C3,
-        .name = "area_sbk_sbk_52",
+        .id = 0x6A0DF07D,
+        .name = "sbk_52",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -17936,8 +17936,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B7574EC,
-        .name = "area_sbk_sbk_53",
+        .id = 0x6A0DB267,
+        .name = "sbk_53",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -17985,8 +17985,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B754670,
-        .name = "area_sbk_sbk_54",
+        .id = 0x6A0D704B,
+        .name = "sbk_54",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -18034,8 +18034,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B75AC58,
-        .name = "area_sbk_sbk_55",
+        .id = 0x6A0DFEF0,
+        .name = "sbk_55",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -18083,8 +18083,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B75AB3D,
-        .name = "area_sbk_sbk_56",
+        .id = 0x6A0D95EE,
+        .name = "sbk_56",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -18132,8 +18132,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B751AF0,
-        .name = "area_sbk_sbk_60",
+        .id = 0x6A0D168F,
+        .name = "sbk_60",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -18181,8 +18181,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B752811,
-        .name = "area_sbk_sbk_61",
+        .id = 0x6A0DE02F,
+        .name = "sbk_61",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -18230,8 +18230,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B758992,
-        .name = "area_sbk_sbk_62",
+        .id = 0x6A0D3A6D,
+        .name = "sbk_62",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -18279,8 +18279,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B7570E8,
-        .name = "area_sbk_sbk_63",
+        .id = 0x6A0D723E,
+        .name = "sbk_63",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -18328,8 +18328,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B75C653,
-        .name = "area_sbk_sbk_64",
+        .id = 0x6A0D4F66,
+        .name = "sbk_64",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -18377,8 +18377,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B75F58D,
-        .name = "area_sbk_sbk_65",
+        .id = 0x6A0DBB10,
+        .name = "sbk_65",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -18426,8 +18426,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B75C7E4,
-        .name = "area_sbk_sbk_66",
+        .id = 0x6A0D8251,
+        .name = "sbk_66",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -18475,8 +18475,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0B759076,
-        .name = "area_sbk_sbk_99",
+        .id = 0x6A0D3E5C,
+        .name = "sbk_99",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -18524,8 +18524,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x9BEE80BD,
-        .name = "area_tik_tik_01",
+        .id = 0xF35882F0,
+        .name = "tik_01",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -18573,8 +18573,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x9BEEC0E1,
-        .name = "area_tik_tik_02",
+        .id = 0xF35849C0,
+        .name = "tik_02",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -18622,8 +18622,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x9BEEF6E8,
-        .name = "area_tik_tik_03",
+        .id = 0xF3588C20,
+        .name = "tik_03",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -18671,8 +18671,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x9BEEEEA8,
-        .name = "area_tik_tik_04",
+        .id = 0xF35895DD,
+        .name = "tik_04",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -18720,8 +18720,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x9BEED826,
-        .name = "area_tik_tik_05",
+        .id = 0xF358BA02,
+        .name = "tik_05",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -18769,8 +18769,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x9BEE82E6,
-        .name = "area_tik_tik_06",
+        .id = 0xF3584294,
+        .name = "tik_06",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -18818,8 +18818,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x9BEE51E7,
-        .name = "area_tik_tik_07",
+        .id = 0xF3584C5E,
+        .name = "tik_07",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -18867,8 +18867,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x9BEE4D55,
-        .name = "area_tik_tik_08",
+        .id = 0xF358C075,
+        .name = "tik_08",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -18916,8 +18916,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x9BEECC10,
-        .name = "area_tik_tik_09",
+        .id = 0xF3589DA0,
+        .name = "tik_09",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -18965,8 +18965,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x9BEE1514,
-        .name = "area_tik_tik_10",
+        .id = 0xF358B805,
+        .name = "tik_10",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -19014,8 +19014,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x9BEE6F06,
-        .name = "area_tik_tik_12",
+        .id = 0xF358FEE4,
+        .name = "tik_12",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -19063,8 +19063,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x9BEEF580,
-        .name = "area_tik_tik_14",
+        .id = 0xF35889CD,
+        .name = "tik_14",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -19112,8 +19112,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x9BEE7509,
-        .name = "area_tik_tik_15",
+        .id = 0xF358B4D6,
+        .name = "tik_15",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -19161,8 +19161,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x9BEEB4A4,
-        .name = "area_tik_tik_17",
+        .id = 0xF3585790,
+        .name = "tik_17",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -19210,8 +19210,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x9BEE5827,
-        .name = "area_tik_tik_18",
+        .id = 0xF358F361,
+        .name = "tik_18",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -19259,8 +19259,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x9BEE5F1F,
-        .name = "area_tik_tik_19",
+        .id = 0xF3587C95,
+        .name = "tik_19",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -19308,8 +19308,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x9BEEBAD1,
-        .name = "area_tik_tik_20",
+        .id = 0xF358A7B4,
+        .name = "tik_20",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -19357,8 +19357,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x9BEE5FE7,
-        .name = "area_tik_tik_21",
+        .id = 0xF35818F8,
+        .name = "tik_21",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -19406,8 +19406,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x9BEE23E5,
-        .name = "area_tik_tik_22",
+        .id = 0xF35834F5,
+        .name = "tik_22",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -19455,8 +19455,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x9BEE939F,
-        .name = "area_tik_tik_23",
+        .id = 0xF358BACE,
+        .name = "tik_23",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -19504,8 +19504,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x9BEE4244,
-        .name = "area_tik_tik_24",
+        .id = 0xF358BF4D,
+        .name = "tik_24",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -19553,8 +19553,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x9BEE55F2,
-        .name = "area_tik_tik_25",
+        .id = 0xF3584E9D,
+        .name = "tik_25",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -19602,8 +19602,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x2DB25743,
-        .name = "area_trd_trd_00",
+        .id = 0x789CDECC,
+        .name = "trd_00",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -19651,8 +19651,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x2DB208D6,
-        .name = "area_trd_trd_01",
+        .id = 0x789CB050,
+        .name = "trd_01",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -19700,8 +19700,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x2DB2FE7E,
-        .name = "area_trd_trd_02",
+        .id = 0x789C9A19,
+        .name = "trd_02",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -19749,8 +19749,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x2DB2D69A,
-        .name = "area_trd_trd_03",
+        .id = 0x789C2873,
+        .name = "trd_03",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -19798,8 +19798,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x2DB2B18A,
-        .name = "area_trd_trd_04",
+        .id = 0x789C69DE,
+        .name = "trd_04",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -19847,8 +19847,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x2DB2FAFA,
-        .name = "area_trd_trd_05",
+        .id = 0x789C8544,
+        .name = "trd_05",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -19896,8 +19896,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x2DB27E13,
-        .name = "area_trd_trd_06",
+        .id = 0x789CD856,
+        .name = "trd_06",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -19945,8 +19945,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x2DB20EA7,
-        .name = "area_trd_trd_07",
+        .id = 0x789CB089,
+        .name = "trd_07",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -19994,8 +19994,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x2DB2C6C7,
-        .name = "area_trd_trd_08",
+        .id = 0x789C56BD,
+        .name = "trd_08",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -20043,8 +20043,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x2DB27E50,
-        .name = "area_trd_trd_09",
+        .id = 0x789C640A,
+        .name = "trd_09",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -20092,8 +20092,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x2DB2EFC4,
-        .name = "area_trd_trd_10",
+        .id = 0x789C9176,
+        .name = "trd_10",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -20141,8 +20141,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0D79F90F,
-        .name = "area_tst_tst_01",
+        .id = 0xC412DAF7,
+        .name = "tst_01",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -20190,8 +20190,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0D794FCB,
-        .name = "area_tst_tst_02",
+        .id = 0xC4123F10,
+        .name = "tst_02",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -20239,8 +20239,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0D79BCB2,
-        .name = "area_tst_tst_03",
+        .id = 0xC4126A24,
+        .name = "tst_03",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -20288,8 +20288,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0D798859,
-        .name = "area_tst_tst_04",
+        .id = 0xC412D7FB,
+        .name = "tst_04",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -20337,8 +20337,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0D794485,
-        .name = "area_tst_tst_10",
+        .id = 0xC4122BB3,
+        .name = "tst_10",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -20386,8 +20386,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0D79113C,
-        .name = "area_tst_tst_11",
+        .id = 0xC4123772,
+        .name = "tst_11",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -20435,8 +20435,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0D79BAAA,
-        .name = "area_tst_tst_12",
+        .id = 0xC412CD67,
+        .name = "tst_12",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -20484,8 +20484,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0D7956EE,
-        .name = "area_tst_tst_13",
+        .id = 0xC412D439,
+        .name = "tst_13",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
@@ -20533,8 +20533,8 @@ static EnhancedShadingPreset gAreaPresets[] = {
         },
     },
     {
-        .id = 0x0D796DEA,
-        .name = "area_tst_tst_20",
+        .id = 0xC4126D79,
+        .name = "tst_20",
         .type = ENHANCED_SHADING_PRESET_CAVE,
         .profile = {
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 

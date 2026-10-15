@@ -253,14 +253,32 @@ def get_map_id(area_name, map_name):
     map_hash = hash(map_name) & 0xFFFF
     return (area_hash << 16) | map_hash
 
+def get_preset_name(area_name, map_name):
+    """Generate preset name matching mapConfig->id format (e.g., 'kmr_00')."""
+    # Extract area prefix (kmr, arn, etc.) and map number
+    area_parts = area_name.split('_')
+    area_prefix = area_parts[1] if len(area_parts) > 1 else area_parts[0]
+    if area_prefix.startswith('area_'):
+        area_prefix = area_prefix[5:]
+    
+    # map_name format: "kmr_00", "kmr_02", etc. or just "00", "02"
+    map_parts = map_name.split('_')
+    if len(map_parts) > 1:
+        map_num = map_parts[1]
+    else:
+        map_num = map_name
+    
+    return f"{area_prefix}_{map_num}"
+
 def generate_preset_c(area_name, map_name, preset_type):
     """Generate a C struct for a single preset."""
     config = PRESET_CONFIGS[preset_type]
     map_id = get_map_id(area_name, map_name)
+    preset_name = get_preset_name(area_name, map_name)
     
     return f'''    {{
         .id = 0x{map_id:08X},
-        .name = "{area_name}_{map_name}",
+        .name = "{preset_name}",
         .type = ENHANCED_SHADING_PRESET_{preset_type},
         .profile = {{
             .flags = ENHANCED_SHADING_FLAG_ENABLED | ENHANCED_SHADING_FLAG_USE_PRESET | 
