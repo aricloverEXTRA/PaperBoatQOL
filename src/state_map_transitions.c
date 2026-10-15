@@ -1,10 +1,6 @@
 #include "common.h"
 #include "nu/nusys.h"
 #include "game_modes.h"
-<<<<<<< HEAD
-=======
-#include "port/lighting/LightingManager.h"
->>>>>>> origin/main
 
 BSS s16 gMapTransitionAlpha;
 BSS s16 gMapTransitionFadeRate;
@@ -170,18 +166,7 @@ void state_step_change_map(void) {
                 update_cameras();
                 gMapTransitionStateTime = 2;
                 gMapTransitionState++;
-<<<<<<< HEAD
-=======
-
-                /*
-                 * Notify LightingManager that a new map has been loaded. The LightingManager
-                 * will lookup a matching lighting profile (if any) and apply shader post-passes
-                 * and uniforms. This is a best-effort call; LightingManager does its own
-                 * defensive checks and will be a no-op if resources are missing.
-                 */
-                LightingManager_HandleAreaChange(gGameStatusPtr->areaID, gGameStatusPtr->mapID);
->>>>>>> origin/main
-            }
+}
             break;
         case CHANGE_MAP_AWAIT_MAIN:
             update_encounters();

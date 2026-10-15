@@ -10,21 +10,15 @@
 #include "port/hooks/Events.h"
 #include "port/ui/cvar_prefixes.h"
 
-<<<<<<< HEAD
 extern void register_enhanced_shading_hooks(void);
 extern void register_benchmark_hooks(void);
 
-=======
->>>>>>> origin/main
 void PortEnhancements_Init() {
     LoadGuiTextures();
     PortEnhancements_Register();
     SaveManager_Init();
-<<<<<<< HEAD
     register_enhanced_shading_hooks();
     register_benchmark_hooks();
-=======
->>>>>>> origin/main
 }
 
 void PortEnhancements_Register() {

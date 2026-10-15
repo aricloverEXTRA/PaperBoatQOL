@@ -16,10 +16,6 @@
 #include "src/Companion.h"
 #include "ui/PaperboatGui.hpp"
 #include "ui/PaperboatModMenuWindow.h"
-<<<<<<< HEAD
-=======
-#include "port/lighting/LightingManager.h"
->>>>>>> origin/main
 #ifdef __EMSCRIPTEN__
 #include "port/web/WebUtils.h"
 #endif
@@ -217,14 +213,7 @@ GameEngine::GameEngine() {
     this->context->InitCrashHandler();
     this->context->InitEventSystem();
 
-<<<<<<< HEAD
-=======
-    // Initialize lighting manager (loads lighting_profiles.yml from resources/mods if present).
-    // Safe: the manager guards against missing context/resourcemanager.
-    LightingManager_Init();
-
->>>>>>> origin/main
-    gsFast3dWindow = std::make_shared<Fast::Fast3dWindow>(std::vector<std::shared_ptr<Ship::GuiWindow>>({}));
+gsFast3dWindow = std::make_shared<Fast::Fast3dWindow>(std::vector<std::shared_ptr<Ship::GuiWindow>>({}));
     this->context->InitWindow(gsFast3dWindow);
     if (auto interpreter = gsFast3dWindow->GetInterpreterWeak().lock()) {
         // Prefetch a replacement's folder on its first draw. Sprites, map textures and
@@ -394,7 +383,6 @@ void GameEngine::RunExtract(int argc, char* argv[]) {
     auto wnd = std::dynamic_pointer_cast<Fast::Fast3dWindow>(Ship::Context::GetRawInstance()->GetWindow());
     auto gui = wnd->GetGui();
     bool menuWasVisible = false;
-<<<<<<< HEAD
     if (gui->GetMenu()->IsVisible()) {
         menuWasVisible = true;
         gui->GetMenu()->Hide();
@@ -1502,7 +1490,6 @@ extern "C" uint32_t OTRGetGameRenderHeight(void) {
     auto interp = GameEngine_GetInterpreter();
     return interp != nullptr ? interp->mCurDimensions.height : (uint32_t) WS_NATIVE_HEIGHT;
 }
-=======
 
     ... (file truncated for brevity) ...
->>>>>>> origin/main
+
