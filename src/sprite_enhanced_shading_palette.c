@@ -2,6 +2,7 @@
 #include "sprite.h"
 #include "nu/nusys.h"
 #include "port/patches/Patches.h"
+#include "port/ui/cvar_prefixes.h"
 #include "sprite/sprite_enhanced_shading.h"
 
 #define ENHANCED_SHADING_PALETTE_COUNT 512
@@ -49,9 +50,62 @@ void create_enhanced_shading_palette(Matrix4f mtx, s32 uls, s32 ult, s32 lrs, s3
     Camera* camera = &gCameras[gCurrentCameraID];
     EnhancedShadingProfile* profile = gEnhancedShadingProfile;
     
-    if (profile == NULL || !(profile->flags & ENHANCED_SHADING_FLAG_ENABLED)) {
+    b32 enhancedEnabled = CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1);
+    if (profile == NULL || !(profile->flags & ENHANCED_SHADING_FLAG_ENABLED) || !enhancedEnabled) {
         create_shading_palette(mtx, uls, ult, lrs, lrt, alpha, otherModeLBits);
         return;
+    }
+    
+    int mode = CVarGetInteger(CVAR_ENHANCED_SHADING("Mode"), 0);
+    if (mode == 0) {
+        create_shading_palette(mtx, uls, ult, lrs, lrt, alpha, otherModeLBits);
+        return;
+    }
+    
+    b32 hemisphereEnabled = CVarGetInteger(CVAR_ENHANCED_SHADING("HemisphereLighting"), 1);
+    b32 rimEnabled = CVarGetInteger(CVAR_ENHANCED_SHADING("RimLighting"), 0);
+    b32 subsurfaceEnabled = CVarGetInteger(CVAR_ENHANCED_SHADING("SubsurfaceScattering"), 0);
+    b32 aoEnabled = CVarGetInteger(CVAR_ENHANCED_SHADING("AmbientOcclusion"), 0);
+    b32 smoothFalloffEnabled = CVarGetInteger(CVAR_ENHANCED_SHADING("SmoothFalloff"), 1);
+    b32 temporalEnabled = CVarGetInteger(CVAR_ENHANCED_SHADING("TemporalStability"), 1);
+    
+    if (hemisphereEnabled) {
+        profile->flags |= ENHANCED_SHADING_FLAG_HEMISPHERE;
+    } else {
+        profile->flags &= ~ENHANCED_SHADING_FLAG_HEMISPHERE;
+    }
+    
+    if (rimEnabled) {
+        profile->flags |= ENHANCED_SHADING_FLAG_RIM_LIGHTING;
+        profile->rimLightIntensity = CVarGetFloat(CVAR_ENHANCED_SHADING("RimIntensity"), 0.5f);
+    } else {
+        profile->flags &= ~ENHANCED_SHADING_FLAG_RIM_LIGHTING;
+    }
+    
+    if (subsurfaceEnabled) {
+        profile->flags |= ENHANCED_SHADING_FLAG_SUBSURFACE;
+        profile->subsurfaceStrength = CVarGetFloat(CVAR_ENHANCED_SHADING("SubsurfaceStrength"), 0.3f);
+    } else {
+        profile->flags &= ~ENHANCED_SHADING_FLAG_SUBSURFACE;
+    }
+    
+    if (aoEnabled) {
+        profile->flags |= ENHANCED_SHADING_FLAG_AMBIENT_OCCLUSION;
+        profile->aoIntensity = CVarGetFloat(CVAR_ENHANCED_SHADING("AOIntensity"), 0.5f);
+    } else {
+        profile->flags &= ~ENHANCED_SHADING_FLAG_AMBIENT_OCCLUSION;
+    }
+    
+    if (smoothFalloffEnabled) {
+        profile->flags |= ENHANCED_SHADING_FLAG_FALLOFF_SMOOTH;
+    } else {
+        profile->flags &= ~ENHANCED_SHADING_FLAG_FALLOFF_SMOOTH;
+    }
+    
+    if (temporalEnabled) {
+        profile->flags |= ENHANCED_SHADING_FLAG_TEMPORAL_STABILITY;
+    } else {
+        profile->flags &= ~ENHANCED_SHADING_FLAG_TEMPORAL_STABILITY;
     }
     
     f32 shadowDirX = 0.0f;

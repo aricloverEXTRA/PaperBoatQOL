@@ -3,7 +3,10 @@
 #include "port/patches/Patches.h"
 #include "port/save/SaveManager.h"
 #include "port/hooks/Events.h"
+#include "port/ui/cvar_prefixes.h"
 #include "sprite/sprite_enhanced_shading.h"
+
+extern void register_all_area_presets(void);
 
 EnhancedShadingProfile* gEnhancedShadingProfile;
 EnhancedShadingProfile* gAuxEnhancedShadingProfile;
@@ -30,6 +33,7 @@ void init_enhanced_shading_data(void) {
     
     if (!sEnhancedShadingInitialized) {
         clear_enhanced_shading_data();
+        register_all_area_presets();
         sEnhancedShadingInitialized = true;
     }
 }
@@ -168,6 +172,21 @@ void register_enhanced_shading_preset(const EnhancedShadingPreset* preset) {
 
 void enhanced_shading_load_area_defaults(const char* areaName, s32 mapID, s32 entryID) {
     init_enhanced_shading_data();
+    
+    b32 enhancedEnabled = CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1);
+    if (!enhancedEnabled) {
+        clear_enhanced_shading_data();
+        return;
+    }
+    
+    int mode = CVarGetInteger(CVAR_ENHANCED_SHADING("Mode"), 0);
+    if (mode == 0) {
+        clear_enhanced_shading_data();
+        return;
+    }
+    
+    b32 fallback = CVarGetInteger(CVAR_ENHANCED_SHADING("FallbackToVanilla"), 1);
+    enhanced_shading_set_fallback_to_vanilla(fallback);
     
     EnhancedShadingPreset* preset = find_enhanced_shading_preset_by_area(areaName, mapID);
     if (preset != NULL) {

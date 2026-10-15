@@ -139,6 +139,13 @@ void PaperboatMenu::AddMenuEnhancements() {
 
     AddWidget(path, "Enhanced Shading", WIDGET_SEPARATOR_TEXT);
 
+    AddWidget(path, "Enable Enhanced Shading", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCED_SHADING("Enabled"))
+        .Options(CheckboxOptions().DefaultValue(true).Tooltip(
+            "Enables the enhanced shading system with area-based lighting presets, "
+            "rim lighting, hemisphere lighting, and more."
+        ));
+
     static const std::unordered_map<int32_t, const char*> enhancedShadingModeOptions = {
         { 0, "Vanilla (Original)" },
         { 1, "Area-Based Presets (Color Splash Style)" },
@@ -147,6 +154,9 @@ void PaperboatMenu::AddMenuEnhancements() {
 
     AddWidget(path, "Enhanced Shading Mode", WIDGET_CVAR_COMBOBOX)
         .CVar(CVAR_ENHANCED_SHADING("Mode"))
+        .PreFunc([](WidgetInfo& info) {
+            info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1);
+        })
         .Options(
             ComboboxOptions()
                 .Tooltip(
@@ -159,6 +169,9 @@ void PaperboatMenu::AddMenuEnhancements() {
 
     AddWidget(path, "Fallback to Vanilla for Unknown Areas", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCED_SHADING("FallbackToVanilla"))
+        .PreFunc([](WidgetInfo& info) {
+            info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1);
+        })
         .Options(
             CheckboxOptions().DefaultValue(true).Tooltip(
                 "When enabled, areas without custom lighting presets will use vanilla lighting. "
@@ -168,6 +181,9 @@ void PaperboatMenu::AddMenuEnhancements() {
 
     AddWidget(path, "Hemisphere Lighting", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCED_SHADING("HemisphereLighting"))
+        .PreFunc([](WidgetInfo& info) {
+            info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1);
+        })
         .Options(
             CheckboxOptions().DefaultValue(true).Tooltip(
                 "Enables hemisphere lighting (sky/ground colors) for more natural outdoor lighting. "
@@ -177,6 +193,9 @@ void PaperboatMenu::AddMenuEnhancements() {
 
     AddWidget(path, "Rim Lighting", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCED_SHADING("RimLighting"))
+        .PreFunc([](WidgetInfo& info) {
+            info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1);
+        })
         .Options(
             CheckboxOptions().DefaultValue(false).Tooltip(
                 "Adds rim/fresnel lighting on character edges for better silhouette definition. "
@@ -186,6 +205,9 @@ void PaperboatMenu::AddMenuEnhancements() {
 
     AddWidget(path, "Subsurface Scattering", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCED_SHADING("SubsurfaceScattering"))
+        .PreFunc([](WidgetInfo& info) {
+            info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1);
+        })
         .Options(
             CheckboxOptions().DefaultValue(false).Tooltip(
                 "Simulates light passing through thin materials (ears, paper edges). "
@@ -195,6 +217,9 @@ void PaperboatMenu::AddMenuEnhancements() {
 
     AddWidget(path, "Ambient Occlusion", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCED_SHADING("AmbientOcclusion"))
+        .PreFunc([](WidgetInfo& info) {
+            info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1);
+        })
         .Options(
             CheckboxOptions().DefaultValue(false).Tooltip(
                 "Darkens crevices and contact points for better depth perception. "
@@ -204,6 +229,9 @@ void PaperboatMenu::AddMenuEnhancements() {
 
     AddWidget(path, "Smooth Falloff", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCED_SHADING("SmoothFalloff"))
+        .PreFunc([](WidgetInfo& info) {
+            info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1);
+        })
         .Options(
             CheckboxOptions().DefaultValue(true).Tooltip(
                 "Uses smoother quadratic falloff for point/spot lights instead of linear. "
@@ -213,6 +241,9 @@ void PaperboatMenu::AddMenuEnhancements() {
 
     AddWidget(path, "Temporal Stability", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCED_SHADING("TemporalStability"))
+        .PreFunc([](WidgetInfo& info) {
+            info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1);
+        })
         .Options(
             CheckboxOptions().DefaultValue(true).Tooltip(
                 "Blends lighting between frames to reduce flickering. "
@@ -223,7 +254,8 @@ void PaperboatMenu::AddMenuEnhancements() {
     AddWidget(path, "Rim Light Intensity", WIDGET_CVAR_SLIDER_FLOAT)
         .CVar(CVAR_ENHANCED_SHADING("RimIntensity"))
         .PreFunc([](WidgetInfo& info) {
-            info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("RimLighting"), 0);
+            info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1) 
+                || !CVarGetInteger(CVAR_ENHANCED_SHADING("RimLighting"), 0);
         })
         .Options(
             FloatSliderOptions().Min(0.0f).Max(2.0f).DefaultValue(0.5f).Step(0.05f).Format("%.2f").Tooltip(
@@ -234,7 +266,8 @@ void PaperboatMenu::AddMenuEnhancements() {
     AddWidget(path, "Subsurface Strength", WIDGET_CVAR_SLIDER_FLOAT)
         .CVar(CVAR_ENHANCED_SHADING("SubsurfaceStrength"))
         .PreFunc([](WidgetInfo& info) {
-            info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("SubsurfaceScattering"), 0);
+            info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1)
+                || !CVarGetInteger(CVAR_ENHANCED_SHADING("SubsurfaceScattering"), 0);
         })
         .Options(
             FloatSliderOptions().Min(0.0f).Max(1.0f).DefaultValue(0.3f).Step(0.05f).Format("%.2f").Tooltip(
@@ -245,7 +278,8 @@ void PaperboatMenu::AddMenuEnhancements() {
     AddWidget(path, "AO Intensity", WIDGET_CVAR_SLIDER_FLOAT)
         .CVar(CVAR_ENHANCED_SHADING("AOIntensity"))
         .PreFunc([](WidgetInfo& info) {
-            info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("AmbientOcclusion"), 0);
+            info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1)
+                || !CVarGetInteger(CVAR_ENHANCED_SHADING("AmbientOcclusion"), 0);
         })
         .Options(
             FloatSliderOptions().Min(0.0f).Max(1.0f).DefaultValue(0.5f).Step(0.05f).Format("%.2f").Tooltip(
