@@ -1,0 +1,379 @@
+#include "common.h"
+#include "sprite.h"
+#include "nu/nusys.h"
+#include "ld_addrs.h"
+#include "sprite/player.h"
+
+#include "port/sprite/SpriteLoader.h"
+#include "port/Engine.h"
+
+#ifdef SHIFT
+#define SPRITE_ROM_START (u32) sprites_ROM_START + 0x10
+#elif VERSION_US || VERSION_IQUE
+#define SPRITE_ROM_START 0x1943000 + 0x10
+#elif VERSION_PAL
+#define SPRITE_ROM_START 0x1DF0000 + 0x10
+#elif VERSION_JP
+#define SPRITE_ROM_START 0x1A40000 + 0x10
+#endif
+
+extern b32 SpriteUseGeneralHeap;
+extern HeapNode heap_generalHead;
+extern HeapNode heap_spriteHead;
+
+BSS s32 spr_asset_entry[2];
+BSS s32 PlayerRasterLoadDescBuffer[101]; //NOTE: maximum rasters supported for a single player sprite is 101
+BSS s32 PlayerRasterLoadDescNumLoaded;
+BSS s32 PlayerRasterLoadDescBeginSpriteIndex[SPR_Peach3]; //TODO size linked to number of player sprites
+BSS s32 PlayerRasterLoadDesc[0x2E0]; // correct length?
+
+BSS PlayerRastersHeader PlayerRasterHeader;
+BSS s32 PlayerSpriteRasterSets[SPR_Peach3 + 1]; //TODO size linked to number of player sprites
+BSS s32 PlayerRasterCacheSize;
+BSS s32 PlayerRasterMaxSize;
+BSS s32 SpriteDataHeader[3];
+BSS PlayerSpriteCacheEntry PlayerRasterCache[18];
+
+#define ALIGN4(v) (((uintptr_t)(v) >> 2) << 2)
+#define SPR_SWIZZLE(base,offset) ((void*)((intptr_t)(offset) + (intptr_t)(base)))
+
+void spr_swizzle_anim_offsets(s32 arg0, s32 base, void* spriteData) {
+    SpriteAnimComponent*** animList;
+    SpriteAnimComponent** compList;
+    SpriteAnimComponent* comp;
+
+    // required to match, spriteData->animList would be nicer
+    animList = (SpriteAnimComponent***) spriteData;
+    animList += 4;
+
+    while (true) {
+        if (*animList == PTR_LIST_END) {
+            break;
+        }
+        compList = (SpriteAnimComponent**) ((intptr_t)*animList - ALIGN4(base));
+        compList = SPR_SWIZZLE(ALIGN4(spriteData), compList);
+        *animList = compList;
+        while (true) {
+            if (*compList == PTR_LIST_END) {
+                break;
+            }
+            *compList = comp = SPR_SWIZZLE(ALIGN4(spriteData), (intptr_t)*compList - ALIGN4(base));
+            comp->cmdList = SPR_SWIZZLE(ALIGN4(spriteData), (intptr_t)comp->cmdList - ALIGN4(base));
+            compList++;
+        }
+        animList++;
+    }
+}
+
+SpriteAnimData* spr_load_sprite(s32 idx, s32 isPlayerSprite, s32 useTailAlloc) {
+    SpriteAnimData* animData;
+    s32 i;
+    s32 count;
+
+    // Load sprite from OTR (SpriteLoader converts N64 format to native
+    // format with proper pointer sizes, so we skip swizzle entirely)
+    if (isPlayerSprite) {
+        size_t spriteSize = Sprite_GetPlayerSize(idx);
+        ASSERT_MSG(spriteSize > 0, "player sprite not found in assets");
+
+        if (useTailAlloc) {
+            animData = _heap_malloc_tail(&heap_spriteHead, spriteSize);
+        } else {
+            animData = _heap_malloc(&heap_spriteHead, spriteSize);
+        }
+        ASSERT_MSG(animData, "out of sprite memory");
+
+        Sprite_LoadPlayer(idx, animData, spriteSize);
+
+        // Load player raster descriptors
+        PlayerRasterLoadDescBeginSpriteIndex[idx] = PlayerRasterLoadDescNumLoaded;
+        count = PlayerSpriteRasterSets[idx + 1] - PlayerSpriteRasterSets[idx];
+        Sprite_GetPlayerRasterLoadDescriptors(idx, PlayerSpriteRasterSets[idx],
+            PlayerRasterLoadDescBuffer, count);
+        for (i = 0; i < count; i++) {
+            PlayerRasterLoadDesc[PlayerRasterLoadDescNumLoaded++] = PlayerRasterLoadDescBuffer[i];
+        }
+    } else {
+        size_t spriteSize = Sprite_GetNPCSize(idx);
+        ASSERT_MSG(spriteSize > 0, "NPC sprite not found in assets");
+
+        if (useTailAlloc) {
+            animData = _heap_malloc_tail(&heap_spriteHead, spriteSize);
+        } else {
+            animData = _heap_malloc(&heap_spriteHead, spriteSize);
+        }
+        ASSERT_MSG(animData, "out of sprite memory");
+
+        Sprite_LoadNPC(idx, animData, spriteSize);
+    }
+
+    return animData;
+}
+
+void spr_init_player_raster_cache(s32 cacheSize, s32 maxRasterSize) {
+    void* raster;
+    s32 i;
+    s32 tempHeader[3];
+
+    // Load sprite data header from assets
+    Sprite_GetDataHeader(tempHeader);
+    SpriteDataHeader[0] = tempHeader[0];
+    SpriteDataHeader[1] = tempHeader[1];
+    SpriteDataHeader[2] = tempHeader[2];
+
+    PlayerRasterCacheSize = cacheSize;
+    PlayerRasterMaxSize = maxRasterSize;
+    SpriteDataHeader[0] += SPRITE_ROM_START;
+    SpriteDataHeader[1] += SPRITE_ROM_START;
+    SpriteDataHeader[2] += SPRITE_ROM_START;
+    raster = _heap_malloc(&heap_spriteHead, maxRasterSize * cacheSize);
+
+    for (i = 0; i < ARRAY_COUNT(PlayerRasterCache); i++) {
+        PlayerRasterCache[i].raster = raster;
+        raster += PlayerRasterMaxSize;
+        PlayerRasterCache[i].lazyDeleteTime = 0;
+        PlayerRasterCache[i].rasterIndex = 0;
+        PlayerRasterCache[i].spriteIndex = 0xFF;
+    }
+
+    for (i = 0; i < ARRAY_COUNT(PlayerRasterLoadDescBeginSpriteIndex); i++)    {
+        PlayerRasterLoadDescBeginSpriteIndex[i] = 0;
+    }
+    PlayerRasterLoadDescNumLoaded = 0;
+
+    // Load player raster header from assets
+    Sprite_GetPlayerRasterHeader(tempHeader);
+    PlayerRasterHeader.indexRanges = tempHeader[0];
+    PlayerRasterHeader.loadDescriptors = tempHeader[1];
+    PlayerRasterHeader.imageData = tempHeader[2];
+
+    // Load player sprite raster sets from assets
+    Sprite_GetPlayerRasterSets(PlayerSpriteRasterSets, ARRAY_COUNT(PlayerSpriteRasterSets));
+}
+
+IMG_PTR spr_get_player_raster(s32 rasterIndex, s32 playerSpriteID) {
+    PlayerSpriteCacheEntry* cacheEntry;
+    u32 playerRasterInfo;
+    s32 idx = -1;
+    s32 i;
+
+    // Path-addressed rasters resolve at draw time and don't need a cache slot
+    IMG_PTR rasterPath = Sprite_GetPlayerRasterPath(playerSpriteID, rasterIndex);
+    if (rasterPath != nullptr) {
+        return rasterPath;
+    }
+
+    for (i = 0; i < PlayerRasterCacheSize; i++) {
+        if (PlayerRasterCache[i].lazyDeleteTime != 0) {
+            if (PlayerRasterCache[i].rasterIndex == rasterIndex && PlayerRasterCache[i].spriteIndex == playerSpriteID) {
+                PlayerRasterCache[i].lazyDeleteTime = 2;
+                return PlayerRasterCache[i].raster;
+            }
+        } else if (idx == -1) {
+            idx = i;
+        }
+    }
+
+    if (idx == -1) {
+        return nullptr;
+    }
+
+    cacheEntry = &PlayerRasterCache[idx];
+    cacheEntry->rasterIndex = rasterIndex;
+    cacheEntry->spriteIndex = playerSpriteID;
+    cacheEntry->lazyDeleteTime = 2;
+
+    // each player raster load descriptor has image size (in bytes) and relative offset packed into one word
+    // upper three nibbles give size / 16, lower 5 give offset
+    playerRasterInfo = PlayerRasterLoadDesc[PlayerRasterLoadDescBeginSpriteIndex[playerSpriteID] + rasterIndex];
+
+    s32 rawOffset = playerRasterInfo & 0xFFFFF;
+    s32 adjustedOffset = rawOffset - PlayerRasterHeader.imageData;
+    s32 rasterSize = (playerRasterInfo >> 0x10) & 0xFFF0;
+
+    s32 loadResult = Sprite_LoadPlayerRaster(adjustedOffset, cacheEntry->raster, rasterSize);
+    if (loadResult == 0) {
+        cacheEntry->lazyDeleteTime = 0;
+        return nullptr;
+    }
+
+    // TODO: Re-visit this with TMEM LUS changes.
+    // Invalidate the GPU texture cache for this buffer address.
+    // PlayerRasterCache reuses fixed buffer addresses for different raster data —
+    // without invalidation the GPU would serve stale textures.
+    GameEngine_InvalidateTextureCache(cacheEntry->raster);
+
+    return cacheEntry->raster;
+}
+
+void spr_update_player_raster_cache(void) {
+    s32 i;
+
+    func_8013A4D0();
+
+    for (i = 0; i < PlayerRasterCacheSize; i++) {
+        if (PlayerRasterCache[i].lazyDeleteTime != 0) {
+            PlayerRasterCache[i].lazyDeleteTime--;
+        }
+    }
+}
+
+void spr_load_npc_extra_anims(SpriteAnimData* header, u32* extraAnimList) {
+    u8* src;
+    s32 imgID;
+    s32 rasterSize;
+    s32 remaining;
+    u16 animCmd;
+    u16* cmdList;
+    u32 extraAnimID;
+    u8* dataPos;
+    void* copyEnd;
+    SpriteAnimComponent* comp;
+    SpriteAnimComponent** compList;
+    void* writePos;
+    SpriteRasterCacheEntry** rasterList;
+    SpriteRasterCacheEntry* raster;
+    PAL_PTR* oldPalList;
+    // one extra required for 'done' sentinel
+    s32 sawRaster[100 + 1];
+    s32 i;
+
+    for (i = 0; i < ARRAY_COUNT(sawRaster) - 1; i++) {
+        sawRaster[i] = false;
+    }
+
+    while ((extraAnimID = *extraAnimList++) != -1) {
+        compList = header->animListStart[extraAnimID & 0xFF];
+        while ((comp = *compList++) != PTR_LIST_END) {
+            cmdList = comp->cmdList;
+            remaining = (s16) comp->cmdListSize / 2;
+            while (remaining > 0) {
+                animCmd = *cmdList++;
+                remaining--;
+                switch (animCmd & 0xF000) {
+                    case 0x1000:
+                        i = animCmd; // required to match
+                        imgID = i & 0xFF;
+                        if (imgID < ARRAY_COUNT(sawRaster) - 1) {
+                            sawRaster[imgID] = true;
+                        }
+                        break;
+                    case 0x3000:
+                        cmdList++;
+                        remaining--;
+                        // fallthrough
+                    case 0x4000:
+                        cmdList++;
+                        remaining--;
+                        // fallthrough
+                    case 0x7000:
+                    case 0x5000:
+                        cmdList++;
+                        remaining--;
+                        // fallthrough
+                    case 0x0000:
+                    case 0x2000:
+                    case 0x6000:
+                    case 0x8000:
+                        break;
+                }
+            }
+        }
+    }
+
+    rasterList = header->rastersOffset;
+    raster = *rasterList;
+    dataPos = raster->image;
+
+    for (i = 0; i < ARRAY_COUNT(sawRaster) - 1; i++) {
+        if ((raster = *rasterList) == PTR_LIST_END) {
+            break;
+        }
+        if (sawRaster[i]) {
+            src = raster->image;
+            rasterSize = (raster->width * raster->height) / 2;
+            copyEnd = &dataPos[rasterSize];
+            rasterSize += 8;
+            if (dataPos != src) {
+                raster->image = dataPos;
+                bcopy(src, dataPos, rasterSize);
+            }
+            *rasterList = copyEnd;
+            dataPos += rasterSize;
+        }
+        rasterList++;
+    }
+    // sentinel value to mark end of valid data
+    sawRaster[i] = true;
+
+    writePos = dataPos;
+
+    // copy raster list
+    rasterList = header->rastersOffset;
+    header->rastersOffset = writePos;
+
+    for (i = 0; i < ARRAY_COUNT(sawRaster) - 1; i++) {
+        raster = *rasterList++;
+        if (sawRaster[i]) {
+            *(SpriteRasterCacheEntry**) writePos = raster;
+        } else {
+            *(SpriteRasterCacheEntry**) writePos = (SpriteRasterCacheEntry*) copyEnd;
+        }
+        writePos = (u8*)writePos + sizeof(SpriteRasterCacheEntry**);
+        if (raster == PTR_LIST_END) {
+            break;
+        }
+    }
+
+    // copy palette list
+    oldPalList = header->palettesOffset;
+    header->palettesOffset = writePos;
+
+    for (i = 0; i < ARRAY_COUNT(sawRaster) - 1; i++) {
+        raster = (SpriteRasterCacheEntry*)*oldPalList++; // required to match
+        *(u16**)writePos = (u16*)raster;
+        writePos = (u8*)writePos + sizeof(u16*);
+        if (raster == PTR_LIST_END) {
+            break;
+        }
+    }
+
+    _heap_realloc(&heap_spriteHead, header, (size_t)((u8*)writePos - (u8*)header));
+}
+
+SpriteComponent** spr_allocate_components(s32 count) {
+    size_t listSize;
+    SpriteComponent** listStart;
+    SpriteComponent* component;
+    SpriteComponent** listPos;
+    size_t totalSize;
+    s32 i;
+
+    // data will contain a -1 terminated list, followed by the SpriteComponents
+    // corresponding to that list
+    // Use sizeof(SpriteComponent*) instead of hardcoded 4 for 64-bit compatibility
+    listSize = (count + 1) * sizeof(SpriteComponent*);
+    totalSize = (count * sizeof(SpriteComponent)) + listSize;
+
+    if (SpriteUseGeneralHeap) {
+        listStart = _heap_malloc(&heap_generalHead, totalSize);
+        listPos = listStart;
+        component = (SpriteComponent*) listPos;
+    } else {
+        listStart = _heap_malloc(&heap_spriteHead, totalSize);
+        listPos = listStart;
+        component = (SpriteComponent*) listPos;
+    }
+
+    // Use uintptr_t instead of s32 for 64-bit pointer arithmetic
+    component = (SpriteComponent*)((uintptr_t)(component) + listSize);
+
+    // fill list values
+    for (i = 0; i < count; i++) {
+        *listPos++ = component;
+        component++;
+    }
+    *listPos = PTR_LIST_END;
+
+    return listStart;
+}

@@ -1,0 +1,10 @@
+ansiwrap
+cxxfilt
+python-Levenshtein
+stringcase
+watchdog
+gitpython
+colour
+ahocorasick-rs
+types-tqdm
+types-colorama

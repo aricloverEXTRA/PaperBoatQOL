@@ -1,0 +1,90 @@
+set(CPACK_PACKAGE_NAME "${PROJECT_NAME}"
+    CACHE STRING "The resulting package name"
+)
+
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Paper Mario 64 PC port"
+    CACHE STRING "Package description for the package metadata"
+)
+set(CPACK_PACKAGE_VENDOR "PaperBoat")
+
+set(CPACK_VERBATIM_VARIABLES YES)
+
+set(CPACK_PACKAGE_INSTALL_DIRECTORY ${CPACK_PACKAGE_NAME})
+set(CPACK_OUTPUT_FILE_PREFIX "${CMAKE_SOURCE_DIR}/_packages")
+
+set(CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
+set(CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
+set(CPACK_PACKAGE_VERSION_PATCH ${PROJECT_VERSION_PATCH})
+set(CPACK_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}")
+
+set(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/README.md")
+
+if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    set(CPACK_EXTERNAL_ENABLE_STAGING YES)
+    set(CPACK_EXTERNAL_PACKAGE_SCRIPT "${PROJECT_BINARY_DIR}/appimage-generate.cmake")
+    if (CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64|arm64")
+        set(CPACK_APPIMAGE_RUNTIME_ARCH "aarch64")
+        set(CPACK_APPIMAGE_RUNTIME_SHA256 "00cbdfcf917cc6c0ff6d3347d59e0ca1f7f45a6df1a428a0d6d8a78664d87444")
+    else()
+        set(CPACK_APPIMAGE_RUNTIME_ARCH "x86_64")
+        set(CPACK_APPIMAGE_RUNTIME_SHA256 "2fca8b443c92510f1483a883f60061ad09b46b978b2631c807cd873a47ec260d")
+    endif()
+    set(CPACK_APPIMAGE_RUNTIME_URL
+        "https://github.com/AppImage/type2-runtime/releases/download/20251108/runtime-${CPACK_APPIMAGE_RUNTIME_ARCH}")
+
+    file(GENERATE
+      OUTPUT "${PROJECT_BINARY_DIR}/appimage-generate.cmake"
+      CONTENT [[
+find_program(LINUXDEPLOY_EXECUTABLE
+  NAMES linuxdeploy linuxdeploy-x86_64.AppImage
+  PATHS ${CPACK_PACKAGE_DIRECTORY}/linuxdeploy)
+
+if (NOT LINUXDEPLOY_EXECUTABLE)
+  message(STATUS "Downloading linuxdeploy")
+  set(LINUXDEPLOY_EXECUTABLE ${CPACK_PACKAGE_DIRECTORY}/linuxdeploy/linuxdeploy)
+  file(DOWNLOAD
+      https://github.com/linuxdeploy/linuxdeploy/releases/download/1-alpha-20240109-1/linuxdeploy-x86_64.AppImage
+      ${LINUXDEPLOY_EXECUTABLE}
+      INACTIVITY_TIMEOUT 10
+      LOG ${CPACK_PACKAGE_DIRECTORY}/linuxdeploy/download.log
+      STATUS LINUXDEPLOY_DOWNLOAD)
+  execute_process(COMMAND chmod +x ${LINUXDEPLOY_EXECUTABLE} COMMAND_ECHO STDOUT)
+endif()
+
+set(APPIMAGE_RUNTIME ${CPACK_PACKAGE_DIRECTORY}/linuxdeploy/runtime-${CPACK_APPIMAGE_RUNTIME_ARCH})
+
+if (NOT EXISTS ${APPIMAGE_RUNTIME})
+  message(STATUS "Downloading AppImage runtime")
+  file(DOWNLOAD
+      ${CPACK_APPIMAGE_RUNTIME_URL}
+      ${APPIMAGE_RUNTIME}
+      INACTIVITY_TIMEOUT 10
+      EXPECTED_HASH SHA256=${CPACK_APPIMAGE_RUNTIME_SHA256}
+      LOG ${CPACK_PACKAGE_DIRECTORY}/linuxdeploy/runtime-download.log
+      STATUS APPIMAGE_RUNTIME_DOWNLOAD)
+endif()
+
+execute_process(
+  COMMAND
+    ${CMAKE_COMMAND} -E env
+      OUTPUT=${CPACK_PACKAGE_FILE_NAME}.AppImage
+      VERSION=$<IF:$<BOOL:${CPACK_PACKAGE_VERSION}>,${CPACK_PACKAGE_VERSION},0.1.0>
+      LDAI_RUNTIME_FILE=${APPIMAGE_RUNTIME}
+      NO_STRIP=true
+    ${LINUXDEPLOY_EXECUTABLE}
+    --appimage-extract-and-run
+    --appdir=${CPACK_TEMPORARY_DIRECTORY}
+    --executable=$<TARGET_FILE:Paperboat>
+    $<$<BOOL:$<TARGET_PROPERTY:Paperboat,APPIMAGE_DESKTOP_FILE>>:--desktop-file=$<TARGET_PROPERTY:Paperboat,APPIMAGE_DESKTOP_FILE>>
+    $<$<BOOL:$<TARGET_PROPERTY:Paperboat,APPIMAGE_ICON_FILE>>:--icon-file=$<TARGET_PROPERTY:Paperboat,APPIMAGE_ICON_FILE>>
+    --output=appimage
+    --verbosity=2
+  RESULT_VARIABLE LINUXDEPLOY_RESULT)
+
+if (NOT LINUXDEPLOY_RESULT EQUAL 0)
+  message(FATAL_ERROR "linuxdeploy failed with ${LINUXDEPLOY_RESULT}")
+endif()
+]])
+endif()
+
+include(CPack)

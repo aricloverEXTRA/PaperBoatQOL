@@ -1,0 +1,980 @@
+#include "common.h"
+#include "hud_element.h"
+#include "dx/config.h"
+#include "dx/debug_menu.h"
+
+s32 UniqueScriptCounter = 1;
+s32 IsUpdatingScripts = false;
+f32 GlobalTimeRate = 1.0f;
+
+// script_list
+BSS u32* gMapFlags;
+BSS Bytecode* gMapVars;
+BSS s32 gNumScripts;
+BSS ScriptList gWorldScriptList;
+BSS ScriptList gBattleScriptList;
+BSS ScriptList* gCurrentScriptListPtr;
+BSS s32 gScriptIndexList[MAX_SCRIPTS];
+BSS s32 gScriptIdList[MAX_SCRIPTS];
+BSS s32 gScriptListCount;
+
+// sprite shading — SetSpriteShading copies OTR data here for parsing
+BSS u8 gSpriteShadingData[0x100];
+
+// evt
+BSS char evtDebugPrintBuffer[0x100];
+
+// map_api
+BSS struct LavaReset* gLavaResetList;
+BSS s32 LastSafeFloor;
+
+// model_api
+BSS AnimatedModelList gBattleMeshAnimationList;
+BSS AnimatedModelList gWorldMeshAnimationList;
+BSS AnimatedModelList* gCurrentMeshAnimationListPtr;
+
+// npc_api
+BSS s32 wExtraPartnerID;
+BSS s32 wExtraPartnerNpcID;
+
+// msg_api
+BSS s32 ShowMessageScreenOffsetX;
+BSS s32 ShowMessageScreenOffsetY;
+BSS MessagePrintState* gCurrentPrintContext;
+BSS MessagePrintState* D_802DB268;
+BSS s32 D_802DB264;
+
+// player_api
+BSS Npc playerNpcData;
+BSS u16 PlayerImgFXFlags;
+BSS VirtualEntityList bBattleVirtualEntityList;
+BSS VirtualEntityList wWorldVirtualEntityList;
+BSS VirtualEntityList* gCurrentVirtualEntityListPtr;
+
+// audio_api
+BSS MusicEvent* MusicEventList;
+BSS Evt* RunningMusicEvents[10];
+BSS s32 RunningMusicEventIDs[10];
+
+// item_api
+BSS PopupMenu gItemChoicePopupMenu;
+
+// why is this at the end? com section vs bss?
+BSS u32 gWorldMapFlags[MAX_MAPFLAGS];
+BSS u32 gBattleMapFlags[MAX_MAPFLAGS];
+
+BSS Bytecode gWorldMapVars[MAX_MAPVARS];
+BSS Bytecode gBattleMapVars[MAX_MAPVARS];
+
+BSS PushBlockGrid* wPushBlockGrids[8];
+
+BSS s32 DoorModelsSwingCW[3];
+BSS s32 DoorModelsSwingCCW[3];
+
+s32 evt_execute_next_command(Evt* script);
+
+void sort_scripts(void) {
+    s32 temp_a0;
+    s32 temp_a1;
+    s32 tempID;
+    Evt* curScript;
+    ScriptList** currentScriptListPtr;
+    s32 i;
+    s32 j;
+    s32 x;
+    s32 numValidScripts = 0;
+    s32* scriptIndexList = gScriptIndexList;
+    s32* scriptIdList = gScriptIdList;
+
+    for (i = 0; i < MAX_SCRIPTS; i++) {
+        curScript = (*gCurrentScriptListPtr)[i];
+        if (curScript != nullptr) {
+            if (curScript->stateFlags != 0) {
+                scriptIndexList[numValidScripts] = i;
+                scriptIdList[numValidScripts] = curScript->id;
+                numValidScripts++;
+            }
+        }
+    }
+
+    gScriptListCount = numValidScripts;
+    for (i = 0; i < (x = numValidScripts - 1); i++) {
+        scriptIndexList = gScriptIndexList;
+        currentScriptListPtr = &gCurrentScriptListPtr;
+        scriptIdList = gScriptIdList;
+        for (j = i + 1; j < numValidScripts; j++) {
+            temp_a1 = scriptIndexList[i];
+            temp_a0 = scriptIndexList[j];
+            x = i;
+            if ((**currentScriptListPtr)[temp_a1]->priority > (**currentScriptListPtr)[temp_a0]->priority) {
+                scriptIndexList[i] = temp_a0;
+                scriptIndexList[j] = temp_a1;
+                tempID = scriptIdList[i];
+                scriptIdList[i] = scriptIdList[j];
+                scriptIdList[j] = tempID;
+            }
+        }
+    }
+}
+
+void find_script_labels(Evt* script) {
+    Bytecode* curLine;
+    s32 type;
+    s32 label;
+    s32 numArgs;
+    s32 i;
+    s32 j;
+
+    for (i = 0; i < ARRAY_COUNT(script->labelIndices); i++) {
+        script->labelIndices[i] = -1;
+        script->labelPositions[i] = 0;
+    }
+
+    j = 0;
+    curLine = script->ptrNextLine;
+    while (j < ARRAY_COUNT(script->labelIndices)) {
+        type = *curLine++;
+        numArgs = *curLine++;
+        label = *curLine;
+        curLine += numArgs;
+
+        if (type == 1) {
+            return;
+        }
+
+        if (type == 3) {
+            script->labelIndices[j] = label;
+            script->labelPositions[j] = curLine;
+            j++;
+        }
+    }
+    PANIC();
+}
+
+void clear_script_list(void) {
+    s32 i;
+
+    if (gGameStatusPtr->context == CONTEXT_WORLD) {
+        gCurrentScriptListPtr = &gWorldScriptList;
+        gMapVars = gWorldMapVars;
+        gMapFlags = gWorldMapFlags;
+    } else {
+        gCurrentScriptListPtr = &gBattleScriptList;
+        gMapVars = gBattleMapVars;
+        gMapFlags = gBattleMapFlags;
+    }
+
+    for (i = 0; i < MAX_SCRIPTS; i++) {
+        (*gCurrentScriptListPtr)[i] = nullptr;
+    }
+
+    gNumScripts = 0;
+    gScriptListCount = 0;
+    IsUpdatingScripts = false;
+
+    for (i = 0; i < MAX_MAPVARS; i++) {
+        gMapVars[i] = 0;
+    }
+
+    for (i = 0; i < MAX_MAPFLAGS; i++) {
+        gMapFlags[i] = 0;
+    }
+
+    #if DX_DEBUG_MENU
+    dx_debug_evt_reset();
+    #endif
+
+    clear_virtual_entity_list();
+    reset_model_animators();
+}
+
+void init_script_list(void) {
+    if (gGameStatusPtr->context == CONTEXT_WORLD) {
+        gCurrentScriptListPtr = &gWorldScriptList;
+        gMapVars = gWorldMapVars;
+        gMapFlags = gWorldMapFlags;
+    } else {
+        gCurrentScriptListPtr = &gBattleScriptList;
+        gMapVars = gBattleMapVars;
+        gMapFlags = gBattleMapFlags;
+    }
+
+    gNumScripts = 0;
+    IsUpdatingScripts = false;
+
+    init_virtual_entity_list();
+    init_model_animators();
+}
+
+// enforces current gTimeFreezeMode on newly created script
+void suspend_frozen_scripts(Evt* script) {
+    switch (gTimeFreezeMode) {
+        default:
+        case TIME_FREEZE_NONE:
+        case TIME_FREEZE_EXIT:
+            return;
+        case TIME_FREEZE_PARTIAL:
+            suspend_all_group(EVT_GROUP_FLAG_INTERACT);
+            return;
+        case TIME_FREEZE_FULL:
+        case TIME_FREEZE_POPUP_MENU:
+            suspend_all_group(EVT_GROUP_FLAG_MENUS);
+            return;
+    }
+}
+
+Evt* start_script(EvtScript* source, s32 priority, s32 flags) {
+    Evt* newScript;
+    s32 scriptListCount;
+    s32 curScriptIndex;
+    s32 i;
+
+    for (i = 0; i < MAX_SCRIPTS; i++) {
+        if ((*gCurrentScriptListPtr)[i] == nullptr) {
+            break;
+        }
+    }
+
+    ASSERT(i < MAX_SCRIPTS);
+    curScriptIndex = i;
+
+    (*gCurrentScriptListPtr)[curScriptIndex] = newScript = heap_malloc(sizeof(*newScript));
+    gNumScripts++;
+    ASSERT(newScript != nullptr);
+
+    newScript->stateFlags = flags | EVT_FLAG_ACTIVE;
+    newScript->curOpcode = EVT_OP_INTERNAL_FETCH;
+    newScript->priority = priority;
+    newScript->id = UniqueScriptCounter++;
+    newScript->ptrNextLine = (Bytecode*)source;
+    newScript->ptrFirstLine = (Bytecode*)source;
+    newScript->ptrCurLine = (Bytecode*)source;
+    newScript->userData = nullptr;
+    newScript->blockingParent = nullptr;
+    newScript->childScript = nullptr;
+    newScript->parentScript = nullptr;
+    newScript->owner1.enemy = (struct Enemy*)(intptr_t)-1;
+    newScript->owner2.npc = (struct Npc*)(intptr_t)-1;
+    newScript->loopDepth = -1;
+    newScript->switchDepth = -1;
+    newScript->groupFlags = EVT_GROUP_NOT_BATTLE;
+    newScript->buffer = 0;
+    newScript->array = 0;
+    newScript->flagArray = 0;
+    newScript->ptrSavedPos = nullptr;
+    newScript->frameCounter = 0.0f;
+    newScript->unk_158 = 0;
+    newScript->timeScale = GlobalTimeRate;
+    newScript->debugPaused = false;
+
+    scriptListCount = 0;
+
+    for (i = 0; i < ARRAY_COUNT(newScript->varTable); i++) {
+        newScript->varTable[i] = 0;
+    }
+
+    for (i = 0; i < ARRAY_COUNT(newScript->varFlags); i++) {
+        newScript->varFlags[i] = 0;
+    }
+
+    find_script_labels(newScript);
+
+    if (IsUpdatingScripts && (newScript->stateFlags & EVT_FLAG_RUN_IMMEDIATELY)) {
+        scriptListCount = gScriptListCount++;
+        gScriptIndexList[scriptListCount] = curScriptIndex;
+        gScriptIdList[scriptListCount] = newScript->id;
+    }
+
+    suspend_frozen_scripts(newScript);
+
+    if (UniqueScriptCounter == 0) {
+        UniqueScriptCounter = 1;
+    }
+
+    return newScript;
+}
+
+Evt* start_script_in_group(EvtScript* source, u8 priority, u8 flags, u8 groupFlags) {
+    Evt* newScript;
+    s32 scriptListCount;
+    s32 curScriptIndex;
+    s32 i;
+
+    for (i = 0; i < MAX_SCRIPTS; i++) {
+        if ((*gCurrentScriptListPtr)[i] == nullptr) {
+            break;
+        }
+    }
+
+    ASSERT(i < MAX_SCRIPTS);
+    curScriptIndex = i;
+
+    (*gCurrentScriptListPtr)[curScriptIndex] = newScript = heap_malloc(sizeof(*newScript));
+    gNumScripts++;
+    ASSERT(newScript != nullptr);
+
+    newScript->stateFlags = flags | EVT_FLAG_ACTIVE;
+    newScript->curOpcode = EVT_OP_INTERNAL_FETCH;
+    newScript->priority = priority;
+    newScript->id = UniqueScriptCounter++;
+    newScript->ptrNextLine = (Bytecode*)source;
+    newScript->ptrFirstLine = (Bytecode*)source;
+    newScript->ptrCurLine = (Bytecode*)source;
+    newScript->userData = nullptr;
+    newScript->blockingParent = nullptr;
+    newScript->childScript = nullptr;
+    newScript->parentScript = nullptr;
+    newScript->owner1.enemy = (struct Enemy*)(intptr_t)-1;
+    newScript->owner2.npc = (struct Npc*)(intptr_t)-1;
+    newScript->loopDepth = -1;
+    newScript->switchDepth = -1;
+    newScript->groupFlags = groupFlags;
+    newScript->buffer = 0;
+    newScript->array = 0;
+    newScript->flagArray = 0;
+    newScript->ptrSavedPos = nullptr;
+    newScript->frameCounter = 0.0f;
+    newScript->unk_158 = 0;
+    newScript->timeScale = GlobalTimeRate;
+    newScript->debugPaused = false;
+
+    scriptListCount = 0;
+
+    for (i = 0; i < ARRAY_COUNT(newScript->varTable); i++) {
+        newScript->varTable[i] = 0;
+    }
+    for (i = 0; i < ARRAY_COUNT(newScript->varFlags); i++) {
+        newScript->varFlags[i] = 0;
+    }
+
+    find_script_labels(newScript);
+
+    if (IsUpdatingScripts && (newScript->stateFlags & EVT_FLAG_RUN_IMMEDIATELY)) {
+        scriptListCount = gScriptListCount++;
+        gScriptIndexList[scriptListCount] = curScriptIndex;
+        gScriptIdList[scriptListCount] = newScript->id;
+    }
+
+    suspend_frozen_scripts(newScript);
+
+    if (UniqueScriptCounter == 0) {
+        UniqueScriptCounter = 1;
+    }
+
+    return newScript;
+}
+
+Evt* start_child_script(Evt* parentScript, EvtScript* source, s32 flags) {
+    s32 curScriptIndex;
+    s32 scriptListCount;
+    Evt* child;
+    s32 i;
+
+    for (i = 0; i < MAX_SCRIPTS; i++) {
+        if ((*gCurrentScriptListPtr)[i] == nullptr) {
+            break;
+        }
+    }
+
+    ASSERT(i < MAX_SCRIPTS);
+    curScriptIndex = i;
+
+    (*gCurrentScriptListPtr)[curScriptIndex] = child = heap_malloc(sizeof(*child));
+    gNumScripts++;
+    ASSERT(child != nullptr);
+
+    parentScript->childScript = child;
+    parentScript->stateFlags |= EVT_FLAG_BLOCKED_BY_CHILD;
+    child->stateFlags = flags | EVT_FLAG_ACTIVE;
+    child->ptrCurLine = child->ptrFirstLine = child->ptrNextLine = (Bytecode*)source;
+
+    child->curOpcode = EVT_OP_INTERNAL_FETCH;
+    child->userData = nullptr;
+    child->blockingParent = parentScript;
+    child->childScript = nullptr;
+    child->parentScript = nullptr;
+    child->priority = parentScript->priority + 1;
+    child->id = UniqueScriptCounter++;
+    child->owner1 = parentScript->owner1;
+    child->owner2 = parentScript->owner2;
+    child->loopDepth = -1;
+    child->switchDepth = -1;
+    child->groupFlags = parentScript->groupFlags;
+    child->buffer = parentScript->buffer;
+    child->ptrSavedPos = nullptr;
+    child->array = parentScript->array;
+    child->flagArray = parentScript->flagArray;
+    child->timeScale = GlobalTimeRate;
+    child->frameCounter = 0.0f;
+    child->unk_158 = 0;
+    child->debugPaused = false;
+
+    scriptListCount = 0;
+
+    for (i = 0; i < ARRAY_COUNT(child->varTable); i++) {
+        child->varTable[i] = parentScript->varTable[i];
+    }
+
+    for (i = 0; i < ARRAY_COUNT(child->varFlags); i++) {
+        child->varFlags[i] = parentScript->varFlags[i];
+    }
+
+    find_script_labels(child);
+    if (IsUpdatingScripts) {
+        scriptListCount = gScriptListCount++;
+        gScriptIndexList[scriptListCount] = curScriptIndex;
+        gScriptIdList[scriptListCount] = child->id;
+    }
+
+    suspend_frozen_scripts(child);
+
+    if (UniqueScriptCounter == 0) {
+        UniqueScriptCounter = 1;
+    }
+
+    return child;
+}
+
+Evt* start_child_thread(Evt* parentScript, Bytecode* nextLine, s32 newState) {
+    Evt* child;
+    s32 curScriptIndex;
+    s32 i;
+    s32 scriptListCount;
+
+    for (i = 0; i < MAX_SCRIPTS; i++) {
+        if ((*gCurrentScriptListPtr)[i] == nullptr) {
+            break;
+        }
+    }
+
+    ASSERT(i < MAX_SCRIPTS);
+    curScriptIndex = i;
+
+    (*gCurrentScriptListPtr)[curScriptIndex] = child = heap_malloc(sizeof(*child));
+    gNumScripts++;
+    ASSERT(child != nullptr);
+
+    child->stateFlags = newState | EVT_FLAG_ACTIVE;
+    child->ptrNextLine = nextLine;
+    child->ptrFirstLine = nextLine;
+    child->ptrCurLine = nextLine;
+    child->curOpcode = EVT_OP_INTERNAL_FETCH;
+    child->userData = nullptr;
+    child->blockingParent = nullptr;
+    child->parentScript = parentScript;
+    child->childScript = nullptr;
+    child->priority = parentScript->priority;
+    child->id = UniqueScriptCounter++;
+    child->owner1 = parentScript->owner1;
+    child->owner2 = parentScript->owner2;
+    child->loopDepth = -1;
+    child->switchDepth = -1;
+    child->groupFlags = parentScript->groupFlags;
+    child->ptrSavedPos = nullptr;
+    child->buffer = parentScript->buffer;
+    child->array = parentScript->array;
+    child->flagArray = parentScript->flagArray;
+    child->timeScale = GlobalTimeRate;
+    child->frameCounter = 0.0f;
+    child->unk_158 = 0;
+    child->debugPaused = false;
+
+    scriptListCount = 0;
+
+    for (i = 0; i < ARRAY_COUNT(child->varTable); i++) {
+        child->varTable[i] = parentScript->varTable[i];
+    }
+
+    for (i = 0; i < ARRAY_COUNT(child->varFlags); i++) {
+        child->varFlags[i] = parentScript->varFlags[i];
+    }
+
+    find_script_labels(child);
+    if (IsUpdatingScripts) {
+        scriptListCount = gScriptListCount++;
+        gScriptIndexList[scriptListCount] = curScriptIndex;
+        gScriptIdList[scriptListCount] = child->id;
+    }
+
+    if (UniqueScriptCounter == 0) {
+        UniqueScriptCounter = 1;
+    }
+
+    suspend_frozen_scripts(child);
+    return child;
+}
+
+Evt* func_802C3C10(Evt* script, Bytecode* line, s32 arg2) {
+    Evt* curScript;
+    s32 i;
+
+    script->ptrNextLine = line;
+    script->ptrFirstLine = line;
+    script->ptrCurLine = line;
+    script->curOpcode = EVT_OP_INTERNAL_FETCH;
+    script->frameCounter = 0;
+    script->stateFlags |= arg2;
+    script->timeScale = 1.0f;
+
+    #if DX_DEBUG_MENU
+    dx_debug_evt_force_detach(script);
+    #endif
+
+    if (script->userData != nullptr) {
+        heap_free(script->userData);
+        script->userData = nullptr;
+    }
+
+    if (script->childScript != 0) {
+        kill_script(script->childScript);
+    }
+
+    for (i = 0; i < MAX_SCRIPTS; i++) {
+        curScript = (*gCurrentScriptListPtr)[i];
+        if ((curScript != 0) && (curScript->parentScript == script)) {
+            kill_script(curScript);
+        }
+    }
+    script->loopDepth = -1;
+    script->switchDepth = -1;
+    script->blockingParent = nullptr;
+    script->parentScript = nullptr;
+    script->childScript = nullptr;
+    script->frameCounter = 0.0f;
+    script->unk_158 = 0;
+    script->timeScale = GlobalTimeRate;
+    find_script_labels(script);
+    suspend_frozen_scripts(script);
+
+    return script;
+}
+
+Evt* restart_script(Evt* script) {
+    Bytecode* ptrFirstLine = script->ptrFirstLine;
+
+    // frameCounter gets set to 0 twice which makes me think a macro is being used here
+    script->loopDepth = -1;
+    script->switchDepth = -1;
+    script->frameCounter = 0;
+    script->curOpcode = EVT_OP_INTERNAL_FETCH;
+
+    script->ptrNextLine = ptrFirstLine;
+    script->ptrCurLine = ptrFirstLine;
+    script->timeScale = 1.0f;
+    script->frameCounter = 0;
+    script->unk_158 = 0;
+
+    script->timeScale = GlobalTimeRate;
+
+    find_script_labels(script);
+    suspend_frozen_scripts(script);
+
+    return script;
+}
+
+void update_scripts(void) {
+    s32 i;
+
+    if (gGameStatusPtr->debugScripts == DEBUG_SCRIPTS_NO_UPDATE) {
+        return;
+    }
+
+    IsUpdatingScripts = true;
+    sort_scripts();
+
+    for (i = 0; i < gScriptListCount; i++) {
+        Evt* script = (*gCurrentScriptListPtr)[gScriptIndexList[i]];
+
+        if (script != nullptr
+            && script->id == gScriptIdList[i]
+            && script->stateFlags != 0
+            && !(script->stateFlags & (EVT_FLAG_SUSPENDED | EVT_FLAG_BLOCKED_BY_CHILD | EVT_FLAG_PAUSED))
+        ) {
+            CALL_CANCELLABLE_EVENT(ScriptRequestUpdate, script) {
+                b32 stop = false;
+                s32 status;
+
+                script->frameCounter += script->timeScale;
+
+                do {
+                    if (script->frameCounter < 1.0) {
+                        // Continue to next script
+                        break;
+                    };
+
+                    script->frameCounter -= 1.0;
+                    CALL_CANCELLABLE_EVENT(ScriptFrameUpdate, script, &status) {
+                        status = evt_execute_next_command(script);
+                    }
+                    if (status == EVT_CMD_RESULT_ERROR) {
+                        stop = true;
+                        break;
+                    }
+                } while (status != EVT_CMD_RESULT_YIELD);
+
+                if (stop) {
+                    break;
+                }
+            }
+        }
+    }
+    IsUpdatingScripts = false;
+}
+
+// Does nothing, is cursed
+void func_802C3EE4(void) {
+    intptr_t temp;
+    s32 i;
+
+    for (i = 0; i < gScriptListCount; i++) {
+        temp = (intptr_t) (*gCurrentScriptListPtr)[gScriptIndexList[i]];
+        temp = *((s32*) temp);
+        if (temp == gScriptIdList[i]) {
+            temp = 1;
+        }
+    }
+}
+
+void kill_script(Evt* instanceToKill) {
+    Evt* childScript;
+    Evt* blockingParent;
+    s32 j;
+    s32 i;
+
+    for (i = 0; i < MAX_SCRIPTS; i++) {
+        if ((*gCurrentScriptListPtr)[i] == instanceToKill) {
+            break;
+        }
+    }
+
+    if (i >= MAX_SCRIPTS) {
+        return;
+    }
+
+    childScript = instanceToKill->childScript;
+    if (childScript != nullptr) {
+        kill_script(childScript);
+    }
+
+    for (j = 0; j < MAX_SCRIPTS; j++) {
+        Evt* tempScriptInstance = (*gCurrentScriptListPtr)[j];
+        if (tempScriptInstance != nullptr) {
+            if (tempScriptInstance->parentScript == instanceToKill) {
+                kill_script(tempScriptInstance);
+            }
+        }
+    }
+
+    blockingParent = instanceToKill->blockingParent;
+    if (blockingParent != nullptr) {
+        blockingParent->childScript = nullptr;
+        blockingParent->stateFlags &= ~EVT_FLAG_BLOCKED_BY_CHILD;
+
+        for (j = 0; j < ARRAY_COUNT(blockingParent->varTable); j++) {
+            blockingParent->varTable[j] = instanceToKill->varTable[j];
+        }
+
+        for (j = 0; j < ARRAY_COUNT(blockingParent->varFlags); j++) {
+            blockingParent->varFlags[j] = instanceToKill->varFlags[j];
+        }
+    }
+
+    #if DX_DEBUG_MENU
+    dx_debug_evt_force_detach(instanceToKill);
+    #endif
+
+    if (instanceToKill->userData != nullptr) {
+        heap_free(instanceToKill->userData);
+        instanceToKill->userData = nullptr;
+    }
+
+    heap_free((*gCurrentScriptListPtr)[i]);
+    (*gCurrentScriptListPtr)[i] = nullptr;
+    gNumScripts--;
+}
+
+void kill_script_by_ID(s32 id) {
+    s32 i;
+    Evt* scriptContextPtr;
+
+    for (i = 0; i < MAX_SCRIPTS; i++) {
+        scriptContextPtr = (*gCurrentScriptListPtr)[i];
+        if (scriptContextPtr != nullptr && scriptContextPtr->id == id) {
+            kill_script(scriptContextPtr);
+        }
+    }
+}
+
+void kill_all_scripts(void) {
+    s32 i;
+    Evt* scriptContextPtr;
+
+    for (i = 0; i < MAX_SCRIPTS; i++) {
+        scriptContextPtr = (*gCurrentScriptListPtr)[i];
+        if (scriptContextPtr != nullptr) {
+            kill_script(scriptContextPtr);
+        }
+    }
+}
+
+s32 does_script_exist(s32 id) {
+    s32 i;
+    Evt* scriptContextPtr;
+
+    for (i = 0; i < MAX_SCRIPTS; i++) {
+        scriptContextPtr = (*gCurrentScriptListPtr)[i];
+        if (scriptContextPtr != nullptr && scriptContextPtr->id == id) {
+            return true;
+        }
+    }
+    return false;
+}
+
+s32 does_script_exist_by_ref(Evt* script) {
+    s32 i;
+
+    for (i = 0; i < MAX_SCRIPTS; i++) {
+        if (script == (*gCurrentScriptListPtr)[i]) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void set_script_priority(Evt* script, s32 priority) {
+    script->priority = priority;
+}
+
+void set_script_timescale(Evt* script, f32 timescale) {
+    script->timeScale = timescale * GlobalTimeRate;
+}
+
+void set_global_timespace(f32 timeScale) {
+    GlobalTimeRate = timeScale;
+}
+
+f32 get_global_timespace(void) {
+    return GlobalTimeRate;
+}
+
+void set_script_group(Evt* script, s32 groupFlags) {
+    script->groupFlags = groupFlags;
+}
+
+Trigger* bind_trigger(EvtScript* script, s32 flags, s32 triggerFlagIndex, intptr_t triggerVar0, intptr_t triggerVar1,
+                      s32 priority, s32 arg6) {
+    Trigger* trigger;
+    TriggerBlueprint bp;
+
+    bp.flags = flags | TRIGGER_SCRIPT_BOUND;
+    bp.colliderID = triggerFlagIndex;
+    bp.tattleMsg = 0;
+    bp.onActivateFunc = evt_trigger_on_activate_exec_script;
+    bp.hasPlayerInteractPrompt = arg6;
+
+    trigger = create_trigger(&bp);
+    trigger->onTriggerEvt = script;
+    trigger->runningScript = nullptr;
+    trigger->priority = priority;
+    trigger->varTable[0] = triggerVar0;
+    trigger->varTable[1] = triggerVar1;
+    return trigger;
+}
+
+Trigger* bind_trigger_1(EvtScript* script, s32 flags, s32 triggerFlagIndex, intptr_t triggerVar0, intptr_t triggerVar1,
+                        s32 priority) {
+    return bind_trigger(script, flags, triggerFlagIndex, triggerVar0, triggerVar1, priority, 1);
+}
+
+void suspend_group_script(Evt* script, s32 groupFlags) {
+    Evt* childScript = script->childScript;
+    s32 i;
+
+    if (childScript != nullptr) {
+        suspend_group_script(childScript, groupFlags);
+    }
+
+    for (i = 0; i < MAX_SCRIPTS; i++) {
+        Evt* scriptContextPtr = (*gCurrentScriptListPtr)[i];
+
+        if (scriptContextPtr != nullptr && scriptContextPtr->parentScript == script) {
+            suspend_group_script(scriptContextPtr, groupFlags);
+        }
+    }
+
+    if ((script->groupFlags & groupFlags) != 0) {
+        script->stateFlags |= EVT_FLAG_PAUSED;
+    }
+}
+
+void resume_group_script(Evt* script, s32 groupFlags) {
+    Evt* childScript = script->childScript;
+    s32 i;
+
+    if (childScript != nullptr) {
+        resume_group_script(childScript, groupFlags);
+    }
+
+    for (i = 0; i < MAX_SCRIPTS; i++) {
+        Evt* scriptContextPtr = (*gCurrentScriptListPtr)[i];
+
+        if (scriptContextPtr != nullptr && scriptContextPtr->parentScript == script) {
+            suspend_group_script(scriptContextPtr, groupFlags);
+        }
+    }
+
+    if ((script->groupFlags & groupFlags) != 0) {
+        script->stateFlags &= ~EVT_FLAG_PAUSED;
+    }
+}
+
+void suspend_all_script(s32 id) {
+    s32 i;
+
+    for (i = 0; i < MAX_SCRIPTS; i++) {
+        Evt* scriptContextPtr = (*gCurrentScriptListPtr)[i];
+
+        if (scriptContextPtr != nullptr && scriptContextPtr->id == id) {
+            suspend_group_script(scriptContextPtr, EVT_GROUP_NOT_BATTLE);
+        }
+    }
+}
+
+void resume_all_script(s32 id) {
+    s32 i;
+    Evt* scriptContextPtr;
+
+    for (i = 0; i < MAX_SCRIPTS; i++) {
+        scriptContextPtr = (*gCurrentScriptListPtr)[i];
+        if (scriptContextPtr != nullptr && scriptContextPtr->id == id) {
+            resume_group_script(scriptContextPtr, EVT_GROUP_NOT_BATTLE);
+        }
+    }
+}
+
+void suspend_group_script_index(s32 id, s32 groupFlags) {
+    s32 i;
+    Evt* scriptContextPtr;
+
+    for (i = 0; i < MAX_SCRIPTS; i++) {
+        scriptContextPtr = (*gCurrentScriptListPtr)[i];
+        if (scriptContextPtr != nullptr && scriptContextPtr->id == id) {
+            suspend_group_script(scriptContextPtr, groupFlags);
+        }
+    }
+}
+
+void resume_group_script_index(s32 id, s32 groupFlags) {
+    s32 i;
+    Evt* scriptContextPtr;
+
+    for (i = 0; i < MAX_SCRIPTS; i++) {
+        scriptContextPtr = (*gCurrentScriptListPtr)[i];
+        if (scriptContextPtr != nullptr && scriptContextPtr->id == id) {
+            resume_group_script(scriptContextPtr, groupFlags);
+        }
+    }
+}
+
+void suspend_all_group(s32 groupFlags) {
+    s32 i;
+    Evt* scriptContextPtr;
+
+    for (i = 0; i < MAX_SCRIPTS; i++) {
+        scriptContextPtr = (*gCurrentScriptListPtr)[i];
+        if (scriptContextPtr != nullptr) {
+            suspend_group_script(scriptContextPtr, groupFlags);
+        }
+    }
+}
+
+void resume_all_group(s32 groupFlags) {
+    s32 i;
+    Evt* scriptContextPtr;
+
+    for (i = 0; i < MAX_SCRIPTS; i++) {
+        scriptContextPtr = (*gCurrentScriptListPtr)[i];
+        if (scriptContextPtr != nullptr) {
+            resume_group_script(scriptContextPtr, groupFlags);
+        }
+    }
+}
+
+void suspend_group_others(Evt* script, s32 groupFlags) {
+    s32 i;
+    Evt* scriptContextPtr;
+
+    for (i = 0; i < MAX_SCRIPTS; i++) {
+        scriptContextPtr = (*gCurrentScriptListPtr)[i];
+        if (scriptContextPtr != nullptr && scriptContextPtr != script) {
+            suspend_group_script(scriptContextPtr, groupFlags);
+        }
+    }
+}
+
+void resume_group_others(Evt* script, s32 groupFlags) {
+    s32 i;
+    Evt* scriptContextPtr;
+
+    for (i = 0; i < MAX_SCRIPTS; i++) {
+        scriptContextPtr = (*gCurrentScriptListPtr)[i];
+        if (scriptContextPtr != nullptr && scriptContextPtr != script) {
+            resume_group_script(scriptContextPtr, groupFlags);
+        }
+    }
+}
+
+Evt* get_script_by_index(s32 index) {
+    return (*gCurrentScriptListPtr)[index];
+}
+
+Evt* get_script_by_id(s32 id) {
+    s32 i;
+    Evt* scriptContextPtr;
+
+    for (i = 0; i < MAX_SCRIPTS; i++) {
+        if ((*gCurrentScriptListPtr)[i] != nullptr) {
+            scriptContextPtr = (*gCurrentScriptListPtr)[i];
+            if (scriptContextPtr->id == id) {
+                return scriptContextPtr;
+            }
+        }
+    }
+    return 0;
+}
+
+void set_script_flags(Evt* script, s32 flags) {
+    Evt* childScript = script->childScript;
+    s32 i;
+
+    script->stateFlags |= flags;
+    if (childScript != nullptr) {
+        set_script_flags(childScript, flags);
+    }
+
+    for (i = 0; i < MAX_SCRIPTS; i++) {
+        Evt* scriptContextPtr = (*gCurrentScriptListPtr)[i];
+
+        if (scriptContextPtr != nullptr && scriptContextPtr->parentScript == script) {
+            set_script_flags(script->parentScript, flags);
+        }
+    }
+}
+
+void clear_script_flags(Evt* script, s32 flags) {
+    Evt* childScript = script->childScript;
+    s32 i;
+
+    script->stateFlags &= ~flags;
+    if (childScript != nullptr) {
+        clear_script_flags(childScript, flags);
+    }
+
+    for (i = 0; i < MAX_SCRIPTS; i++) {
+        Evt* scriptContextPtr = (*gCurrentScriptListPtr)[i];
+
+        if (scriptContextPtr != nullptr && scriptContextPtr->parentScript == script) {
+            clear_script_flags(scriptContextPtr, flags);
+        }
+    }
+}

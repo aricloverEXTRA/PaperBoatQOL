@@ -1,0 +1,9 @@
+*.h linguist-language=C
+
+# suppress asm/nonmatchings/ in GitHub diffs
+asm/nonmatchings/**/*.s linguist-generated
+
+*.c	diff=cpp
+*.h	diff=cpp
+
+src/world/dead/**/* merge=ours
