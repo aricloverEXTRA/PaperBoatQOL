@@ -1,4 +1,4 @@
-@prism(type='fragment', name='PaperBoat Glow Post', version='1.0.0', description='Single-pass bright glow/bloom for emissive surfaces such as lava, fire and magic', author='PaperBoat Shader Mod')
+@prism(type='fragment', name='PaperBoat Glow Post', version='1.0.0', description='Single-pass bright glow/bloom for emissive surfaces such as lava fire and magic', author='PaperBoat Shader Mod')
 
 @if(BACKEND_VULKAN)
 #version 450

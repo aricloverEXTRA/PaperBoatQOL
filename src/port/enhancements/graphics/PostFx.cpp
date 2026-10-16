@@ -5,10 +5,11 @@
  *   - a colour-adjust pass (exposure / contrast / saturation / tint / tone mapping)
  *   - a single-pass glow/bloom pass for emissive surfaces such as lava and fire
  *
- * The shipped shaders only have OpenGL and Vulkan variants. Registering a post
- * pass whose shader file is missing for the active backend aborts the engine, so
- * every pass is hard-gated to the OpenGL/Vulkan backends and to the opt-in
- * "PostProcessing" CVar (default off).
+ * The shipped shaders have OpenGL (GLSL) and DirectX 11 (HLSL) variants plus a
+ * Vulkan variant. Registering a post pass whose shader file is missing for the
+ * active backend aborts the engine, so every pass is hard-gated to the backends
+ * that ship a variant (OpenGL/Vulkan/DirectX) and to the opt-in
+ * "PostProcessing" CVar (default off). Metal has no variant and stays disabled.
  */
 
 // Fast3dWindow.h pulls in <fast/interpreter.h> -> prism, which must be parsed
@@ -66,7 +67,8 @@ static bool PostFx_BackendSupported() {
     }
 
     Fast::WindowBackend backend = static_cast<Fast::WindowBackend>(window->GetWindowBackend());
-    return backend == Fast::FAST3D_SDL_OPENGL || backend == Fast::FAST3D_SDL_VULKAN;
+    return backend == Fast::FAST3D_SDL_OPENGL || backend == Fast::FAST3D_SDL_VULKAN ||
+           backend == Fast::FAST3D_DXGI_DX11;
 }
 
 static void PostFx_ReconcilePasses(bool wantColorAdjust, bool wantGlow) {

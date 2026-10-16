@@ -1,4 +1,4 @@
-@prism(type='fragment', name='PaperBoat Color Adjust Post', version='1.0.0', description='Exposure, contrast, saturation, tint and tone mapping post-processing pass', author='PaperBoat Shader Mod')
+@prism(type='fragment', name='PaperBoat Color Adjust Post', version='1.0.0', description='Exposure contrast saturation tint and tone mapping post-processing pass', author='PaperBoat Shader Mod')
 
 @if(BACKEND_VULKAN)
 #version 450
