@@ -10,6 +10,11 @@
 
 #include <string>
 
+// Declared nowhere in a header; defined in src/is_debug.c (C linkage).
+extern "C" {
+void osSyncPrintf(const char* fmt, ...);
+}
+
 #include "common.h"
 
 #define BENCHMARK_MAX_SAMPLES 1000

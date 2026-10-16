@@ -11,12 +11,16 @@
  * "PostProcessing" CVar (default off).
  */
 
+// Fast3dWindow.h pulls in <fast/interpreter.h> -> prism, which must be parsed
+// before anything that defines the script_api "Else" macro (pulled in
+// transitively by port/hooks/Events.h via common_structs.h).
+#include <fast/Fast3dWindow.h>
+
 #include "port/hooks/Events.h"
 #include "port/ui/cvar_prefixes.h"
 
 #include <libultraship/libultraship.h>
 #include <libultraship/bridge/consolevariablebridge.h>
-#include <fast/Fast3dWindow.h>
 
 #include <memory>
 
