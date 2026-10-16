@@ -101,16 +101,16 @@ static void PostFx_PushUniforms() {
         Color_RGBA8 tint = CVarGetColor(POSTFX_TINT_COLOR_CVAR, { 255, 255, 255, 255 });
 
         float grade[4] = {
-            CVarGetFloat(POSTFX_EXPOSURE_CVAR, 1.0f),
-            CVarGetFloat(POSTFX_CONTRAST_CVAR, 1.0f),
-            CVarGetFloat(POSTFX_SATURATION_CVAR, 1.0f),
+            CVarGetFloat(POSTFX_EXPOSURE_CVAR, 1.05f),
+            CVarGetFloat(POSTFX_CONTRAST_CVAR, 1.05f),
+            CVarGetFloat(POSTFX_SATURATION_CVAR, 1.1f),
             CVarGetFloat(POSTFX_TINTMIX_CVAR, 0.0f),
         };
         float tintReg[4] = {
             tint.r / 255.0f,
             tint.g / 255.0f,
             tint.b / 255.0f,
-            CVarGetInteger(POSTFX_TONEMAP_CVAR, 0) ? 1.0f : 0.0f,
+            CVarGetInteger(POSTFX_TONEMAP_CVAR, 1) ? 1.0f : 0.0f,
         };
 
         gfx_set_custom_uniform(2, grade);
@@ -119,8 +119,8 @@ static void PostFx_PushUniforms() {
 
     if (gGlowHandle >= 0) {
         float glow[4] = {
-            CVarGetFloat(POSTFX_GLOW_THRESH_CVAR, 1.0f),
-            CVarGetFloat(POSTFX_GLOW_INT_CVAR, 0.3f),
+            CVarGetFloat(POSTFX_GLOW_THRESH_CVAR, 0.8f),
+            CVarGetFloat(POSTFX_GLOW_INT_CVAR, 0.4f),
             CVarGetFloat(POSTFX_GLOW_RADIUS_CVAR, 2.0f),
             1.0f,
         };
@@ -134,7 +134,7 @@ static void PostFx_FrameUpdate() {
     bool master = backendOk && CVarGetInteger(POSTFX_MASTER_CVAR, 0) != 0;
 
     bool wantColorAdjust = master;
-    bool wantGlow = master && CVarGetInteger(POSTFX_GLOW_CVAR, 0) != 0;
+    bool wantGlow = master && CVarGetInteger(POSTFX_GLOW_CVAR, 1) != 0;
 
     PostFx_ReconcilePasses(wantColorAdjust, wantGlow);
     PostFx_PushUniforms();

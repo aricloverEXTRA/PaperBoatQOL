@@ -111,7 +111,7 @@ void create_enhanced_shading_palette(Matrix4f mtx, s32 uls, s32 ult, s32 lrs, s3
         return;
     }
     
-    int mode = CVarGetInteger(CVAR_ENHANCED_SHADING("Mode"), 0);
+    int mode = CVarGetInteger(CVAR_ENHANCED_SHADING("Mode"), 1);
     if (mode == 0) {
         create_shading_palette(mtx, uls, ult, lrs, lrt, alpha, otherModeLBits);
         return;
@@ -295,7 +295,7 @@ void create_enhanced_shading_palette(Matrix4f mtx, s32 uls, s32 ult, s32 lrs, s3
         EnhancedLightSource* light = &profile->lights[i];
         if (!(light->flags & 1)) continue;
         
-        Vec3f lightDir;
+        Vec3f lightDir = { 0.0f, 0.0f, 0.0f };
         f32 dist = 0.0f;
         f32 intensityScale = 1.0f;
         

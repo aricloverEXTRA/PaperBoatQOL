@@ -165,6 +165,7 @@ void PaperboatMenu::AddMenuEnhancements() {
                     "'Custom Lighting' allows manual configuration. 'Vanilla' uses original game lighting."
                 )
                 .ComboMap(enhancedShadingModeOptions)
+                .DefaultIndex(1)
         );
 
     AddWidget(path, "Fallback to Vanilla for Unknown Areas", WIDGET_CVAR_CHECKBOX)
@@ -349,6 +350,7 @@ void PaperboatMenu::AddMenuEnhancements() {
                     "to prevent overheating and frame drops."
                 )
                 .ComboMap(graphicsPresetOptions)
+                .DefaultIndex(2)
         );
 
     // Advanced Effects
@@ -472,7 +474,7 @@ void PaperboatMenu::AddMenuEnhancements() {
         .CVar(CVAR_ENHANCED_SHADING("Bloom"))
         .PreFunc(hideUnlessPostFx)
         .Options(
-            CheckboxOptions().DefaultValue(false).Tooltip(
+            CheckboxOptions().DefaultValue(true).Tooltip(
                 "Adds glow effect to bright areas (lava, fire, magic). Creates a dreamy, modern look."
             )
         );
@@ -507,7 +509,7 @@ void PaperboatMenu::AddMenuEnhancements() {
         .CVar(CVAR_ENHANCED_SHADING("ToneMapping"))
         .PreFunc(hideUnlessPostFx)
         .Options(
-            CheckboxOptions().DefaultValue(false).Tooltip(
+            CheckboxOptions().DefaultValue(true).Tooltip(
                 "Applies ACES filmic tone mapping for HDR-like color grading. "
                 "Prevents blown-out highlights and improves color balance."
             )
@@ -557,6 +559,15 @@ void PaperboatMenu::AddMenuEnhancements() {
         .CVar(CVAR_ENHANCED_SHADING("PostTintColor"))
         .PreFunc(hideUnlessPostFx)
         .Options(ColorPickerOptions().DefaultValue({ 255, 255, 255, 255 }).ShowReset());
+
+    AddWidget(path, "Reset", WIDGET_SEPARATOR_TEXT);
+
+    AddWidget(path, "Reset Graphics", WIDGET_BUTTON)
+        .Callback([](WidgetInfo& info) {
+            CVarSave();
+            CVarClearBlock(CVAR_ENHANCEMENT("EnhancedShading"));
+        })
+        .Options(ButtonOptions().Tooltip("Puts every graphics option on this page back to its default."));
 
     // Enhancements > Status Bar
     path = { "Enhancements", "Status Bar", SECTION_COLUMN_1 };
