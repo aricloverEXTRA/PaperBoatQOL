@@ -564,6 +564,68 @@ void PaperboatMenu::AddMenuEnhancements() {
             )
         );
 
+    AddWidget(path, "God Rays", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCED_SHADING("Sunrays"))
+        .PreFunc(hideUnlessPostFx)
+        .Options(
+            CheckboxOptions().DefaultValue(false).Tooltip(
+                "Adds screen-space sun shafts (god rays). Sun position is set "
+                "per area; adjust below if needed."
+            )
+        );
+
+    AddWidget(path, "Sun Position X", WIDGET_CVAR_SLIDER_FLOAT)
+        .CVar(CVAR_ENHANCED_SHADING("SunraysX"))
+        .PreFunc([](WidgetInfo& info) {
+            info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1)
+                || !CVarGetInteger(CVAR_ENHANCED_SHADING("PostProcessing"), 0)
+                || !CVarGetInteger(CVAR_ENHANCED_SHADING("Sunrays"), 0);
+        })
+        .Options(
+            FloatSliderOptions().Min(0.0f).Max(1.0f).DefaultValue(0.5f).Step(0.01f).Format("%.2f").Tooltip(
+                "Horizontal sun position (0 = left, 1 = right)."
+            )
+        );
+
+    AddWidget(path, "Sun Position Y", WIDGET_CVAR_SLIDER_FLOAT)
+        .CVar(CVAR_ENHANCED_SHADING("SunraysY"))
+        .PreFunc([](WidgetInfo& info) {
+            info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1)
+                || !CVarGetInteger(CVAR_ENHANCED_SHADING("PostProcessing"), 0)
+                || !CVarGetInteger(CVAR_ENHANCED_SHADING("Sunrays"), 0);
+        })
+        .Options(
+            FloatSliderOptions().Min(0.0f).Max(1.0f).DefaultValue(0.2f).Step(0.01f).Format("%.2f").Tooltip(
+                "Vertical sun position (0 = bottom, 1 = top). Flip if shafts point the wrong way."
+            )
+        );
+
+    AddWidget(path, "God Ray Intensity", WIDGET_CVAR_SLIDER_FLOAT)
+        .CVar(CVAR_ENHANCED_SHADING("SunraysIntensity"))
+        .PreFunc([](WidgetInfo& info) {
+            info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1)
+                || !CVarGetInteger(CVAR_ENHANCED_SHADING("PostProcessing"), 0)
+                || !CVarGetInteger(CVAR_ENHANCED_SHADING("Sunrays"), 0);
+        })
+        .Options(
+            FloatSliderOptions().Min(0.0f).Max(2.0f).DefaultValue(0.6f).Step(0.05f).Format("%.2f").Tooltip(
+                "Strength of the god rays."
+            )
+        );
+
+    AddWidget(path, "God Ray Decay", WIDGET_CVAR_SLIDER_FLOAT)
+        .CVar(CVAR_ENHANCED_SHADING("SunraysDecay"))
+        .PreFunc([](WidgetInfo& info) {
+            info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1)
+                || !CVarGetInteger(CVAR_ENHANCED_SHADING("PostProcessing"), 0)
+                || !CVarGetInteger(CVAR_ENHANCED_SHADING("Sunrays"), 0);
+        })
+        .Options(
+            FloatSliderOptions().Min(0.80f).Max(0.99f).DefaultValue(0.95f).Step(0.01f).Format("%.2f").Tooltip(
+                "How quickly rays fade with distance. Lower = shorter rays."
+            )
+        );
+
     AddWidget(path, "Contrast", WIDGET_CVAR_SLIDER_FLOAT)
         .CVar(CVAR_ENHANCED_SHADING("PostContrast"))
         .PreFunc(hideUnlessPostFx)

@@ -18,7 +18,10 @@
 #include <fast/Fast3dWindow.h>
 
 #include "port/hooks/Events.h"
+#include "port/hooks/impl/EventSystem.h"
 #include "port/ui/cvar_prefixes.h"
+
+#include <string.h>
 
 #include <libultraship/libultraship.h>
 #include <libultraship/bridge/consolevariablebridge.h>
@@ -43,6 +46,11 @@ void gfx_set_custom_uniform(uint8_t idx, const float values[4]);
 #define POSTFX_OUTLINE_CVAR        CVAR_ENHANCED_SHADING("Outlines")
 #define POSTFX_OUTLINE_THRESH_CVAR CVAR_ENHANCED_SHADING("OutlineThreshold")
 #define POSTFX_OUTLINE_STRENGTH_CVAR CVAR_ENHANCED_SHADING("OutlineStrength")
+#define POSTFX_SUNRAYS_CVAR          CVAR_ENHANCED_SHADING("Sunrays")
+#define POSTFX_SUNRAYS_X_CVAR        CVAR_ENHANCED_SHADING("SunraysX")
+#define POSTFX_SUNRAYS_Y_CVAR        CVAR_ENHANCED_SHADING("SunraysY")
+#define POSTFX_SUNRAYS_INTENSITY_CVAR CVAR_ENHANCED_SHADING("SunraysIntensity")
+#define POSTFX_SUNRAYS_DECAY_CVAR    CVAR_ENHANCED_SHADING("SunraysDecay")
 #define POSTFX_TONEMAP_CVAR      CVAR_ENHANCED_SHADING("ToneMapping")
 #define POSTFX_EXPOSURE_CVAR     CVAR_ENHANCED_SHADING("Exposure")
 #define POSTFX_CONTRAST_CVAR     CVAR_ENHANCED_SHADING("PostContrast")
@@ -53,12 +61,31 @@ void gfx_set_custom_uniform(uint8_t idx, const float values[4]);
 #define POSTFX_COLOR_ADJUST_SHADER "shaders/post/cs_color_adjust.shader"
 #define POSTFX_GLOW_SHADER         "shaders/post/cs_glow.shader"
 #define POSTFX_OUTLINE_SHADER      "shaders/post/cs_outline.shader"
+#define POSTFX_SUNRAYS_SHADER      "shaders/post/cs_sunrays.shader"
 
 static int gColorAdjustHandle = -1;
 static int gGlowHandle = -1;
 static int gOutlineHandle = -1;
-// Bits: 0 = colour adjust, 1 = glow, 2 = outline.
+static int gSunraysHandle = -1;
+// Bits: 0 = colour adjust, 1 = sunrays, 2 = glow, 3 = outline.
 static int gRegisteredSignature = -1;
+
+// Per-area sun placement for the god-ray pass. Screen-space (0..1) UVs; the
+// Y axis is configurable because the post-pass texture orientation can differ
+// between backends. Add entries here to give a location its own shafts.
+typedef struct {
+    const char* mapName;
+    float sunX;
+    float sunY;
+    float intensity;
+} SunrayArea;
+
+static const SunrayArea kSunrayAreas[] = {
+    { "dro_01", 0.55f, 0.20f, 1.00f }, // Dry Dry Desert
+    { "dro_02", 0.58f, 0.16f, 1.00f }, // Dry Dry Ruins (desert temple)
+    { "flo_00", 0.50f, 0.14f, 0.70f }, // Flower Fields (open sky)
+    { "flo_19", 0.50f, 0.10f, 0.90f }, // Cloudy Climb (beanstalk ascent)
+};
 
 static bool PostFx_BackendSupported() {
     Ship::Context* ctx = Ship::Context::GetRawInstance();
@@ -76,8 +103,9 @@ static bool PostFx_BackendSupported() {
            backend == Fast::FAST3D_DXGI_DX11;
 }
 
-static void PostFx_ReconcilePasses(bool wantColorAdjust, bool wantGlow, bool wantOutline) {
-    int signature = (wantColorAdjust ? 1 : 0) | (wantGlow ? 2 : 0) | (wantOutline ? 4 : 0);
+static void PostFx_ReconcilePasses(bool wantColorAdjust, bool wantSunrays, bool wantGlow, bool wantOutline) {
+    int signature = (wantColorAdjust ? 1 : 0) | (wantSunrays ? 2 : 0) | (wantGlow ? 4 : 0) |
+                    (wantOutline ? 8 : 0);
     if (signature == gRegisteredSignature) {
         return;
     }
@@ -94,10 +122,17 @@ static void PostFx_ReconcilePasses(bool wantColorAdjust, bool wantGlow, bool wan
         gfx_unregister_post_pass(gOutlineHandle);
         gOutlineHandle = -1;
     }
+    if (gSunraysHandle >= 0) {
+        gfx_unregister_post_pass(gSunraysHandle);
+        gSunraysHandle = -1;
+    }
 
-    // Order matters: grade -> glow -> outline, so the ink sits on top.
+    // Order matters: grade -> sunrays -> glow -> outline, so the ink sits on top.
     if (wantColorAdjust) {
         gColorAdjustHandle = gfx_register_post_pass(POSTFX_COLOR_ADJUST_SHADER);
+    }
+    if (wantSunrays) {
+        gSunraysHandle = gfx_register_post_pass(POSTFX_SUNRAYS_SHADER);
     }
     if (wantGlow) {
         gGlowHandle = gfx_register_post_pass(POSTFX_GLOW_SHADER);
@@ -151,6 +186,43 @@ static void PostFx_PushUniforms() {
 
         gfx_set_custom_uniform(5, outline);
     }
+
+    if (gSunraysHandle >= 0) {
+        float sunrays[4] = {
+            CVarGetFloat(POSTFX_SUNRAYS_X_CVAR, 0.5f),
+            CVarGetFloat(POSTFX_SUNRAYS_Y_CVAR, 0.2f),
+            CVarGetFloat(POSTFX_SUNRAYS_INTENSITY_CVAR, 0.6f),
+            CVarGetFloat(POSTFX_SUNRAYS_DECAY_CVAR, 0.95f),
+        };
+
+        gfx_set_custom_uniform(6, sunrays);
+    }
+}
+
+// Applies the per-area sun position on map load so each location gets its own
+// shaft direction. Falls back to a generic high-sky sun for unknown areas.
+static void PostFx_OnMapLoad(IEvent* event) {
+    if (event == nullptr) {
+        return;
+    }
+
+    const OnMapLoad* ev = (const OnMapLoad*)event;
+    if (ev == nullptr) {
+        return;
+    }
+
+    for (s32 i = 0; i < (s32)(sizeof(kSunrayAreas) / sizeof(kSunrayAreas[0])); i++) {
+        if (strcmp(kSunrayAreas[i].mapName, ev->mapName) == 0) {
+            CVarSetFloat(POSTFX_SUNRAYS_X_CVAR, kSunrayAreas[i].sunX);
+            CVarSetFloat(POSTFX_SUNRAYS_Y_CVAR, kSunrayAreas[i].sunY);
+            CVarSetFloat(POSTFX_SUNRAYS_INTENSITY_CVAR, kSunrayAreas[i].intensity);
+            return;
+        }
+    }
+
+    CVarSetFloat(POSTFX_SUNRAYS_X_CVAR, 0.5f);
+    CVarSetFloat(POSTFX_SUNRAYS_Y_CVAR, 0.2f);
+    CVarSetFloat(POSTFX_SUNRAYS_INTENSITY_CVAR, 0.6f);
 }
 
 static void PostFx_FrameUpdate() {
@@ -158,13 +230,15 @@ static void PostFx_FrameUpdate() {
     bool master = backendOk && CVarGetInteger(POSTFX_MASTER_CVAR, 0) != 0;
 
     bool wantColorAdjust = master;
+    bool wantSunrays = master && CVarGetInteger(POSTFX_SUNRAYS_CVAR, 0) != 0;
     bool wantGlow = master && CVarGetInteger(POSTFX_GLOW_CVAR, 1) != 0;
     bool wantOutline = master && CVarGetInteger(POSTFX_OUTLINE_CVAR, 0) != 0;
 
-    PostFx_ReconcilePasses(wantColorAdjust, wantGlow, wantOutline);
+    PostFx_ReconcilePasses(wantColorAdjust, wantSunrays, wantGlow, wantOutline);
     PostFx_PushUniforms();
 }
 
 void register_postfx_hooks(void) {
     REGISTER_LISTENER(GameFrameUpdate, EVENT_PRIORITY_NORMAL, [](IEvent*) { PostFx_FrameUpdate(); });
+    REGISTER_LISTENER(OnMapLoad, EVENT_PRIORITY_NORMAL, [](IEvent* event) { PostFx_OnMapLoad(event); });
 }
