@@ -1497,5 +1497,3 @@ extern "C" uint32_t OTRGetGameRenderHeight(void) {
     return interp != nullptr ? interp->mCurDimensions.height : (uint32_t) WS_NATIVE_HEIGHT;
 }
 
-    ... (file truncated for brevity) ...
-
