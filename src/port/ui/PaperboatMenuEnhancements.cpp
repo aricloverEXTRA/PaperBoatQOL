@@ -165,7 +165,7 @@ void PaperboatMenu::AddMenuEnhancements() {
                     "'Custom Lighting' allows manual configuration. 'Vanilla' uses original game lighting."
                 )
                 .ComboMap(enhancedShadingModeOptions)
-                .DefaultIndex(1)
+                .DefaultIndex(0)
         );
 
     AddWidget(path, "Fallback to Vanilla for Unknown Areas", WIDGET_CVAR_CHECKBOX)
@@ -350,7 +350,7 @@ void PaperboatMenu::AddMenuEnhancements() {
                     "to prevent overheating and frame drops."
                 )
                 .ComboMap(graphicsPresetOptions)
-                .DefaultIndex(2)
+                .DefaultIndex(4)
         );
 
     // Advanced Effects

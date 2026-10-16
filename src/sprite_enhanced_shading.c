@@ -213,7 +213,7 @@ void enhanced_shading_load_area_defaults(const char* areaName, s32 mapID, s32 en
         return;
     }
     
-    int mode = CVarGetInteger(CVAR_ENHANCED_SHADING("Mode"), 1);
+    int mode = CVarGetInteger(CVAR_ENHANCED_SHADING("Mode"), 0);
     if (mode == 0) {
         clear_enhanced_shading_data();
         return;
@@ -448,7 +448,7 @@ s32 enhanced_shading_get_platform_max_preset(void) {
 }
 
 s32 enhanced_shading_get_effective_preset(void) {
-    s32 preset = CVarGetInteger(CVAR_ENHANCED_SHADING("GraphicsPreset"), ENHANCED_GRAPHICS_PRESET_HIGH);
+    s32 preset = CVarGetInteger(CVAR_ENHANCED_SHADING("GraphicsPreset"), ENHANCED_GRAPHICS_PRESET_CUSTOM);
     s32 maxPreset = enhanced_shading_get_platform_max_preset();
 
     if (preset < ENHANCED_GRAPHICS_PRESET_LOW) {
