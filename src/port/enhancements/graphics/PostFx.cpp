@@ -40,6 +40,9 @@ void gfx_set_custom_uniform(uint8_t idx, const float values[4]);
 #define POSTFX_GLOW_THRESH_CVAR  CVAR_ENHANCED_SHADING("BloomThreshold")
 #define POSTFX_GLOW_INT_CVAR     CVAR_ENHANCED_SHADING("BloomIntensity")
 #define POSTFX_GLOW_RADIUS_CVAR  CVAR_ENHANCED_SHADING("BloomRadius")
+#define POSTFX_OUTLINE_CVAR        CVAR_ENHANCED_SHADING("Outlines")
+#define POSTFX_OUTLINE_THRESH_CVAR CVAR_ENHANCED_SHADING("OutlineThreshold")
+#define POSTFX_OUTLINE_STRENGTH_CVAR CVAR_ENHANCED_SHADING("OutlineStrength")
 #define POSTFX_TONEMAP_CVAR      CVAR_ENHANCED_SHADING("ToneMapping")
 #define POSTFX_EXPOSURE_CVAR     CVAR_ENHANCED_SHADING("Exposure")
 #define POSTFX_CONTRAST_CVAR     CVAR_ENHANCED_SHADING("PostContrast")
@@ -49,10 +52,12 @@ void gfx_set_custom_uniform(uint8_t idx, const float values[4]);
 
 #define POSTFX_COLOR_ADJUST_SHADER "shaders/post/cs_color_adjust.shader"
 #define POSTFX_GLOW_SHADER         "shaders/post/cs_glow.shader"
+#define POSTFX_OUTLINE_SHADER      "shaders/post/cs_outline.shader"
 
 static int gColorAdjustHandle = -1;
 static int gGlowHandle = -1;
-// Bits: 0 = colour adjust registered, 1 = glow registered.
+static int gOutlineHandle = -1;
+// Bits: 0 = colour adjust, 1 = glow, 2 = outline.
 static int gRegisteredSignature = -1;
 
 static bool PostFx_BackendSupported() {
@@ -71,8 +76,8 @@ static bool PostFx_BackendSupported() {
            backend == Fast::FAST3D_DXGI_DX11;
 }
 
-static void PostFx_ReconcilePasses(bool wantColorAdjust, bool wantGlow) {
-    int signature = (wantColorAdjust ? 1 : 0) | (wantGlow ? 2 : 0);
+static void PostFx_ReconcilePasses(bool wantColorAdjust, bool wantGlow, bool wantOutline) {
+    int signature = (wantColorAdjust ? 1 : 0) | (wantGlow ? 2 : 0) | (wantOutline ? 4 : 0);
     if (signature == gRegisteredSignature) {
         return;
     }
@@ -85,12 +90,20 @@ static void PostFx_ReconcilePasses(bool wantColorAdjust, bool wantGlow) {
         gfx_unregister_post_pass(gGlowHandle);
         gGlowHandle = -1;
     }
+    if (gOutlineHandle >= 0) {
+        gfx_unregister_post_pass(gOutlineHandle);
+        gOutlineHandle = -1;
+    }
 
+    // Order matters: grade -> glow -> outline, so the ink sits on top.
     if (wantColorAdjust) {
         gColorAdjustHandle = gfx_register_post_pass(POSTFX_COLOR_ADJUST_SHADER);
     }
     if (wantGlow) {
         gGlowHandle = gfx_register_post_pass(POSTFX_GLOW_SHADER);
+    }
+    if (wantOutline) {
+        gOutlineHandle = gfx_register_post_pass(POSTFX_OUTLINE_SHADER);
     }
 
     gRegisteredSignature = signature;
@@ -127,6 +140,17 @@ static void PostFx_PushUniforms() {
 
         gfx_set_custom_uniform(4, glow);
     }
+
+    if (gOutlineHandle >= 0) {
+        float outline[4] = {
+            CVarGetFloat(POSTFX_OUTLINE_THRESH_CVAR, 0.15f),
+            CVarGetFloat(POSTFX_OUTLINE_STRENGTH_CVAR, 0.9f),
+            0.0f,
+            0.0f,
+        };
+
+        gfx_set_custom_uniform(5, outline);
+    }
 }
 
 static void PostFx_FrameUpdate() {
@@ -135,8 +159,9 @@ static void PostFx_FrameUpdate() {
 
     bool wantColorAdjust = master;
     bool wantGlow = master && CVarGetInteger(POSTFX_GLOW_CVAR, 1) != 0;
+    bool wantOutline = master && CVarGetInteger(POSTFX_OUTLINE_CVAR, 0) != 0;
 
-    PostFx_ReconcilePasses(wantColorAdjust, wantGlow);
+    PostFx_ReconcilePasses(wantColorAdjust, wantGlow, wantOutline);
     PostFx_PushUniforms();
 }
 

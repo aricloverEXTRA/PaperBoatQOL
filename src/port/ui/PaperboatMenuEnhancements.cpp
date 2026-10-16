@@ -528,6 +528,42 @@ void PaperboatMenu::AddMenuEnhancements() {
             )
         );
 
+    AddWidget(path, "Ink Outlines", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCED_SHADING("Outlines"))
+        .PreFunc(hideUnlessPostFx)
+        .Options(
+            CheckboxOptions().DefaultValue(false).Tooltip(
+                "Draws dark ink outlines around characters and objects for a "
+                "hand-drawn Paper Mario look."
+            )
+        );
+
+    AddWidget(path, "Outline Threshold", WIDGET_CVAR_SLIDER_FLOAT)
+        .CVar(CVAR_ENHANCED_SHADING("OutlineThreshold"))
+        .PreFunc([](WidgetInfo& info) {
+            info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1)
+                || !CVarGetInteger(CVAR_ENHANCED_SHADING("PostProcessing"), 0)
+                || !CVarGetInteger(CVAR_ENHANCED_SHADING("Outlines"), 0);
+        })
+        .Options(
+            FloatSliderOptions().Min(0.0f).Max(1.0f).DefaultValue(0.15f).Step(0.01f).Format("%.2f").Tooltip(
+                "Edge sensitivity for the ink outline. Lower catches more edges."
+            )
+        );
+
+    AddWidget(path, "Outline Strength", WIDGET_CVAR_SLIDER_FLOAT)
+        .CVar(CVAR_ENHANCED_SHADING("OutlineStrength"))
+        .PreFunc([](WidgetInfo& info) {
+            info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1)
+                || !CVarGetInteger(CVAR_ENHANCED_SHADING("PostProcessing"), 0)
+                || !CVarGetInteger(CVAR_ENHANCED_SHADING("Outlines"), 0);
+        })
+        .Options(
+            FloatSliderOptions().Min(0.0f).Max(1.0f).DefaultValue(0.9f).Step(0.05f).Format("%.2f").Tooltip(
+                "Opacity of the ink outline."
+            )
+        );
+
     AddWidget(path, "Contrast", WIDGET_CVAR_SLIDER_FLOAT)
         .CVar(CVAR_ENHANCED_SHADING("PostContrast"))
         .PreFunc(hideUnlessPostFx)
