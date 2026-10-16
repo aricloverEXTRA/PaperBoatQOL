@@ -35,6 +35,7 @@ typedef struct BenchmarkState {
     f32 frameTimes[BENCHMARK_MAX_SAMPLES];
     u64 startTime;
     u64 endTime;
+    u64 lastFrameTime;
     
     // Results
     f32 avgFPS;
@@ -62,6 +63,7 @@ void benchmark_start(const char* configName) {
     gBenchmarkState.frameCount = 0;
     gBenchmarkState.sampleCount = 0;
     gBenchmarkState.startTime = osGetTime();
+    gBenchmarkState.lastFrameTime = 0;
     gBenchmarkState.avgFPS = 0.0f;
     gBenchmarkState.minFPS = 1000.0f;
     gBenchmarkState.maxFPS = 0.0f;
@@ -162,12 +164,15 @@ void benchmark_frame_update(void) {
     
     // Sample every frame for detailed analysis
     if (gBenchmarkState.sampleCount < BENCHMARK_MAX_SAMPLES) {
-        // Get frame time from FrameInterpolation or similar
-        f32 frameTime = FrameInterpolation_GetLastFrameTimeMS();
-        if (frameTime > 0.0f) {
-            gBenchmarkState.frameTimes[gBenchmarkState.sampleCount] = frameTime;
-            gBenchmarkState.sampleCount++;
+        u64 now = osGetTime();
+        if (gBenchmarkState.lastFrameTime != 0) {
+            f32 frameTime = (f32)(now - gBenchmarkState.lastFrameTime);
+            if (frameTime > 0.0f) {
+                gBenchmarkState.frameTimes[gBenchmarkState.sampleCount] = frameTime;
+                gBenchmarkState.sampleCount++;
+            }
         }
+        gBenchmarkState.lastFrameTime = now;
     }
     
     // Auto-stop after duration
@@ -219,5 +224,5 @@ void benchmark_print_results(void) {
 
 // Register benchmark frame update hook
 void register_benchmark_hooks(void) {
-    REGISTER_EVENT_HANDLER(GameFrameUpdate, benchmark_frame_update);
+    REGISTER_LISTENER(GameFrameUpdate, EVENT_PRIORITY_NORMAL, [](IEvent*) { benchmark_frame_update(); });
 }

@@ -34,4 +34,3 @@
     <Location id="LOCATION_PEACHS_CASTLE" parent="LOCATION_BOWSERS_CASTLE" requires="STORY_EPILOGUE" startX="88" startY="22" path="-3,7;0,6;4,7"/>
     <Location id="LOCATION_MARIOS_HOUSE" parent="LOCATION_TOAD_TOWN" requires="STORY_NEVER" startX="98" startY="147" path=""/>
 </WorldMap>
-

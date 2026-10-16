@@ -166,7 +166,7 @@ void state_step_change_map(void) {
                 update_cameras();
                 gMapTransitionStateTime = 2;
                 gMapTransitionState++;
-}
+            }
             break;
         case CHANGE_MAP_AWAIT_MAIN:
             update_encounters();

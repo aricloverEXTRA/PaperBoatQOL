@@ -5,6 +5,7 @@
 #include <cstring>
 #include <sstream>
 #include <iostream>
+#include <spdlog/spdlog.h>
 
 // Renderer API (available in PaperBoat): register/unregister post passes and set custom uniforms.
 // These symbols are provided by the fast/prism renderer. Include their header if available;
@@ -38,13 +39,13 @@ void Manager::LoadProfilesFromResource() {
     // Try to load "shaders/lighting_profiles.yml" from the ResourceManager (mods and port shaders).
     auto ctx = Ship::Context::GetRawInstance();
     if (!ctx) {
-        Ship::DebugLog("LightingManager: No Ship::Context available; skipping lighting profiles load.");
+        SPDLOG_INFO("LightingManager: No Ship::Context available; skipping lighting profiles load.");
         return;
     }
 
     auto resourceMgr = ctx->GetResourceManager();
     if (!resourceMgr) {
-        Ship::DebugLog("LightingManager: No ResourceManager; skipping lighting profiles load.");
+        SPDLOG_INFO("LightingManager: No ResourceManager; skipping lighting profiles load.");
         return;
     }
 
@@ -72,7 +73,7 @@ void Manager::LoadProfilesFromResource() {
             // Expect top-level key "profiles"
             YAML::Node plist = root["profiles"] ? root["profiles"] : root;
             if (!plist || !plist.IsSequence()) {
-                Ship::DebugLog("LightingManager: lighting_profiles.yml did not contain a 'profiles' sequence; skipping %s", path.c_str());
+                SPDLOG_WARN("LightingManager: lighting_profiles.yml did not contain a 'profiles' sequence; skipping {}", path);
                 continue;
             }
 
@@ -126,19 +127,19 @@ void Manager::LoadProfilesFromResource() {
             }
 
             anyLoaded = true;
-            Ship::DebugLog("LightingManager: Loaded lighting profiles from %s", path.c_str());
+            SPDLOG_INFO("LightingManager: Loaded lighting profiles from {}", path);
             break; // stop at first successful candidate
         } catch (const YAML::Exception& e) {
-            Ship::DebugLog("LightingManager: YAML parse error for lighting profiles %s: %s", path.c_str(), e.what());
+            SPDLOG_ERROR("LightingManager: YAML parse error for lighting profiles {}: {}", path, e.what());
             continue;
         } catch (...) {
-            Ship::DebugLog("LightingManager: Unknown error while loading lighting profiles %s", path.c_str());
+            SPDLOG_WARN("LightingManager: Unknown error while loading lighting profiles {}", path);
             continue;
         }
     }
 
     if (!anyLoaded) {
-        Ship::DebugLog("LightingManager: No lighting_profiles.yml found in resources (mods/port).");
+        SPDLOG_INFO("LightingManager: No lighting_profiles.yml found in resources (mods/port).");
     }
 }
 
@@ -197,7 +198,7 @@ void Manager::ApplyProfile(const Profile& p) {
             activePostPassHandles.push_back(handle);
         } else {
             // registration failed: log and continue
-            Ship::DebugLog("LightingManager: gfx_register_post_pass failed for %s", passPath.c_str());
+            SPDLOG_WARN("LightingManager: gfx_register_post_pass failed for {}", passPath);
         }
     }
 
@@ -211,12 +212,12 @@ void Manager::ApplyProfile(const Profile& p) {
         try {
             gfx_set_custom_uniform(idx, arr);
         } catch (...) {
-            Ship::DebugLog("LightingManager: gfx_set_custom_uniform failed for idx %u", idx);
+            SPDLOG_WARN("LightingManager: gfx_set_custom_uniform failed for idx {}", (int)idx);
         }
     }
 
     activeProfileName = p.name;
-    Ship::DebugLog("LightingManager: Applied profile '%s' (area=%d map=%d)", p.name.c_str(), p.areaID, p.mapID);
+    SPDLOG_INFO("LightingManager: Applied profile '{}' (area={} map={})", p.name, p.areaID, p.mapID);
 }
 
 void Manager::ClearActiveProfile() {

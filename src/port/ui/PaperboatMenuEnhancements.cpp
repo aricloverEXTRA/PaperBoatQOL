@@ -451,14 +451,29 @@ void PaperboatMenu::AddMenuEnhancements() {
             )
         );
 
-    AddWidget(path, "Bloom", WIDGET_CVAR_CHECKBOX)
-        .CVar(CVAR_ENHANCED_SHADING("Bloom"))
+    auto hideUnlessPostFx = [](WidgetInfo& info) {
+        info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1)
+            || !CVarGetInteger(CVAR_ENHANCED_SHADING("PostProcessing"), 0);
+    };
+
+    AddWidget(path, "Post-Processing", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCED_SHADING("PostProcessing"))
         .PreFunc([](WidgetInfo& info) {
             info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1);
         })
         .Options(
             CheckboxOptions().DefaultValue(false).Tooltip(
-                "Adds glow effect to bright areas. Creates a dreamy, modern look."
+                "Enables real screen-space post-processing passes (glow and colour grading). "
+                "Only supported on the OpenGL and Vulkan renderers."
+            )
+        );
+
+    AddWidget(path, "Bloom", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCED_SHADING("Bloom"))
+        .PreFunc(hideUnlessPostFx)
+        .Options(
+            CheckboxOptions().DefaultValue(false).Tooltip(
+                "Adds glow effect to bright areas (lava, fire, magic). Creates a dreamy, modern look."
             )
         );
 
@@ -466,6 +481,7 @@ void PaperboatMenu::AddMenuEnhancements() {
         .CVar(CVAR_ENHANCED_SHADING("BloomThreshold"))
         .PreFunc([](WidgetInfo& info) {
             info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1) 
+                || !CVarGetInteger(CVAR_ENHANCED_SHADING("PostProcessing"), 0)
                 || !CVarGetInteger(CVAR_ENHANCED_SHADING("Bloom"), 0);
         })
         .Options(
@@ -478,6 +494,7 @@ void PaperboatMenu::AddMenuEnhancements() {
         .CVar(CVAR_ENHANCED_SHADING("BloomIntensity"))
         .PreFunc([](WidgetInfo& info) {
             info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1) 
+                || !CVarGetInteger(CVAR_ENHANCED_SHADING("PostProcessing"), 0)
                 || !CVarGetInteger(CVAR_ENHANCED_SHADING("Bloom"), 0);
         })
         .Options(
@@ -488,12 +505,10 @@ void PaperboatMenu::AddMenuEnhancements() {
 
     AddWidget(path, "Tone Mapping", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCED_SHADING("ToneMapping"))
-        .PreFunc([](WidgetInfo& info) {
-            info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1);
-        })
+        .PreFunc(hideUnlessPostFx)
         .Options(
             CheckboxOptions().DefaultValue(false).Tooltip(
-                "Applies Reinhard tone mapping for HDR-like color grading. "
+                "Applies ACES filmic tone mapping for HDR-like color grading. "
                 "Prevents blown-out highlights and improves color balance."
             )
         );
@@ -502,6 +517,7 @@ void PaperboatMenu::AddMenuEnhancements() {
         .CVar(CVAR_ENHANCED_SHADING("Exposure"))
         .PreFunc([](WidgetInfo& info) {
             info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1) 
+                || !CVarGetInteger(CVAR_ENHANCED_SHADING("PostProcessing"), 0)
                 || !CVarGetInteger(CVAR_ENHANCED_SHADING("ToneMapping"), 0);
         })
         .Options(
@@ -509,6 +525,38 @@ void PaperboatMenu::AddMenuEnhancements() {
                 "Overall scene brightness multiplier for tone mapping."
             )
         );
+
+    AddWidget(path, "Contrast", WIDGET_CVAR_SLIDER_FLOAT)
+        .CVar(CVAR_ENHANCED_SHADING("PostContrast"))
+        .PreFunc(hideUnlessPostFx)
+        .Options(
+            FloatSliderOptions().Min(0.5f).Max(2.0f).DefaultValue(1.0f).Step(0.05f).Format("%.2f").Tooltip(
+                "Post-processing contrast. 1.00 leaves the image unchanged."
+            )
+        );
+
+    AddWidget(path, "Saturation", WIDGET_CVAR_SLIDER_FLOAT)
+        .CVar(CVAR_ENHANCED_SHADING("PostSaturation"))
+        .PreFunc(hideUnlessPostFx)
+        .Options(
+            FloatSliderOptions().Min(0.0f).Max(2.0f).DefaultValue(1.0f).Step(0.05f).Format("%.2f").Tooltip(
+                "Post-processing colour saturation. 1.00 leaves the image unchanged, 0.00 is greyscale."
+            )
+        );
+
+    AddWidget(path, "Colour Tint Strength", WIDGET_CVAR_SLIDER_FLOAT)
+        .CVar(CVAR_ENHANCED_SHADING("PostTintMix"))
+        .PreFunc(hideUnlessPostFx)
+        .Options(
+            FloatSliderOptions().Min(0.0f).Max(1.0f).DefaultValue(0.0f).Step(0.05f).Format("%.2f").Tooltip(
+                "How strongly the colour tint below is blended over the scene."
+            )
+        );
+
+    AddWidget(path, "Colour Tint", WIDGET_CVAR_COLOR_PICKER)
+        .CVar(CVAR_ENHANCED_SHADING("PostTintColor"))
+        .PreFunc(hideUnlessPostFx)
+        .Options(ColorPickerOptions().DefaultValue({ 255, 255, 255, 255 }).ShowReset());
 
     // Enhancements > Status Bar
     path = { "Enhancements", "Status Bar", SECTION_COLUMN_1 };

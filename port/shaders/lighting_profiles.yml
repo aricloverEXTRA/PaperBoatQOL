@@ -10,16 +10,19 @@
 #               custom_u2: [ r, g, b, a ]   # sets uCustom2 register
 #             blend:
 #               duration: float seconds (optional)
+#
+# Only shaders that actually ship in this repo may be referenced here:
+#   shaders/post/cs_color_adjust.shader  (exposure / contrast / saturation / tint / tone map)
+#   shaders/post/cs_glow.shader          (bright glow / bloom)
 
 profiles:
   - name: "default_soft"
     # global default
     post_passes:
       - "shaders/post/cs_color_adjust.shader"
-      - "shaders/post/cs_soften_edges.shader"
     uniforms:
-      custom_u2: [ 1.0, 0.95, 0.9, 1.0 ]  # example color tweak, register 2
-      u3:       [ 0.08, 0.12, 0.18, 1.0 ] # e.g. shadow tint
+      custom_u2: [ 1.0, 1.0, 1.0, 0.0 ]  # exposure, contrast, saturation, tint mix
+      u3:       [ 1.0, 1.0, 1.0, 0.0 ]   # tint r, g, b, tone map enable
     blend:
       duration: 0.0
 
@@ -27,11 +30,10 @@ profiles:
     area_id: 0    # example area ID for outdoors; replace with real area IDs
     post_passes:
       - "shaders/post/cs_color_adjust.shader"
-      - "shaders/post/cs_sun_rays.shader"
-      - "shaders/post/cs_soften_edges.shader"
+      - "shaders/post/cs_glow.shader"
     uniforms:
       custom_u2: [ 1.05, 1.02, 0.95, 1.0 ]
-      custom_u4: [ 0.9, 0.85, 0.7, 1.0 ]
+      custom_u4: [ 1.0, 0.3, 2.0, 1.0 ]  # glow threshold, intensity, radius, enabled
     blend:
       duration: 0.3
 
@@ -39,9 +41,8 @@ profiles:
     area_id: 10
     post_passes:
       - "shaders/post/cs_color_adjust.shader"
-      - "shaders/post/cs_darken.shader"
     uniforms:
-      custom_u2: [ 0.6, 0.65, 0.7, 1.0 ]
+      custom_u2: [ 0.9, 1.1, 0.95, 0.0 ]
       u5:       [ 0.0, 0.0, 0.0, 1.0 ]
     blend:
       duration: 0.25
@@ -50,8 +51,8 @@ profiles:
     area_id: 99
     map_id: 1
     post_passes:
-      - "shaders/post/cs_intense.shader"
+      - "shaders/post/cs_glow.shader"
     uniforms:
-      custom_u2: [ 1.2, 1.1, 1.05, 1.0 ]
+      custom_u4: [ 1.0, 0.5, 3.0, 1.0 ]
     blend:
       duration: 0.15

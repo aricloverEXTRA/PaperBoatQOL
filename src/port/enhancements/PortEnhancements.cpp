@@ -12,6 +12,7 @@
 
 extern void register_enhanced_shading_hooks(void);
 extern void register_benchmark_hooks(void);
+extern void register_postfx_hooks(void);
 
 void PortEnhancements_Init() {
     LoadGuiTextures();
@@ -19,6 +20,7 @@ void PortEnhancements_Init() {
     SaveManager_Init();
     register_enhanced_shading_hooks();
     register_benchmark_hooks();
+    register_postfx_hooks();
 }
 
 void PortEnhancements_Register() {
