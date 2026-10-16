@@ -181,4 +181,9 @@ DynamicLight* enhanced_shading_get_dynamic_light(s32 lightIndex);
 void enhanced_shading_clear_dynamic_lights(void);
 void enhanced_shading_register_default_dynamic_lights(const char* areaName, s32 mapID);
 
+// Platform-aware graphics preset limits
+s32 enhanced_shading_get_platform_max_preset(void);
+s32 enhanced_shading_get_effective_preset(void);
+b32 enhanced_shading_platform_allows_feature(s32 featureFlag);
+
 #endif

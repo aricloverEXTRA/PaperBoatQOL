@@ -69,14 +69,14 @@ void clear_enhanced_shading_data(void) {
         profile->dofFocalRange = 100.0f;
         profile->dofMaxBlur = 0.5f;
         profile->dofNearBlurMax = 0.3f;
-        profile->dofSkyboxExempt = TRUE;
+        profile->dofSkyboxExempt = 1;
         
         // Shadows
         profile->shadowDistance = 1000.0f;
         profile->shadowBias = 0.005f;
         profile->shadowNormalBias = 0.02f;
         profile->shadowResolution = 2;
-        profile->shadowPCF = TRUE;
+        profile->shadowPCF = 1;
         
         // Bloom
         profile->bloomThreshold = 1.0f;
@@ -86,7 +86,7 @@ void clear_enhanced_shading_data(void) {
         // Tone Mapping
         profile->exposure = 1.0f;
         profile->whitePoint = 1.0f;
-        profile->toneMappingEnabled = FALSE;
+        profile->toneMappingEnabled = 0;
         
         auxProfile->flags = 0;
         auxProfile->presetType = ENHANCED_SHADING_PRESET_NONE;
@@ -426,5 +426,73 @@ void enhanced_shading_register_default_dynamic_lights(const char* areaName, s32 
             .ownerEntityID = -1,
         };
         enhanced_shading_add_dynamic_light(&lavaGlow);
+    }
+}
+
+// ===== Platform-aware graphics preset limits =====
+//
+// Mobile/console/web targets get capped so devices don't overheat or
+// drop frames. Desktop (Windows/Linux/macOS) is unrestricted.
+
+s32 enhanced_shading_get_platform_max_preset(void) {
+#if defined(__EMSCRIPTEN__)
+    // Web builds use WASM + WebGL2 and lack WebGPU fallbacks, so cap at Low.
+    return ENHANCED_GRAPHICS_PRESET_LOW;
+#elif defined(__ANDROID__) || defined(__IOS__) || defined(__SWITCH__) || defined(__WIIU__)
+    // Battery/thermals: cap at Medium (Switch-like optimization for mobile).
+    return ENHANCED_GRAPHICS_PRESET_MEDIUM;
+#else
+    // Windows / Linux / macOS: no cap (Custom allowed).
+    return ENHANCED_GRAPHICS_PRESET_CUSTOM;
+#endif
+}
+
+s32 enhanced_shading_get_effective_preset(void) {
+    s32 preset = CVarGetInteger(CVAR_ENHANCED_SHADING("GraphicsPreset"), ENHANCED_GRAPHICS_PRESET_CUSTOM);
+    s32 maxPreset = enhanced_shading_get_platform_max_preset();
+
+    if (preset < ENHANCED_GRAPHICS_PRESET_LOW) {
+        preset = ENHANCED_GRAPHICS_PRESET_LOW;
+    }
+    if (preset > maxPreset) {
+        preset = maxPreset;
+    }
+    return preset;
+}
+
+// Returns TRUE if the given feature flag is enabled by the effective preset.
+// Custom preset falls back to the individual CVars handled by the caller.
+b32 enhanced_shading_platform_allows_feature(s32 featureFlag) {
+    s32 preset = enhanced_shading_get_effective_preset();
+
+    switch (preset) {
+        case ENHANCED_GRAPHICS_PRESET_LOW:
+            // Baseline: hemisphere shading only.
+            return featureFlag == ENHANCED_SHADING_FLAG_HEMISPHERE
+                || featureFlag == ENHANCED_SHADING_FLAG_DYNAMIC_LIGHTS
+                || featureFlag == ENHANCED_SHADING_FLAG_FALLOFF_SMOOTH;
+        case ENHANCED_GRAPHICS_PRESET_MEDIUM:
+            // Balanced: adds AO + rim + temporal stability.
+            return featureFlag == ENHANCED_SHADING_FLAG_HEMISPHERE
+                || featureFlag == ENHANCED_SHADING_FLAG_DYNAMIC_LIGHTS
+                || featureFlag == ENHANCED_SHADING_FLAG_FALLOFF_SMOOTH
+                || featureFlag == ENHANCED_SHADING_FLAG_AMBIENT_OCCLUSION
+                || featureFlag == ENHANCED_SHADING_FLAG_RIM_LIGHTING
+                || featureFlag == ENHANCED_SHADING_FLAG_TEMPORAL_STABILITY;
+        case ENHANCED_GRAPHICS_PRESET_HIGH:
+            // Quality: adds subsurface + DOF.
+            return featureFlag == ENHANCED_SHADING_FLAG_HEMISPHERE
+                || featureFlag == ENHANCED_SHADING_FLAG_DYNAMIC_LIGHTS
+                || featureFlag == ENHANCED_SHADING_FLAG_FALLOFF_SMOOTH
+                || featureFlag == ENHANCED_SHADING_FLAG_AMBIENT_OCCLUSION
+                || featureFlag == ENHANCED_SHADING_FLAG_RIM_LIGHTING
+                || featureFlag == ENHANCED_SHADING_FLAG_TEMPORAL_STABILITY
+                || featureFlag == ENHANCED_SHADING_FLAG_SUBSURFACE
+                || featureFlag == ENHANCED_SHADING_FLAG_DEPTH_OF_FIELD;
+        case ENHANCED_GRAPHICS_PRESET_ULTRA:
+            // Everything on.
+            return true;
+        default:
+            return false;
     }
 }

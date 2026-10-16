@@ -344,7 +344,9 @@ void PaperboatMenu::AddMenuEnhancements() {
             ComboboxOptions()
                 .Tooltip(
                     "Selects a graphics preset that automatically configures multiple effects. "
-                    "'Custom' allows individual effect toggles below."
+                    "'Custom' allows individual effect toggles below. "
+                    "Mobile, console, and web builds are capped (Web = Low, Android/iOS/Switch = Medium) "
+                    "to prevent overheating and frame drops."
                 )
                 .ComboMap(graphicsPresetOptions)
         );

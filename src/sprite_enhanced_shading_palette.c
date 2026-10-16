@@ -117,13 +117,31 @@ void create_enhanced_shading_palette(Matrix4f mtx, s32 uls, s32 ult, s32 lrs, s3
         return;
     }
     
-    b32 hemisphereEnabled = CVarGetInteger(CVAR_ENHANCED_SHADING("HemisphereLighting"), 1);
-    b32 rimEnabled = CVarGetInteger(CVAR_ENHANCED_SHADING("RimLighting"), 0);
-    b32 subsurfaceEnabled = CVarGetInteger(CVAR_ENHANCED_SHADING("SubsurfaceScattering"), 0);
-    b32 aoEnabled = CVarGetInteger(CVAR_ENHANCED_SHADING("AmbientOcclusion"), 0);
-    b32 smoothFalloffEnabled = CVarGetInteger(CVAR_ENHANCED_SHADING("SmoothFalloff"), 1);
-    b32 temporalEnabled = CVarGetInteger(CVAR_ENHANCED_SHADING("TemporalStability"), 1);
-    b32 dynamicLightsEnabled = CVarGetInteger(CVAR_ENHANCED_SHADING("DynamicLights"), 1);
+    // Determine effective feature enables. On restricted platforms (mobile/
+    // console/web) the graphics preset is clamped and overrides individual
+    // toggles; on desktop "Custom" uses the per-feature CVars.
+    s32 graphicsPreset = enhanced_shading_get_effective_preset();
+    b32 usePreset = (graphicsPreset != ENHANCED_GRAPHICS_PRESET_CUSTOM);
+
+    b32 presetHemisphere = enhanced_shading_platform_allows_feature(ENHANCED_SHADING_FLAG_HEMISPHERE);
+    b32 presetRim = enhanced_shading_platform_allows_feature(ENHANCED_SHADING_FLAG_RIM_LIGHTING);
+    b32 presetSubsurface = enhanced_shading_platform_allows_feature(ENHANCED_SHADING_FLAG_SUBSURFACE);
+    b32 presetAO = enhanced_shading_platform_allows_feature(ENHANCED_SHADING_FLAG_AMBIENT_OCCLUSION);
+    b32 presetSmoothFalloff = enhanced_shading_platform_allows_feature(ENHANCED_SHADING_FLAG_FALLOFF_SMOOTH);
+    b32 presetTemporal = enhanced_shading_platform_allows_feature(ENHANCED_SHADING_FLAG_TEMPORAL_STABILITY);
+    b32 presetDynamicLights = enhanced_shading_platform_allows_feature(ENHANCED_SHADING_FLAG_DYNAMIC_LIGHTS);
+    b32 presetDOF = enhanced_shading_platform_allows_feature(ENHANCED_SHADING_FLAG_DEPTH_OF_FIELD);
+    b32 presetShadows = enhanced_shading_platform_allows_feature(ENHANCED_SHADING_FLAG_SHADOWS);
+    b32 presetBloom = enhanced_shading_platform_allows_feature(ENHANCED_SHADING_FLAG_BLOOM);
+    b32 presetToneMapping = enhanced_shading_platform_allows_feature(ENHANCED_SHADING_FLAG_TONE_MAPPING);
+
+    b32 hemisphereEnabled = usePreset ? presetHemisphere : CVarGetInteger(CVAR_ENHANCED_SHADING("HemisphereLighting"), 1);
+    b32 rimEnabled = usePreset ? presetRim : CVarGetInteger(CVAR_ENHANCED_SHADING("RimLighting"), 0);
+    b32 subsurfaceEnabled = usePreset ? presetSubsurface : CVarGetInteger(CVAR_ENHANCED_SHADING("SubsurfaceScattering"), 0);
+    b32 aoEnabled = usePreset ? presetAO : CVarGetInteger(CVAR_ENHANCED_SHADING("AmbientOcclusion"), 0);
+    b32 smoothFalloffEnabled = usePreset ? presetSmoothFalloff : CVarGetInteger(CVAR_ENHANCED_SHADING("SmoothFalloff"), 1);
+    b32 temporalEnabled = usePreset ? presetTemporal : CVarGetInteger(CVAR_ENHANCED_SHADING("TemporalStability"), 1);
+    b32 dynamicLightsEnabled = usePreset ? presetDynamicLights : CVarGetInteger(CVAR_ENHANCED_SHADING("DynamicLights"), 1);
     b32 dynamicLightFlickerEnabled = CVarGetInteger(CVAR_ENHANCED_SHADING("DynamicLightFlicker"), 1);
     
     if (hemisphereEnabled) {
@@ -171,10 +189,10 @@ void create_enhanced_shading_palette(Matrix4f mtx, s32 uls, s32 ult, s32 lrs, s3
         profile->flags &= ~ENHANCED_SHADING_FLAG_DYNAMIC_LIGHTS;
     }
     
-    b32 dofEnabled = CVarGetInteger(CVAR_ENHANCED_SHADING("DepthOfField"), 0);
-    b32 shadowsEnabled = CVarGetInteger(CVAR_ENHANCED_SHADING("Shadows"), 0);
-    b32 bloomEnabled = CVarGetInteger(CVAR_ENHANCED_SHADING("Bloom"), 0);
-    b32 toneMappingEnabled = CVarGetInteger(CVAR_ENHANCED_SHADING("ToneMapping"), 0);
+    b32 dofEnabled = usePreset ? presetDOF : CVarGetInteger(CVAR_ENHANCED_SHADING("DepthOfField"), 0);
+    b32 shadowsEnabled = usePreset ? presetShadows : CVarGetInteger(CVAR_ENHANCED_SHADING("Shadows"), 0);
+    b32 bloomEnabled = usePreset ? presetBloom : CVarGetInteger(CVAR_ENHANCED_SHADING("Bloom"), 0);
+    b32 toneMappingEnabled = usePreset ? presetToneMapping : CVarGetInteger(CVAR_ENHANCED_SHADING("ToneMapping"), 0);
     b32 skyboxDofExempt = CVarGetInteger(CVAR_ENHANCED_SHADING("SkyboxDOFExempt"), 1);
     
     if (dofEnabled) {

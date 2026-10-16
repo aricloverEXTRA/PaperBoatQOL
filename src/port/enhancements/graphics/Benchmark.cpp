@@ -58,7 +58,7 @@ void benchmark_start(const char* configName) {
         return;
     }
     
-    gBenchmarkState.active = TRUE;
+    gBenchmarkState.active = 1;
     gBenchmarkState.frameCount = 0;
     gBenchmarkState.sampleCount = 0;
     gBenchmarkState.startTime = osGetTime();
@@ -101,7 +101,7 @@ void benchmark_stop(void) {
         return;
     }
     
-    gBenchmarkState.active = FALSE;
+    gBenchmarkState.active = 0;
     gBenchmarkState.endTime = osGetTime();
     
     // Calculate results
