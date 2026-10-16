@@ -37,6 +37,7 @@ typedef enum EnhancedShadingFlags {
     ENHANCED_SHADING_FLAG_FALLOFF_SMOOTH  = (1 << 6),
     ENHANCED_SHADING_FLAG_TEMPORAL_STABILITY = (1 << 7),
     ENHANCED_SHADING_FLAG_DYNAMIC_LIGHTS  = (1 << 8),
+    ENHANCED_SHADING_FLAG_HEMISPHERE      = (1 << 9),
 } EnhancedShadingFlags;
 
 typedef enum EnhancedLightType {
