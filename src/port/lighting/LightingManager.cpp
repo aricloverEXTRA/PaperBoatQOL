@@ -143,7 +143,7 @@ void Manager::LoadProfilesFromResource() {
     }
 }
 
-const Manager::Profile* Manager::FindBestProfile(int areaID, int mapID) const {
+const Profile* Manager::FindBestProfile(int areaID, int mapID) const {
     // Priority: exact (area+map) -> area-only -> default(profile with areaID=-1/mapID=-1)
     const Profile* fallback = nullptr;
     for (const auto& p : profiles) {

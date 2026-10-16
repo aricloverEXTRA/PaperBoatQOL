@@ -11,7 +11,6 @@
  * "PostProcessing" CVar (default off).
  */
 
-#include "common.h"
 #include "port/hooks/Events.h"
 #include "port/ui/cvar_prefixes.h"
 
@@ -20,6 +19,8 @@
 #include <fast/Fast3dWindow.h>
 
 #include <memory>
+
+#include "common.h"
 
 // Post-pass API from the fast/prism renderer. Declared by hand (like
 // LightingManager.cpp) to avoid pulling in the heavy interpreter header.
