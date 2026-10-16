@@ -8,6 +8,7 @@
 #include "common.h"
 #include "port/Engine.h"
 #include "port/hooks/Events.h"
+#include <string>
 
 #define BENCHMARK_MAX_SAMPLES 1000
 #define BENCHMARK_DURATION_FRAMES 1800  // 30 seconds at 60 FPS

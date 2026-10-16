@@ -153,7 +153,7 @@ void create_enhanced_shading_palette(Matrix4f mtx, s32 uls, s32 ult, s32 lrs, s3
         worldNormal.z /= normalLen;
     }
     
-    Vec3f viewDir = { -camera->mtxView[2][0], -camera->mtxView[2][1], -camera->mtxView[2][2] };
+    Vec3f viewDir = { -camera->mtxViewPlayer[2][0], -camera->mtxViewPlayer[2][1], -camera->mtxViewPlayer[2][2] };
     f32 viewLen = sqrtf(viewDir.x * viewDir.x + viewDir.y * viewDir.y + viewDir.z * viewDir.z);
     if (viewLen > 0.0f) {
         viewDir.x /= viewLen;
