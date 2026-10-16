@@ -4,6 +4,10 @@
 #include "common.h"
 #include "common_structs.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define ENHANCED_SHADING_MAX_LIGHTS 16
 #define ENHANCED_SHADING_MAX_PRESETS 512
 #define ENHANCED_SHADING_MAX_DYNAMIC_LIGHTS 64
@@ -185,5 +189,9 @@ void enhanced_shading_register_default_dynamic_lights(const char* areaName, s32 
 s32 enhanced_shading_get_platform_max_preset(void);
 s32 enhanced_shading_get_effective_preset(void);
 b32 enhanced_shading_platform_allows_feature(s32 featureFlag);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
