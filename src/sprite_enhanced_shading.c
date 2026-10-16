@@ -2,7 +2,6 @@
 #include "sprite.h"
 #include "string.h"
 #include "port/patches/Patches.h"
-#include "port/save/SaveManager.h"
 #include "port/hooks/Events.h"
 #include "port/ui/cvar_prefixes.h"
 #include "sprite/sprite_enhanced_shading.h"
