@@ -48,6 +48,59 @@ static f32 compute_ambient_occlusion(const EnhancedShadingProfile* profile, f32 
     return ao < 0.0f ? 0.0f : (ao > 1.0f ? 1.0f : ao);
 }
 
+static f32 compute_dof_blur(const EnhancedShadingProfile* profile, f32 distance) {
+    if (!(profile->flags & ENHANCED_SHADING_FLAG_DEPTH_OF_FIELD)) return 0.0f;
+    
+    f32 diff = distance - profile->dofFocalDistance;
+    f32 blur = 0.0f;
+    
+    if (diff > profile->dofFocalRange) {
+        blur = (diff - profile->dofFocalRange) / profile->dofFocalRange;
+    } else if (diff < -profile->dofFocalRange) {
+        blur = (-diff - profile->dofFocalRange) / profile->dofFocalRange;
+    }
+    
+    blur = blur * profile->dofMaxBlur;
+    if (blur > profile->dofMaxBlur) blur = profile->dofMaxBlur;
+    
+    // Near blur
+    if (diff < -profile->dofFocalRange) {
+        f32 nearBlur = (-diff - profile->dofFocalRange) / profile->dofFocalRange * profile->dofNearBlurMax;
+        if (nearBlur > profile->dofNearBlurMax) nearBlur = profile->dofNearBlurMax;
+        if (nearBlur > blur) blur = nearBlur;
+    }
+    
+    return blur;
+}
+
+static f32 compute_shadow_factor(const EnhancedShadingProfile* profile, f32 distance, f32 ndotl) {
+    if (!(profile->flags & ENHANCED_SHADING_FLAG_SHADOWS)) return 1.0f;
+    if (distance > profile->shadowDistance) return 1.0f;
+    if (ndotl <= 0.0f) return 1.0f;
+    
+    // Simple shadow attenuation based on distance and angle
+    f32 shadowFactor = 1.0f - (ndotl * (1.0f - distance / profile->shadowDistance));
+    shadowFactor = shadowFactor * 0.5f + 0.5f; // Blend with 50% shadow intensity
+    
+    return shadowFactor;
+}
+
+static f32 compute_bloom_factor(const EnhancedShadingProfile* profile, f32 luminance) {
+    if (!(profile->flags & ENHANCED_SHADING_FLAG_BLOOM)) return 0.0f;
+    if (luminance < profile->bloomThreshold) return 0.0f;
+    
+    f32 bloom = (luminance - profile->bloomThreshold) * profile->bloomIntensity;
+    return bloom < 1.0f ? bloom : 1.0f;
+}
+
+static f32 apply_tone_mapping(const EnhancedShadingProfile* profile, f32 color) {
+    if (!(profile->flags & ENHANCED_SHADING_FLAG_TONE_MAPPING)) return color;
+    
+    // Reinhard tone mapping
+    f32 mapped = (color * profile->exposure) / (color * profile->exposure + profile->whitePoint);
+    return mapped;
+}
+
 void create_enhanced_shading_palette(Matrix4f mtx, s32 uls, s32 ult, s32 lrs, s32 lrt, s32 alpha, s32 otherModeLBits) {
     Camera* camera = &gCameras[gCurrentCameraID];
     EnhancedShadingProfile* profile = gEnhancedShadingProfile;
@@ -116,6 +169,51 @@ void create_enhanced_shading_palette(Matrix4f mtx, s32 uls, s32 ult, s32 lrs, s3
         profile->flags |= ENHANCED_SHADING_FLAG_DYNAMIC_LIGHTS;
     } else {
         profile->flags &= ~ENHANCED_SHADING_FLAG_DYNAMIC_LIGHTS;
+    }
+    
+    b32 dofEnabled = CVarGetInteger(CVAR_ENHANCED_SHADING("DepthOfField"), 0);
+    b32 shadowsEnabled = CVarGetInteger(CVAR_ENHANCED_SHADING("Shadows"), 0);
+    b32 bloomEnabled = CVarGetInteger(CVAR_ENHANCED_SHADING("Bloom"), 0);
+    b32 toneMappingEnabled = CVarGetInteger(CVAR_ENHANCED_SHADING("ToneMapping"), 0);
+    b32 skyboxDofExempt = CVarGetInteger(CVAR_ENHANCED_SHADING("SkyboxDOFExempt"), 1);
+    
+    if (dofEnabled) {
+        profile->flags |= ENHANCED_SHADING_FLAG_DEPTH_OF_FIELD;
+        profile->dofFocalDistance = CVarGetFloat(CVAR_ENHANCED_SHADING("DOFFocalDistance"), 500.0f);
+        profile->dofFocalRange = CVarGetFloat(CVAR_ENHANCED_SHADING("DOFFocalRange"), 100.0f);
+        profile->dofMaxBlur = CVarGetFloat(CVAR_ENHANCED_SHADING("DOFMaxBlur"), 0.5f);
+        profile->dofNearBlurMax = CVarGetFloat(CVAR_ENHANCED_SHADING("DOFNearBlurMax"), 0.3f);
+        profile->dofSkyboxExempt = skyboxDofExempt;
+    } else {
+        profile->flags &= ~ENHANCED_SHADING_FLAG_DEPTH_OF_FIELD;
+    }
+    
+    if (shadowsEnabled) {
+        profile->flags |= ENHANCED_SHADING_FLAG_SHADOWS;
+        profile->shadowDistance = CVarGetFloat(CVAR_ENHANCED_SHADING("ShadowDistance"), 1000.0f);
+        profile->shadowBias = CVarGetFloat(CVAR_ENHANCED_SHADING("ShadowBias"), 0.005f);
+        profile->shadowNormalBias = CVarGetFloat(CVAR_ENHANCED_SHADING("ShadowNormalBias"), 0.02f);
+        profile->shadowResolution = CVarGetInteger(CVAR_ENHANCED_SHADING("ShadowResolution"), 2);
+        profile->shadowPCF = CVarGetInteger(CVAR_ENHANCED_SHADING("ShadowPCF"), 1);
+    } else {
+        profile->flags &= ~ENHANCED_SHADING_FLAG_SHADOWS;
+    }
+    
+    if (bloomEnabled) {
+        profile->flags |= ENHANCED_SHADING_FLAG_BLOOM;
+        profile->bloomThreshold = CVarGetFloat(CVAR_ENHANCED_SHADING("BloomThreshold"), 1.0f);
+        profile->bloomIntensity = CVarGetFloat(CVAR_ENHANCED_SHADING("BloomIntensity"), 0.3f);
+        profile->bloomRadius = CVarGetFloat(CVAR_ENHANCED_SHADING("BloomRadius"), 1.0f);
+    } else {
+        profile->flags &= ~ENHANCED_SHADING_FLAG_BLOOM;
+    }
+    
+    if (toneMappingEnabled) {
+        profile->flags |= ENHANCED_SHADING_FLAG_TONE_MAPPING;
+        profile->exposure = CVarGetFloat(CVAR_ENHANCED_SHADING("Exposure"), 1.0f);
+        profile->whitePoint = CVarGetFloat(CVAR_ENHANCED_SHADING("WhitePoint"), 1.0f);
+    } else {
+        profile->flags &= ~ENHANCED_SHADING_FLAG_TONE_MAPPING;
     }
     
     f32 shadowDirX = 0.0f;

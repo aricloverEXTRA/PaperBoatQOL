@@ -64,6 +64,30 @@ void clear_enhanced_shading_data(void) {
         profile->aoRadius = 1.0f;
         profile->temporalBlendFactor = 0.9f;
         
+        // Depth of Field
+        profile->dofFocalDistance = 500.0f;
+        profile->dofFocalRange = 100.0f;
+        profile->dofMaxBlur = 0.5f;
+        profile->dofNearBlurMax = 0.3f;
+        profile->dofSkyboxExempt = TRUE;
+        
+        // Shadows
+        profile->shadowDistance = 1000.0f;
+        profile->shadowBias = 0.005f;
+        profile->shadowNormalBias = 0.02f;
+        profile->shadowResolution = 2;
+        profile->shadowPCF = TRUE;
+        
+        // Bloom
+        profile->bloomThreshold = 1.0f;
+        profile->bloomIntensity = 0.3f;
+        profile->bloomRadius = 1.0f;
+        
+        // Tone Mapping
+        profile->exposure = 1.0f;
+        profile->whitePoint = 1.0f;
+        profile->toneMappingEnabled = FALSE;
+        
         auxProfile->flags = 0;
         auxProfile->presetType = ENHANCED_SHADING_PRESET_NONE;
         auxProfile->lightCount = 0;

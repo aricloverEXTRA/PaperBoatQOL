@@ -27,6 +27,14 @@ typedef enum EnhancedShadingPresetType {
     ENHANCED_SHADING_PRESET_CUSTOM,
 } EnhancedShadingPresetType;
 
+typedef enum EnhancedGraphicsPreset {
+    ENHANCED_GRAPHICS_PRESET_LOW = 0,
+    ENHANCED_GRAPHICS_PRESET_MEDIUM,
+    ENHANCED_GRAPHICS_PRESET_HIGH,
+    ENHANCED_GRAPHICS_PRESET_ULTRA,
+    ENHANCED_GRAPHICS_PRESET_CUSTOM,
+} EnhancedGraphicsPreset;
+
 typedef enum EnhancedShadingFlags {
     ENHANCED_SHADING_FLAG_ENABLED         = (1 << 0),
     ENHANCED_SHADING_FLAG_USE_PRESET      = (1 << 1),
@@ -38,6 +46,11 @@ typedef enum EnhancedShadingFlags {
     ENHANCED_SHADING_FLAG_TEMPORAL_STABILITY = (1 << 7),
     ENHANCED_SHADING_FLAG_DYNAMIC_LIGHTS  = (1 << 8),
     ENHANCED_SHADING_FLAG_HEMISPHERE      = (1 << 9),
+    ENHANCED_SHADING_FLAG_DEPTH_OF_FIELD  = (1 << 10),
+    ENHANCED_SHADING_FLAG_SHADOWS         = (1 << 11),
+    ENHANCED_SHADING_FLAG_BLOOM           = (1 << 12),
+    ENHANCED_SHADING_FLAG_TONE_MAPPING    = (1 << 13),
+    ENHANCED_SHADING_FLAG_SKYBOX_DOF_EXEMPT = (1 << 14),
 } EnhancedShadingFlags;
 
 typedef enum EnhancedLightType {
@@ -100,9 +113,34 @@ typedef struct EnhancedShadingProfile {
     f32 aoIntensity;
     f32 aoRadius;
     f32 temporalBlendFactor;
+    
+    // Depth of Field
+    f32 dofFocalDistance;
+    f32 dofFocalRange;
+    f32 dofMaxBlur;
+    f32 dofNearBlurMax;
+    b32 dofSkyboxExempt;
+    
+    // Shadows
+    f32 shadowDistance;
+    f32 shadowBias;
+    f32 shadowNormalBias;
+    u8 shadowResolution;
+    b32 shadowPCF;
+    
+    // Bloom
+    f32 bloomThreshold;
+    f32 bloomIntensity;
+    f32 bloomRadius;
+    
+    // Tone Mapping
+    f32 exposure;
+    f32 whitePoint;
+    b32 toneMappingEnabled;
+    
     DynamicLight dynamicLights[ENHANCED_SHADING_MAX_DYNAMIC_LIGHTS];
     u8 dynamicLightCount;
-    u8 unk_padding[7];
+    u8 unk_padding[6];
 } EnhancedShadingProfile;
 
 typedef struct EnhancedShadingPreset {

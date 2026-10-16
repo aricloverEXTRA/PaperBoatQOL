@@ -326,6 +326,188 @@ void PaperboatMenu::AddMenuEnhancements() {
             )
         );
 
+    // Graphics Presets
+    static const std::unordered_map<int32_t, const char*> graphicsPresetOptions = {
+        { 0, "Low (Performance)" },
+        { 1, "Medium (Balanced)" },
+        { 2, "High (Quality)" },
+        { 3, "Ultra (Maximum)" },
+        { 4, "Custom" },
+    };
+
+    AddWidget(path, "Graphics Preset", WIDGET_CVAR_COMBOBOX)
+        .CVar(CVAR_ENHANCED_SHADING("GraphicsPreset"))
+        .PreFunc([](WidgetInfo& info) {
+            info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1);
+        })
+        .Options(
+            ComboboxOptions()
+                .Tooltip(
+                    "Selects a graphics preset that automatically configures multiple effects. "
+                    "'Custom' allows individual effect toggles below."
+                )
+                .ComboMap(graphicsPresetOptions)
+        );
+
+    // Advanced Effects
+    AddWidget(path, "Advanced Effects", WIDGET_SEPARATOR_TEXT);
+
+    AddWidget(path, "Depth of Field", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCED_SHADING("DepthOfField"))
+        .PreFunc([](WidgetInfo& info) {
+            info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1);
+        })
+        .Options(
+            CheckboxOptions().DefaultValue(false).Tooltip(
+                "Simulates camera focus blur. Objects outside the focal range appear blurred. "
+                "Skyboxes are exempt by default to preserve atmosphere."
+            )
+        );
+
+    AddWidget(path, "DOF Focal Distance", WIDGET_CVAR_SLIDER_FLOAT)
+        .CVar(CVAR_ENHANCED_SHADING("DOFFocalDistance"))
+        .PreFunc([](WidgetInfo& info) {
+            info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1) 
+                || !CVarGetInteger(CVAR_ENHANCED_SHADING("DepthOfField"), 0);
+        })
+        .Options(
+            FloatSliderOptions().Min(50.0f).Max(2000.0f).DefaultValue(500.0f).Step(10.0f).Format("%.0f").Tooltip(
+                "Distance from camera where objects are in sharp focus."
+            )
+        );
+
+    AddWidget(path, "DOF Focal Range", WIDGET_CVAR_SLIDER_FLOAT)
+        .CVar(CVAR_ENHANCED_SHADING("DOFFocalRange"))
+        .PreFunc([](WidgetInfo& info) {
+            info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1) 
+                || !CVarGetInteger(CVAR_ENHANCED_SHADING("DepthOfField"), 0);
+        })
+        .Options(
+            FloatSliderOptions().Min(10.0f).Max(500.0f).DefaultValue(100.0f).Step(5.0f).Format("%.0f").Tooltip(
+                "Range around focal distance where objects remain sharp."
+            )
+        );
+
+    AddWidget(path, "DOF Max Blur", WIDGET_CVAR_SLIDER_FLOAT)
+        .CVar(CVAR_ENHANCED_SHADING("DOFMaxBlur"))
+        .PreFunc([](WidgetInfo& info) {
+            info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1) 
+                || !CVarGetInteger(CVAR_ENHANCED_SHADING("DepthOfField"), 0);
+        })
+        .Options(
+            FloatSliderOptions().Min(0.0f).Max(1.0f).DefaultValue(0.5f).Step(0.05f).Format("%.2f").Tooltip(
+                "Maximum blur strength for out-of-focus areas."
+            )
+        );
+
+    AddWidget(path, "DOF Skybox Exempt", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCED_SHADING("SkyboxDOFExempt"))
+        .PreFunc([](WidgetInfo& info) {
+            info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1) 
+                || !CVarGetInteger(CVAR_ENHANCED_SHADING("DepthOfField"), 0);
+        })
+        .Options(
+            CheckboxOptions().DefaultValue(true).Tooltip(
+                "Prevents skyboxes from being blurred by Depth of Field. "
+                "Preserves sky atmosphere and distant vistas."
+            )
+        );
+
+    AddWidget(path, "Shadows", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCED_SHADING("Shadows"))
+        .PreFunc([](WidgetInfo& info) {
+            info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1);
+        })
+        .Options(
+            CheckboxOptions().DefaultValue(false).Tooltip(
+                "Enables real-time shadows for dynamic lights. "
+                "Significant performance cost on lower-end hardware."
+            )
+        );
+
+    AddWidget(path, "Shadow Distance", WIDGET_CVAR_SLIDER_FLOAT)
+        .CVar(CVAR_ENHANCED_SHADING("ShadowDistance"))
+        .PreFunc([](WidgetInfo& info) {
+            info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1) 
+                || !CVarGetInteger(CVAR_ENHANCED_SHADING("Shadows"), 0);
+        })
+        .Options(
+            FloatSliderOptions().Min(200.0f).Max(5000.0f).DefaultValue(1000.0f).Step(50.0f).Format("%.0f").Tooltip(
+                "Maximum distance from camera where shadows are rendered."
+            )
+        );
+
+    AddWidget(path, "Shadow PCF", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCED_SHADING("ShadowPCF"))
+        .PreFunc([](WidgetInfo& info) {
+            info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1) 
+                || !CVarGetInteger(CVAR_ENHANCED_SHADING("Shadows"), 0);
+        })
+        .Options(
+            CheckboxOptions().DefaultValue(true).Tooltip(
+                "Percentage-Closer Filtering for softer shadow edges."
+            )
+        );
+
+    AddWidget(path, "Bloom", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCED_SHADING("Bloom"))
+        .PreFunc([](WidgetInfo& info) {
+            info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1);
+        })
+        .Options(
+            CheckboxOptions().DefaultValue(false).Tooltip(
+                "Adds glow effect to bright areas. Creates a dreamy, modern look."
+            )
+        );
+
+    AddWidget(path, "Bloom Threshold", WIDGET_CVAR_SLIDER_FLOAT)
+        .CVar(CVAR_ENHANCED_SHADING("BloomThreshold"))
+        .PreFunc([](WidgetInfo& info) {
+            info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1) 
+                || !CVarGetInteger(CVAR_ENHANCED_SHADING("Bloom"), 0);
+        })
+        .Options(
+            FloatSliderOptions().Min(0.0f).Max(2.0f).DefaultValue(1.0f).Step(0.05f).Format("%.2f").Tooltip(
+                "Minimum brightness for bloom to activate."
+            )
+        );
+
+    AddWidget(path, "Bloom Intensity", WIDGET_CVAR_SLIDER_FLOAT)
+        .CVar(CVAR_ENHANCED_SHADING("BloomIntensity"))
+        .PreFunc([](WidgetInfo& info) {
+            info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1) 
+                || !CVarGetInteger(CVAR_ENHANCED_SHADING("Bloom"), 0);
+        })
+        .Options(
+            FloatSliderOptions().Min(0.0f).Max(2.0f).DefaultValue(0.3f).Step(0.05f).Format("%.2f").Tooltip(
+                "Strength of the bloom glow effect."
+            )
+        );
+
+    AddWidget(path, "Tone Mapping", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCED_SHADING("ToneMapping"))
+        .PreFunc([](WidgetInfo& info) {
+            info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1);
+        })
+        .Options(
+            CheckboxOptions().DefaultValue(false).Tooltip(
+                "Applies Reinhard tone mapping for HDR-like color grading. "
+                "Prevents blown-out highlights and improves color balance."
+            )
+        );
+
+    AddWidget(path, "Exposure", WIDGET_CVAR_SLIDER_FLOAT)
+        .CVar(CVAR_ENHANCED_SHADING("Exposure"))
+        .PreFunc([](WidgetInfo& info) {
+            info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1) 
+                || !CVarGetInteger(CVAR_ENHANCED_SHADING("ToneMapping"), 0);
+        })
+        .Options(
+            FloatSliderOptions().Min(0.1f).Max(4.0f).DefaultValue(1.0f).Step(0.05f).Format("%.2f").Tooltip(
+                "Overall scene brightness multiplier for tone mapping."
+            )
+        );
+
     // Enhancements > Status Bar
     path = { "Enhancements", "Status Bar", SECTION_COLUMN_1 };
     AddSidebarEntry("Enhancements", path.sidebarName, 2);
