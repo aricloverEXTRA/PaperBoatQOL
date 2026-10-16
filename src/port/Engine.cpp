@@ -7,6 +7,7 @@
 #include "nlohmann/json.hpp"
 #include "port/build.h"
 #include "port/enhancements/PortEnhancements.h"
+#include "port/lighting/LightingManager.h"
 #include "port/interpolation/FrameInterpolation.h"
 #include "port/ui/cvar_prefixes.h"
 #include "port/audio/AudioVolume.h"
@@ -215,6 +216,11 @@ GameEngine::GameEngine() {
 
 gsFast3dWindow = std::make_shared<Fast::Fast3dWindow>(std::vector<std::shared_ptr<Ship::GuiWindow>>({}));
     this->context->InitWindow(gsFast3dWindow);
+
+    // Initialize lighting manager (loads lighting_profiles.yml from resources/mods if present).
+    // Safe: the manager guards against missing context/resourcemanager.
+    LightingManager_Init();
+
     if (auto interpreter = gsFast3dWindow->GetInterpreterWeak().lock()) {
         // Prefetch a replacement's folder on its first draw. Sprites, map textures and
         // backgrounds are prefetched by whatever loads them instead.
