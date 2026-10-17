@@ -470,6 +470,31 @@ void PaperboatMenu::AddMenuEnhancements() {
             )
         );
 
+    static const std::unordered_map<int32_t, const char*> postFxDebugModeOptions = {
+        { 0, "Off" },
+        { 1, "Passthrough (sampling test)" },
+        { 2, "Solid Magenta (geometry test)" },
+        { 3, "UV Grid (UV test)" },
+        { 4, "Invert (sampling test)" },
+        { 5, "UV as Colour (UV test)" },
+    };
+
+    AddWidget(path, "Post-Processing Debug", WIDGET_CVAR_COMBOBOX)
+        .CVar(CVAR_ENHANCED_SHADING("DebugPassMode"))
+        .PreFunc([](WidgetInfo& info) {
+            info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1);
+        })
+        .Options(
+            ComboboxOptions()
+                .Tooltip(
+                    "Runs a single minimal post pass to verify the post-processing pipeline. "
+                    "'Solid Magenta' should fill the whole screen; if it does not, the blit "
+                    "geometry is broken. 'Passthrough' shows the untouched image if sampling works."
+                )
+                .ComboMap(postFxDebugModeOptions)
+                .DefaultIndex(0)
+        );
+
     AddWidget(path, "Bloom", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCED_SHADING("Bloom"))
         .PreFunc(hideUnlessPostFx)

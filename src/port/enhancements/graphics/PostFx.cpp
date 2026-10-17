@@ -59,17 +59,22 @@ void gfx_set_custom_uniform(uint8_t idx, const float values[4]);
 #define POSTFX_SATURATION_CVAR   CVAR_ENHANCED_SHADING("PostSaturation")
 #define POSTFX_TINTMIX_CVAR      CVAR_ENHANCED_SHADING("PostTintMix")
 #define POSTFX_TINT_COLOR_CVAR   CVAR_ENHANCED_SHADING("PostTintColor")
+// Diagnostic switch: 0 = off, else a cs_debug.shader mode (see the shader).
+#define POSTFX_DEBUG_CVAR        CVAR_ENHANCED_SHADING("DebugPassMode")
 
 #define POSTFX_COLOR_ADJUST_SHADER "shaders/post/cs_color_adjust.shader"
 #define POSTFX_GLOW_SHADER         "shaders/post/cs_glow.shader"
 #define POSTFX_OUTLINE_SHADER      "shaders/post/cs_outline.shader"
 #define POSTFX_SUNRAYS_SHADER      "shaders/post/cs_sunrays.shader"
+#define POSTFX_DEBUG_SHADER        "shaders/post/cs_debug.shader"
 
 static int gColorAdjustHandle = -1;
 static int gGlowHandle = -1;
 static int gOutlineHandle = -1;
 static int gSunraysHandle = -1;
-// Bits: 0 = colour adjust, 1 = sunrays, 2 = glow, 3 = outline.
+static int gDebugHandle = -1;
+static int gDebugModeValue = 0;
+// Bits: 0 = colour adjust, 1 = sunrays, 2 = glow, 3 = outline; bits 4+ = debug mode.
 static int gRegisteredSignature = -1;
 
 // Per-area sun placement for the god-ray pass. Screen-space (0..1) UVs; the
@@ -105,9 +110,10 @@ static bool PostFx_BackendSupported() {
            backend == Fast::FAST3D_DXGI_DX11;
 }
 
-static void PostFx_ReconcilePasses(bool wantColorAdjust, bool wantSunrays, bool wantGlow, bool wantOutline) {
+static void PostFx_ReconcilePasses(bool wantColorAdjust, bool wantSunrays, bool wantGlow, bool wantOutline,
+                                   int debugMode) {
     int signature = (wantColorAdjust ? 1 : 0) | (wantSunrays ? 2 : 0) | (wantGlow ? 4 : 0) |
-                    (wantOutline ? 8 : 0);
+                    (wantOutline ? 8 : 0) | (debugMode << 4);
     if (signature == gRegisteredSignature) {
         return;
     }
@@ -127,6 +133,21 @@ static void PostFx_ReconcilePasses(bool wantColorAdjust, bool wantSunrays, bool 
     if (gSunraysHandle >= 0) {
         gfx_unregister_post_pass(gSunraysHandle);
         gSunraysHandle = -1;
+    }
+    if (gDebugHandle >= 0) {
+        gfx_unregister_post_pass(gDebugHandle);
+        gDebugHandle = -1;
+    }
+
+    gDebugModeValue = debugMode;
+
+    // The diagnostic pass runs alone so it can attribute any visual result to a
+    // single, minimal shader (geometry / UV / sampling / presentation).
+    if (debugMode > 0) {
+        gDebugHandle = gfx_register_post_pass(POSTFX_DEBUG_SHADER);
+        gRegisteredSignature = signature;
+        SPDLOG_INFO("[PostFx] DEBUG pass registered: handle={} mode={}", gDebugHandle, debugMode);
+        return;
     }
 
     // Order matters: grade -> sunrays -> glow -> outline, so the ink sits on top.
@@ -168,6 +189,11 @@ static void PostFx_PushUniforms() {
 
         gfx_set_custom_uniform(2, grade);
         gfx_set_custom_uniform(3, tintReg);
+    }
+
+    if (gDebugHandle >= 0) {
+        float debugReg[4] = { (float)gDebugModeValue, 0.0f, 0.0f, 0.0f };
+        gfx_set_custom_uniform(7, debugReg);
     }
 
     if (gGlowHandle >= 0) {
@@ -252,12 +278,21 @@ static void PostFx_FrameUpdate() {
         SPDLOG_INFO("[PostFx] master={} backend={}", master, backend);
     }
 
+    // Diagnostic pass is independent of the master toggle so it can be used to
+    // verify the pipeline even when nothing else is visibly working.
+    int debugMode = CVarGetInteger(POSTFX_DEBUG_CVAR, 0);
+    if (debugMode > 0) {
+        PostFx_ReconcilePasses(false, false, false, false, debugMode);
+        PostFx_PushUniforms();
+        return;
+    }
+
     bool wantColorAdjust = master;
     bool wantSunrays = master && CVarGetInteger(POSTFX_SUNRAYS_CVAR, 0) != 0;
     bool wantGlow = master && CVarGetInteger(POSTFX_GLOW_CVAR, 1) != 0;
     bool wantOutline = master && CVarGetInteger(POSTFX_OUTLINE_CVAR, 0) != 0;
 
-    PostFx_ReconcilePasses(wantColorAdjust, wantSunrays, wantGlow, wantOutline);
+    PostFx_ReconcilePasses(wantColorAdjust, wantSunrays, wantGlow, wantOutline, 0);
     PostFx_PushUniforms();
 }
 
