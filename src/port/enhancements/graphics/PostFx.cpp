@@ -69,6 +69,13 @@ void gfx_set_custom_uniform(uint8_t idx, const float values[4]);
 #define POSTFX_ENGINE_LIGHTING_WRAP_CVAR   CVAR_ENHANCED_SHADING("EngineLightingWrap")
 #define POSTFX_ENGINE_LIGHTING_GROUND_CVAR CVAR_ENHANCED_SHADING("EngineLightingGround")
 #define POSTFX_ENGINE_LIGHTING_BOOST_CVAR  CVAR_ENHANCED_SHADING("EngineLightingBoost")
+// Whole-world "modern look" grade (DirectX 11 shader path). Runs inside the main
+// shader so it does not depend on the post-pass chain: saturation / contrast /
+// brightness applied to every shaded fragment, driven through uCustom[9].
+#define POSTFX_MODERN_CVAR      CVAR_ENHANCED_SHADING("ModernLook")
+#define POSTFX_MODERN_SAT_CVAR  CVAR_ENHANCED_SHADING("ModernSaturation")
+#define POSTFX_MODERN_CON_CVAR  CVAR_ENHANCED_SHADING("ModernContrast")
+#define POSTFX_MODERN_BRI_CVAR  CVAR_ENHANCED_SHADING("ModernBrightness")
 
 #define POSTFX_COLOR_ADJUST_SHADER "shaders/post/cs_color_adjust.shader"
 #define POSTFX_GLOW_SHADER         "shaders/post/cs_glow.shader"
@@ -280,10 +287,25 @@ static void PostFx_PushEngineLighting() {
     gfx_set_custom_uniform(11, tint);
 }
 
+// Whole-world colour grade applied inside the main DirectX 11 shader (register 9
+// = (enabled, saturation, contrast, brightness)). Runs every frame regardless of
+// the post-pass chain so the modern treatment always reaches the renderer.
+static void PostFx_PushModernLook() {
+    bool on = CVarGetInteger(POSTFX_MODERN_CVAR, 1) != 0;
+    float grade[4] = {
+        on ? 1.0f : 0.0f,
+        CVarGetFloat(POSTFX_MODERN_SAT_CVAR, 1.2f),
+        CVarGetFloat(POSTFX_MODERN_CON_CVAR, 1.08f),
+        CVarGetFloat(POSTFX_MODERN_BRI_CVAR, 1.0f),
+    };
+    gfx_set_custom_uniform(9, grade);
+}
+
 static void PostFx_FrameUpdate() {
-    // Independent of post-processing: the engine lighting simply needs a per-frame
-    // value latched for the shader.
+    // Independent of post-processing: the engine lighting and modern grade simply
+    // need per-frame values latched in the shader uniforms.
     PostFx_PushEngineLighting();
+    PostFx_PushModernLook();
 
     bool backendOk = PostFx_BackendSupported();
     if (!backendOk) {

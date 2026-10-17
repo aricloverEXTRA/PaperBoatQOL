@@ -471,6 +471,54 @@ void PaperboatMenu::AddMenuEnhancements() {
             )
         );
 
+    AddWidget(path, "Modern Look (DirectX)", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCED_SHADING("ModernLook"))
+        .PreFunc([](WidgetInfo& info) {
+            info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1);
+        })
+        .Options(
+            CheckboxOptions().DefaultValue(true).Tooltip(
+                "Applies a modern colour treatment (saturation, contrast, brightness) to the "
+                "whole world directly in the shader. DirectX 11 only."
+            )
+        );
+
+    AddWidget(path, "Modern Saturation", WIDGET_CVAR_SLIDER_FLOAT)
+        .CVar(CVAR_ENHANCED_SHADING("ModernSaturation"))
+        .PreFunc([](WidgetInfo& info) {
+            info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1)
+                || !CVarGetInteger(CVAR_ENHANCED_SHADING("ModernLook"), 1);
+        })
+        .Options(
+            FloatSliderOptions().Min(0.5f).Max(2.0f).DefaultValue(1.2f).Step(0.05f).Format("%.2f").Tooltip(
+                "Colour saturation of the modern look. 1.00 leaves colours unchanged."
+            )
+        );
+
+    AddWidget(path, "Modern Contrast", WIDGET_CVAR_SLIDER_FLOAT)
+        .CVar(CVAR_ENHANCED_SHADING("ModernContrast"))
+        .PreFunc([](WidgetInfo& info) {
+            info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1)
+                || !CVarGetInteger(CVAR_ENHANCED_SHADING("ModernLook"), 1);
+        })
+        .Options(
+            FloatSliderOptions().Min(0.5f).Max(2.0f).DefaultValue(1.08f).Step(0.05f).Format("%.2f").Tooltip(
+                "Contrast of the modern colour treatment. 1.00 leaves contrast unchanged."
+            )
+        );
+
+    AddWidget(path, "Modern Brightness", WIDGET_CVAR_SLIDER_FLOAT)
+        .CVar(CVAR_ENHANCED_SHADING("ModernBrightness"))
+        .PreFunc([](WidgetInfo& info) {
+            info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1)
+                || !CVarGetInteger(CVAR_ENHANCED_SHADING("ModernLook"), 1);
+        })
+        .Options(
+            FloatSliderOptions().Min(0.5f).Max(1.5f).DefaultValue(1.0f).Step(0.05f).Format("%.2f").Tooltip(
+                "Overall brightness multiplier for the modern colour treatment."
+            )
+        );
+
     AddWidget(path, "Post-Processing", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCED_SHADING("PostProcessing"))
         .PreFunc([](WidgetInfo& info) {
