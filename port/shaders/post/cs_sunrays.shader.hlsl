@@ -65,7 +65,7 @@ struct PSOutput {
 PSOutput PSMain(PSInput input, float4 screenSpace : SV_Position) {
     float2 uv = input.uv0;
 
-    float3 base = g_texture0.Sample(g_sampler0, uv);
+    float4 base = g_texture0.Sample(g_sampler0, uv);
 
     float2 sunPos = float2(uCustom[6].x, uCustom[6].y);
     float intensity = uCustom[6].z;
@@ -84,7 +84,7 @@ PSOutput PSMain(PSInput input, float4 screenSpace : SV_Position) {
     for (int i = 0; i < SAMPLES; i++) {
         coord -= delta;
         float2 c = clamp(coord, float2(0.0, 0.0), float2(1.0, 1.0));
-        float lum = dot(g_texture0.Sample(g_sampler0, c), PB_LUMA);
+        float lum = dot(g_texture0.Sample(g_sampler0, c).rgb, PB_LUMA);
         rays += lum * illumDecay;
         illumDecay *= decay;
     }
@@ -93,6 +93,6 @@ PSOutput PSMain(PSInput input, float4 screenSpace : SV_Position) {
     float3 color = base.rgb + rays;
 
     PSOutput output;
-    output.color = float4(clamp(color, 0.0, 1.0), base.a);
+    output.color = float4(clamp(color, 0.0, 1.0), 1.0);
     return output;
 }

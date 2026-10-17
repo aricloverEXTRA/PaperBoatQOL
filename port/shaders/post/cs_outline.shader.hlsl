@@ -67,13 +67,13 @@ PSOutput PSMain(PSInput input, float4 screenSpace : SV_Position) {
     float2 texel = float2(uCustom[1].z, uCustom[1].w);
     float2 uv = input.uv0;
 
-    float3 base = g_texture0.Sample(g_sampler0, uv);
+    float4 base = g_texture0.Sample(g_sampler0, uv);
 
-    float lumC = dot(base, PB_LUMA);
-    float lumL = dot(g_texture0.Sample(g_sampler0, uv - float2(texel.x, 0.0)), PB_LUMA);
-    float lumR = dot(g_texture0.Sample(g_sampler0, uv + float2(texel.x, 0.0)), PB_LUMA);
-    float lumD = dot(g_texture0.Sample(g_sampler0, uv - float2(0.0, texel.y)), PB_LUMA);
-    float lumU = dot(g_texture0.Sample(g_sampler0, uv + float2(0.0, texel.y)), PB_LUMA);
+    float lumC = dot(base.rgb, PB_LUMA);
+    float lumL = dot(g_texture0.Sample(g_sampler0, uv - float2(texel.x, 0.0)).rgb, PB_LUMA);
+    float lumR = dot(g_texture0.Sample(g_sampler0, uv + float2(texel.x, 0.0)).rgb, PB_LUMA);
+    float lumD = dot(g_texture0.Sample(g_sampler0, uv - float2(0.0, texel.y)).rgb, PB_LUMA);
+    float lumU = dot(g_texture0.Sample(g_sampler0, uv + float2(0.0, texel.y)).rgb, PB_LUMA);
 
     float edge = length(float2(lumR - lumL, lumU - lumD));
 
@@ -85,6 +85,6 @@ PSOutput PSMain(PSInput input, float4 screenSpace : SV_Position) {
     float3 color = lerp(base.rgb, inkColor, saturate(ink));
 
     PSOutput output;
-    output.color = float4(color, base.a);
+    output.color = float4(color, 1.0);
     return output;
 }

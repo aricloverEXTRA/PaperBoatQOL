@@ -35,7 +35,7 @@
         vec2 uv = vTexCoord0;
         const vec3 luma = vec3(0.2126, 0.7152, 0.0722);
 
-        vec3 base = PB_SAMPLE(uv);
+        vec4 base = PB_SAMPLE(uv);
 
         vec2 sunPos = vec2(uCustom[6].x, uCustom[6].y);
         float intensity = uCustom[6].z;
@@ -54,13 +54,13 @@
         for (int i = 0; i < SAMPLES; i++) {
             coord -= delta;
             vec2 c = clamp(coord, vec2(0.0), vec2(1.0));
-            float lum = dot(PB_SAMPLE(c), luma);
+            float lum = dot(PB_SAMPLE(c).rgb, luma);
             rays += lum * illumDecay;
             illumDecay *= decay;
         }
         rays *= (1.0 / float(SAMPLES)) * intensity;
 
         vec3 color = base.rgb + rays;
-        PB_OUT = vec4(clamp(color, 0.0, 1.0), base.a);
+        PB_OUT = vec4(clamp(color, 0.0, 1.0), 1.0);
     }
 @end

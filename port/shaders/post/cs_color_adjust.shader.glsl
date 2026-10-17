@@ -67,6 +67,6 @@
 
         color = mix(color, color * tint, clamp(tintMix, 0.0, 1.0));
 
-        PB_OUT = vec4(clamp(color, 0.0, 1.0), texel.a);
+        PB_OUT = vec4(clamp(color, 0.0, 1.0), 1.0);
     }
 @end

@@ -37,13 +37,13 @@
         vec2 uv = vTexCoord0;
 
         const vec3 luma = vec3(0.2126, 0.7152, 0.0722);
-        vec3 base = PB_SAMPLE(uv);
+        vec4 base = PB_SAMPLE(uv);
 
-        float lumC = dot(base, luma);
-        float lumL = dot(PB_SAMPLE(uv - vec2(texel.x, 0.0)), luma);
-        float lumR = dot(PB_SAMPLE(uv + vec2(texel.x, 0.0)), luma);
-        float lumD = dot(PB_SAMPLE(uv - vec2(0.0, texel.y)), luma);
-        float lumU = dot(PB_SAMPLE(uv + vec2(0.0, texel.y)), luma);
+        float lumC = dot(base.rgb, luma);
+        float lumL = dot(PB_SAMPLE(uv - vec2(texel.x, 0.0)).rgb, luma);
+        float lumR = dot(PB_SAMPLE(uv + vec2(texel.x, 0.0)).rgb, luma);
+        float lumD = dot(PB_SAMPLE(uv - vec2(0.0, texel.y)).rgb, luma);
+        float lumU = dot(PB_SAMPLE(uv + vec2(0.0, texel.y)).rgb, luma);
 
         float edge = length(vec2(lumR - lumL, lumU - lumD));
 
@@ -54,6 +54,6 @@
         vec3 inkColor = vec3(0.02, 0.02, 0.03);
         vec3 color = mix(base.rgb, inkColor, clamp(ink, 0.0, 1.0));
 
-        PB_OUT = vec4(color, base.a);
+        PB_OUT = vec4(color, 1.0);
     }
 @end

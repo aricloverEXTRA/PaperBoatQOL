@@ -91,6 +91,6 @@ PSOutput PSMain(PSInput input, float4 screenSpace : SV_Position) {
     color = lerp(color, color * tint, clamp(tintMix, 0.0, 1.0));
 
     PSOutput output;
-    output.color = float4(clamp(color, 0.0, 1.0), texel.a);
+    output.color = float4(clamp(color, 0.0, 1.0), 1.0);
     return output;
 }
