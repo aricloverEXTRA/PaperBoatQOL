@@ -458,6 +458,19 @@ void PaperboatMenu::AddMenuEnhancements() {
             || !CVarGetInteger(CVAR_ENHANCED_SHADING("PostProcessing"), 0);
     };
 
+    AddWidget(path, "Engine Lighting (DirectX)", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCED_SHADING("EngineLighting"))
+        .PreFunc([](WidgetInfo& info) {
+            info.isHidden = !CVarGetInteger(CVAR_ENHANCED_SHADING("Enabled"), 1);
+        })
+        .Options(
+            CheckboxOptions().DefaultValue(false).Tooltip(
+                "Replaces the flat N64 vertex lighting with a modern hemisphere ambient "
+                "plus soft wrapped diffuse, driven by each area's own light colours. "
+                "DirectX 11 only; off keeps the original N64 lighting."
+            )
+        );
+
     AddWidget(path, "Post-Processing", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCED_SHADING("PostProcessing"))
         .PreFunc([](WidgetInfo& info) {

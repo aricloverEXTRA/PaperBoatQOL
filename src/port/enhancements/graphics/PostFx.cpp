@@ -61,6 +61,14 @@ void gfx_set_custom_uniform(uint8_t idx, const float values[4]);
 #define POSTFX_TINT_COLOR_CVAR   CVAR_ENHANCED_SHADING("PostTintColor")
 // Diagnostic switch: 0 = off, else a cs_debug.shader mode (see the shader).
 #define POSTFX_DEBUG_CVAR        CVAR_ENHANCED_SHADING("DebugPassMode")
+// Engine-level enhanced lighting (DirectX 11 shader path). When enabled the
+// engine's vertex lighting switches from the flat N64 ambient to a hemisphere +
+// wrapped-diffuse model derived from the area's own light colours. Off by default
+// so the vanilla N64 lighting is untouched.
+#define POSTFX_ENGINE_LIGHTING_CVAR        CVAR_ENHANCED_SHADING("EngineLighting")
+#define POSTFX_ENGINE_LIGHTING_WRAP_CVAR   CVAR_ENHANCED_SHADING("EngineLightingWrap")
+#define POSTFX_ENGINE_LIGHTING_GROUND_CVAR CVAR_ENHANCED_SHADING("EngineLightingGround")
+#define POSTFX_ENGINE_LIGHTING_BOOST_CVAR  CVAR_ENHANCED_SHADING("EngineLightingBoost")
 
 #define POSTFX_COLOR_ADJUST_SHADER "shaders/post/cs_color_adjust.shader"
 #define POSTFX_GLOW_SHADER         "shaders/post/cs_glow.shader"
@@ -256,7 +264,27 @@ static void PostFx_OnMapLoad(IEvent* event) {
     CVarSetFloat(POSTFX_SUNRAYS_INTENSITY_CVAR, 0.6f);
 }
 
+// Hands the engine's lighting parameters to the reserved uCustom registers every
+// frame. Register 8 = (enabled, wrap, groundScale, ambientBoost); register 11 =
+// tint. x == 0 keeps the vanilla N64 lighting path in the shader.
+static void PostFx_PushEngineLighting() {
+    bool on = CVarGetInteger(POSTFX_ENGINE_LIGHTING_CVAR, 0) != 0;
+    float params[4] = {
+        on ? 1.0f : 0.0f,
+        CVarGetFloat(POSTFX_ENGINE_LIGHTING_WRAP_CVAR, 0.5f),
+        CVarGetFloat(POSTFX_ENGINE_LIGHTING_GROUND_CVAR, 0.45f),
+        CVarGetFloat(POSTFX_ENGINE_LIGHTING_BOOST_CVAR, 1.1f),
+    };
+    float tint[4] = { 1.0f, 1.0f, 1.0f, 0.0f };
+    gfx_set_custom_uniform(8, params);
+    gfx_set_custom_uniform(11, tint);
+}
+
 static void PostFx_FrameUpdate() {
+    // Independent of post-processing: the engine lighting simply needs a per-frame
+    // value latched for the shader.
+    PostFx_PushEngineLighting();
+
     bool backendOk = PostFx_BackendSupported();
     if (!backendOk) {
         static bool warned = false;
