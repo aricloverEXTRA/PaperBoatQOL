@@ -23,6 +23,8 @@
 
 #include <string.h>
 
+#include <spdlog/spdlog.h>
+
 #include <libultraship/libultraship.h>
 #include <libultraship/bridge/consolevariablebridge.h>
 
@@ -142,6 +144,9 @@ static void PostFx_ReconcilePasses(bool wantColorAdjust, bool wantSunrays, bool 
     }
 
     gRegisteredSignature = signature;
+
+    SPDLOG_INFO("[PostFx] passes reconciled: grade={} sunrays={} glow={} outline={}", gColorAdjustHandle,
+                gSunraysHandle, gGlowHandle, gOutlineHandle);
 }
 
 static void PostFx_PushUniforms() {
@@ -227,7 +232,25 @@ static void PostFx_OnMapLoad(IEvent* event) {
 
 static void PostFx_FrameUpdate() {
     bool backendOk = PostFx_BackendSupported();
-    bool master = backendOk && CVarGetInteger(POSTFX_MASTER_CVAR, 0) != 0;
+    if (!backendOk) {
+        static bool warned = false;
+        if (!warned) {
+            warned = true;
+            SPDLOG_WARN("[PostFx] backend not supported for post passes; effects stay off");
+        }
+        return;
+    }
+
+    bool master = CVarGetInteger(POSTFX_MASTER_CVAR, 0) != 0;
+
+    // One-shot report so a playtest log shows what the chain is doing.
+    static int lastLoggedMaster = -1;
+    if ((int)master != lastLoggedMaster) {
+        lastLoggedMaster = (int)master;
+        Ship::Context* ctx = Ship::Context::GetRawInstance();
+        int backend = (ctx != nullptr && ctx->GetWindow() != nullptr) ? ctx->GetWindow()->GetWindowBackend() : -1;
+        SPDLOG_INFO("[PostFx] master={} backend={}", master, backend);
+    }
 
     bool wantColorAdjust = master;
     bool wantSunrays = master && CVarGetInteger(POSTFX_SUNRAYS_CVAR, 0) != 0;
