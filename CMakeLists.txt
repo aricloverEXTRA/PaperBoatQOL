@@ -646,6 +646,10 @@ elseif(APPLE)
         -Wno-parentheses
         -Wno-narrowing
         -Wno-missing-braces
+        -Wno-sign-compare
+        -Wno-cast-function-type
+        -Wno-unknown-pragmas
+        -Wno-stringop-overflow
         $<$<COMPILE_LANGUAGE:CXX>:-fpermissive>
         $<$<COMPILE_LANGUAGE:CXX>:-Wno-c++11-narrowing>
         $<$<COMPILE_LANGUAGE:CXX>:-Wno-deprecated-enum-enum-conversion>
@@ -664,6 +668,10 @@ elseif(ANDROID OR EMSCRIPTEN)
         -Wno-parentheses
         -Wno-narrowing
         -Wno-missing-braces
+        -Wno-sign-compare
+        -Wno-cast-function-type
+        -Wno-unknown-pragmas
+        -Wno-stringop-overflow
         $<$<COMPILE_LANGUAGE:C>:-Wno-incompatible-pointer-types>
         $<$<COMPILE_LANGUAGE:CXX>:-fpermissive>
         $<$<COMPILE_LANGUAGE:CXX>:-Wno-c++11-narrowing>
@@ -694,6 +702,10 @@ elseif(UNIX)
         -Wno-parentheses
         -Wno-narrowing
         -Wno-missing-braces
+        -Wno-sign-compare
+        -Wno-cast-function-type
+        -Wno-unknown-pragmas
+        -Wno-stringop-overflow
         $<$<COMPILE_LANGUAGE:C>:-Wno-incompatible-pointer-types>
         $<$<COMPILE_LANGUAGE:CXX>:-fpermissive>
         $<$<COMPILE_LANGUAGE:CXX>:-Wno-deprecated-enum-enum-conversion>
