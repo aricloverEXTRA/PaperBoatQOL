@@ -9,6 +9,11 @@
 
 u8* gSbnData = NULL;
 
+// Auxiliary audio buffer for runtime-injected songs (e.g. TTYD64 battle tracks).
+// See port/enhancements/audio/BattleMusicInject.c.
+u8* gAudioAuxData = NULL;
+s32 gAudioAuxSize = 0;
+
 AuCallback BeginSoundUpdateCallback;
 BGMPlayer* gBGMPlayerA;
 BGMPlayer* gBGMPlayerB;
@@ -55,11 +60,11 @@ void au_engine_init(s32 outputRate) {
     gAuAmbienceManager->globals = gSoundGlobals;
 
     globals = gSoundGlobals;
-    dummyTrackData = alHeapAlloc(alHeap, 1, 0x8000);
-    globals->dataBGM[0] = (BGMHeader*) &dummyTrackData[0];
-    globals->dataBGM[1] = (BGMHeader*) &dummyTrackData[0x1400];
-    globals->dataMSEQ[0] = (MSEQHeader*) &dummyTrackData[0x1C00];
-    globals->dataMSEQ[1] = (MSEQHeader*) &dummyTrackData[0x1400];
+    dummyTrackData = alHeapAlloc(alHeap, 1, 0x10000);
+    globals->dataBGM[0] = (BGMHeader*) ((u8*) dummyTrackData + 0x0000);
+    globals->dataBGM[1] = (BGMHeader*) ((u8*) dummyTrackData + 0x6000);
+    globals->dataMSEQ[0] = (MSEQHeader*) ((u8*) dummyTrackData + 0xC000);
+    globals->dataMSEQ[1] = (MSEQHeader*) ((u8*) dummyTrackData + 0xE000);
 
     for (i = 0; i < ARRAY_COUNT(globals->snapshots); i++) {
         globals->snapshots[i].bgmPlayer = alHeapAlloc(alHeap, 1, sizeof(BGMPlayer));
@@ -106,6 +111,14 @@ void au_engine_init(s32 outputRate) {
 
     gSbnData = (u8*)LOAD_ASSET(AUDIO_SBN);
     au_load_INIT(globals, gSbnData, alHeap);
+
+    // Runtime-inject the TTYD64 battle tracks into the song list, if enabled.
+    {
+        extern void PortInjectBattleMusic(void);
+        
+        SPDLOG_INFO("[BattleMusic] Calling PortInjectBattleMusic");
+        PortInjectBattleMusic();
+    }
 
     au_bgm_player_init(gBGMPlayerA, AU_PRIORITY_BGM_PLAYER_MAIN, FX_BUS_BGMA_MAIN, globals);
     effects[0] = FX_BUS_BGMA_MAIN;
@@ -793,7 +806,11 @@ AuResult au_fetch_SBN_file(u32 fileIdx, AuFileFormat format, SBNFileEntry* outEn
 
     if (fileIdx < gSoundGlobals->fileListLength) {
         SBNFileEntry* entry = &gSoundGlobals->sbnFileList[fileIdx];
-        s32 offset = (entry->offset & 0xFFFFFF) + gSoundGlobals->baseRomOffset;
+        // Auxiliary (runtime-injected) entries carry a 0x40000000 tag and are
+        // resolved by au_read_rom directly; do not mask or rebase them.
+        s32 offset = (entry->offset & 0x40000000)
+                       ? entry->offset
+                       : (entry->offset & 0xFFFFFF) + gSoundGlobals->baseRomOffset;
 
         fileEntry.offset = offset;
         fileEntry.data = entry->data;
@@ -1222,6 +1239,18 @@ void au_sync_channel_delay_enabled(u32 bMonoSound) {
 // probable split
 
 void* au_read_rom(s32 offset) {
+    // Offsets tagged with 0x40000000 resolve into the auxiliary audio buffer
+    // (runtime-injected songs, e.g. the TTYD64 battle tracks). See
+    // port/enhancements/audio/BattleMusicInject.c.
+    if (offset & 0x40000000) {
+        extern u8* gAudioAuxData;
+        extern s32 gAudioAuxSize;
+        s32 idx = offset & 0x3FFFFFFF;
+        if (gAudioAuxData != NULL && idx >= 0 && idx < gAudioAuxSize) {
+            return gAudioAuxData + idx;
+        }
+    }
+
     return gSbnData + offset;
 }
 
