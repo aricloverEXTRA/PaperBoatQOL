@@ -251,7 +251,7 @@ extern "C" void port_get_sun_screen_uv(float* outU, float* outV, int* outVisible
 }
 
 static void RegisterCameraPatches_Init() {
-    REGISTER_LISTENER(CameraSetViewport, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
+    REGISTER_LISTENER(CameraSetViewport, EVENT_PRIORITY_NORMAL, ([](IEvent* event) {
         auto* ev = (CameraSetViewport*) event;
 
         if (!cam_full_height_enabled() || (ev->camID != CAM_DEFAULT && ev->camID != CAM_BATTLE)) {
@@ -263,11 +263,11 @@ static void RegisterCameraPatches_Init() {
 
         *ev->y = 0;
         *ev->height = SCREEN_HEIGHT;
-    });
+    }));
 
-    REGISTER_LISTENER(GameFrameUpdate, EVENT_PRIORITY_NORMAL, [](IEvent*) { cam_sync_full_height(); });
+    REGISTER_LISTENER(GameFrameUpdate, EVENT_PRIORITY_NORMAL, ([](IEvent*) { cam_sync_full_height(); }));
 
-    REGISTER_LISTENER(BattleMenuDrawReel, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
+    REGISTER_LISTENER(BattleMenuDrawReel, EVENT_PRIORITY_NORMAL, ([](IEvent* event) {
         auto* ev = (BattleMenuDrawReel*) event;
 
         if (!cam_view_is_widened() || !CVarGetInteger(CVAR_ENHANCEMENT("Graphics.RoundedReel"), 0)) {
@@ -282,20 +282,20 @@ static void RegisterCameraPatches_Init() {
         hud_element_draw_complex_hud_next(ev->hid);
         hud_element_set_transform_scale(ev->hid, 1.0f, 1.0f, 1.0f);
         gDPSetScissor(gMainGfxPos++, G_SC_NON_INTERLACE, 12, port_hud_clip_top(), 308, port_hud_clip_bottom());
-    });
+    }));
 
-    REGISTER_LISTENER(CameraFitViewport, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
+    REGISTER_LISTENER(CameraFitViewport, EVENT_PRIORITY_NORMAL, ([](IEvent* event) {
         auto* ev = (CameraFitViewport*) event;
         cam_fit_viewport(ev->camID, ev->camera);
-    });
+    }));
 
-    REGISTER_LISTENER(CameraPerspective, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
+    REGISTER_LISTENER(CameraPerspective, EVENT_PRIORITY_NORMAL, ([](IEvent* event) {
         auto* ev = (CameraPerspective*) event;
 
         if (ev->camera->viewportH != 0) {
             *ev->aspect = cam_get_display_aspect(ev->camID, ev->camera);
         }
-    });
+    }));
 
     // Publishes the world camera's view-projection matrix once per rendered
     // frame. cam_main.c folds the view into the projection with
@@ -303,7 +303,7 @@ static void RegisterCameraPatches_Init() {
     // cam->mtxPerspective is already V*P and is exactly what the world pass
     // loads. Hand it to the engine here (frame start, before the world draws) so
     // a depth-based post pass can reconstruct world-space geometry.
-    REGISTER_LISTENER(GameFrameUpdate, EVENT_PRIORITY_NORMAL, [](IEvent*) {
+    REGISTER_LISTENER(GameFrameUpdate, EVENT_PRIORITY_NORMAL, ([](IEvent*) {
         gfx_set_camera_view_projection(gCameras[CAM_DEFAULT].mtxPerspective);
         // Publish camera world position for depth-based post-processing shaders
         // The camera eye position is in lookAt_eye
@@ -313,7 +313,7 @@ static void RegisterCameraPatches_Init() {
             gCameras[CAM_DEFAULT].lookAt_eye.z
         };
         gfx_set_camera_world_position(camPos);
-    });
+    }));
 }
 
 static RegisterShipInitFunc cameraPatchesInitFunc(RegisterCameraPatches_Init);
