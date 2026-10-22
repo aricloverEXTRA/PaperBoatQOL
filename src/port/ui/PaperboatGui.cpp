@@ -17,6 +17,7 @@
 #include <ship/window/gui/ConsoleWindow.h>
 #include "port/ui/devtools/valueviewer/ValueViewer.h"
 #include "port/ui/devtools/saveeditor/SaveEditor.h"
+#include "port/ui/devtools/ShaderDashboard.h"
 #include "port/ui/ActorBlueprintEditor.h"
 
 namespace PaperboatGui {
@@ -36,6 +37,7 @@ std::shared_ptr<SaveEditorWindow> mSaveEditorWindow;
 std::shared_ptr<ActorBlueprintEditorWindow> mActorBlueprintEditorWindow;
 std::shared_ptr<PaperboatModMenuWindow> mModMenuWindow;
 std::shared_ptr<TouchControlsOverlay> mTouchControlsOverlay;
+std::shared_ptr<ShaderDashboardWindow> mShaderDashboardWindow;
 
 UIWidgets::Colors GetMenuThemeColor() {
     return mPaperboatMenu->GetMenuThemeColor();
@@ -103,6 +105,11 @@ void SetupGuiElements() {
     );
     gui->AddGuiWindow(mShaderSettingsWindow);
 
+    mShaderDashboardWindow = std::make_shared<ShaderDashboardWindow>(
+        CVAR_WINDOW("ShaderDashboard"), "Shader Compilation Dashboard", ImVec2(720, 520)
+    );
+    gui->AddGuiWindow(mShaderDashboardWindow);
+
     // Registered everywhere; draws nothing unless the touch controls are on, so
     // the layout can be edited from a desktop build.
     mTouchControlsOverlay = std::make_shared<TouchControlsOverlay>(CVAR_WINDOW("TouchControls"), "##TouchControls");
@@ -120,6 +127,7 @@ void Destroy() {
     mNotificationWindow = nullptr;
     mInputViewer = nullptr;
     mShaderSettingsWindow = nullptr;
+    mShaderDashboardWindow = nullptr;
     mInputViewerSettings = nullptr;
     mConsoleWindow = nullptr;
     mValueViewerWindow = nullptr;

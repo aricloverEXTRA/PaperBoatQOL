@@ -121,6 +121,19 @@ void PaperboatMenu::AddMenuDevTools() {
                 "Edit enemy HP, attack power, rewards and partner odds, and share presets as JSON."
             )
         );
+
+    // Shader Compilation Dashboard
+    path.sidebarName = "Shader Dashboard";
+    AddSidebarEntry("Dev Tools", path.sidebarName, 1);
+    AddWidget(path, "Popout Shader Compilation Dashboard", WIDGET_WINDOW_BUTTON)
+        .CVar(CVAR_WINDOW("ShaderDashboard"))
+        .WindowName("Shader Compilation Dashboard")
+        .HideInSearch(true)
+        .Options(
+            WindowButtonOptions().Tooltip(
+                "Shows shader compilation status: X/Y compiled, hot-reload controls, and per-shader timing."
+            )
+        );
 }
 
 } // namespace PaperboatGui

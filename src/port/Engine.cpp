@@ -1490,3 +1490,105 @@ extern "C" uint32_t OTRGetGameRenderHeight(void) {
     auto interp = GameEngine_GetInterpreter();
     return interp != nullptr ? interp->mCurDimensions.height : (uint32_t) WS_NATIVE_HEIGHT;
 }
+
+// ---------------------------------------------------------------------------
+// Shader Compilation Dashboard support
+// ---------------------------------------------------------------------------
+
+namespace {
+struct ShaderCompileEntry {
+    std::string name;
+    std::string status; // "pending", "compiling", "compiled", "failed"
+    float compileTimeMs = 0.0f;
+    int passId = -1;
+};
+
+std::vector<ShaderCompileEntry> sShaderCompileList;
+std::mutex sShaderCompileMutex;
+
+ShaderCompileEntry* FindShaderEntry(const char* name) {
+    for (auto& entry : sShaderCompileList) {
+        if (entry.name == name) return &entry;
+    }
+    return nullptr;
+}
+
+ShaderCompileEntry* GetOrCreateShaderEntry(const char* name) {
+    for (auto& entry : sShaderCompileList) {
+        if (entry.name == name) return &entry;
+    }
+    sShaderCompileList.push_back({});
+    auto& entry = sShaderCompileList.back();
+    entry.name = name;
+    entry.status = "pending";
+    return &entry;
+}
+} // namespace
+
+extern "C" void GameEngine_OnShaderCompileStart(const char* shaderName) {
+    if (!shaderName) return;
+    std::lock_guard<std::mutex> lock(sShaderCompileMutex);
+    auto* entry = GetOrCreateShaderEntry(shaderName);
+    entry->status = "compiling";
+    entry->compileTimeMs = 0.0f;
+}
+
+extern "C" void GameEngine_OnShaderCompileEnd(const char* shaderName, bool success, float timeMs) {
+    if (!shaderName) return;
+    std::lock_guard<std::mutex> lock(sShaderCompileMutex);
+    auto* entry = FindShaderEntry(shaderName);
+    if (entry) {
+        entry->status = success ? "compiled" : "failed";
+        entry->compileTimeMs = timeMs;
+    }
+}
+
+extern "C" void GameEngine_RegisterShaderPassId(const char* shaderName, int passId) {
+    if (!shaderName) return;
+    std::lock_guard<std::mutex> lock(sShaderCompileMutex);
+    auto* entry = GetOrCreateShaderEntry(shaderName);
+    entry->passId = passId;
+}
+
+extern "C" int GameEngine_GetShaderCompileCount() {
+    std::lock_guard<std::mutex> lock(sShaderCompileMutex);
+    int count = 0;
+    for (const auto& e : sShaderCompileList) {
+        if (e.status == "compiled") count++;
+    }
+    return count;
+}
+
+extern "C" int GameEngine_GetShaderTotalCount() {
+    std::lock_guard<std::mutex> lock(sShaderCompileMutex);
+    return (int)sShaderCompileList.size();
+}
+
+extern "C" const char* GameEngine_GetShaderCompileStatus(int index) {
+    std::lock_guard<std::mutex> lock(sShaderCompileMutex);
+    if (index >= 0 && index < (int)sShaderCompileList.size()) {
+        return sShaderCompileList[index].status.c_str();
+    }
+    return "unknown";
+}
+
+extern "C" float GameEngine_GetShaderCompileTime(int index) {
+    std::lock_guard<std::mutex> lock(sShaderCompileMutex);
+    if (index >= 0 && index < (int)sShaderCompileList.size()) {
+        return sShaderCompileList[index].compileTimeMs;
+    }
+    return 0.0f;
+}
+
+extern "C" void GameEngine_RequestShaderRecompile(const char* shaderName) {
+    if (!shaderName) return;
+    std::lock_guard<std::mutex> lock(sShaderCompileMutex);
+    auto* entry = FindShaderEntry(shaderName);
+    if (entry) {
+        entry->status = "compiling";
+        entry->compileTimeMs = 0.0f;
+    }
+    // The actual recompile is triggered by the graphics backend
+    // For now, just mark it as compiling
+    SPDLOG_INFO("[ShaderDashboard] Recompile requested for: {}", shaderName);
+}

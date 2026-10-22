@@ -222,6 +222,66 @@ static bool pbEffectOn(const char* cvar, int defaultValue) {
 // 0 = off, 1 = basic (on change), 2 = verbose (also on a periodic heartbeat).
 #define POSTFX_SHADER_LOG_CVAR  CVAR_DEVELOPER_TOOLS("ShaderLogLevel")
 
+// Modern shader suite CVars
+#define POSTFX_PBR_CVAR              CVAR_ENHANCED_SHADING("PBR")
+#define POSTFX_PBR_USE_ORM_CVAR      CVAR_ENHANCED_SHADING("PBRUseORM")
+#define POSTFX_PBR_ENV_INT_CVAR      CVAR_ENHANCED_SHADING("PBREnvIntensity")
+#define POSTFX_PBR_DEBUG_CVAR        CVAR_ENHANCED_SHADING("PBRDebug")
+
+#define POSTFX_LUT_CVAR              CVAR_ENHANCED_SHADING("LUT")
+#define POSTFX_LUT_INTENSITY_CVAR    CVAR_ENHANCED_SHADING("LUTIntensity")
+#define POSTFX_LUT_INDEX_CVAR        CVAR_ENHANCED_SHADING("LUTIndex")
+#define POSTFX_LUT_DEBUG_CVAR        CVAR_ENHANCED_SHADING("LUTDebug")
+
+#define POSTFX_HDR_CVAR              CVAR_ENHANCED_SHADING("HDR")
+#define POSTFX_HDR_EXPOSURE_CVAR     CVAR_ENHANCED_SHADING("HDRExposure")
+#define POSTFX_HDR_CURVE_CVAR        CVAR_ENHANCED_SHADING("HDRCurve")
+#define POSTFX_HDR_ADAPT_CVAR        CVAR_ENHANCED_SHADING("HDRAdaptation")
+#define POSTFX_HDR_WHITE_CVAR        CVAR_ENHANCED_SHADING("HDRWhitePoint")
+#define POSTFX_HDR_SHOULDER_CVAR     CVAR_ENHANCED_SHADING("HDRShoulder")
+#define POSTFX_HDR_TOE_CVAR          CVAR_ENHANCED_SHADING("HDRToe")
+#define POSTFX_HDR_CONTRAST_CVAR     CVAR_ENHANCED_SHADING("HDRContrast")
+
+#define POSTFX_VOLUMETRIC_CVAR       CVAR_ENHANCED_SHADING("Volumetric")
+#define POSTFX_VOL_DENSITY_CVAR      CVAR_ENHANCED_SHADING("VolDensity")
+#define POSTFX_VOL_DECAY_CVAR        CVAR_ENHANCED_SHADING("VolDecay")
+#define POSTFX_VOL_WEIGHT_CVAR       CVAR_ENHANCED_SHADING("VolWeight")
+#define POSTFX_VOL_THRESH_CVAR       CVAR_ENHANCED_SHADING("VolThreshold")
+#define POSTFX_VOL_SAMPLES_CVAR      CVAR_ENHANCED_SHADING("VolSamples")
+#define POSTFX_VOL_LENGTH_CVAR       CVAR_ENHANCED_SHADING("VolMaxLength")
+
+#define POSTFX_TAA_CVAR              CVAR_ENHANCED_SHADING("TAA")
+#define POSTFX_TAA_JITTER_CVAR       CVAR_ENHANCED_SHADING("TAAJitter")
+#define POSTFX_TAA_BLEND_CVAR        CVAR_ENHANCED_SHADING("TAABlend")
+#define POSTFX_TAA_CLAMP_CVAR        CVAR_ENHANCED_SHADING("TAAClamp")
+
+#define POSTFX_MOTIONBLUR_CVAR       CVAR_ENHANCED_SHADING("MotionBlur")
+#define POSTFX_MB_STRENGTH_CVAR      CVAR_ENHANCED_SHADING("MBStrength")
+#define POSTFX_MB_SAMPLES_CVAR       CVAR_ENHANCED_SHADING("MBSamples")
+#define POSTFX_MB_CAMERA_CVAR        CVAR_ENHANCED_SHADING("MBCamera")
+#define POSTFX_MB_VELSCALE_CVAR      CVAR_ENHANCED_SHADING("MBVelScale")
+#define POSTFX_MB_MAXBLUR_CVAR       CVAR_ENHANCED_SHADING("MBMaxBlur")
+
+#define POSTFX_PARALLAX_CVAR         CVAR_ENHANCED_SHADING("Parallax")
+#define POSTFX_PARALLAX_SCALE_CVAR   CVAR_ENHANCED_SHADING("ParallaxScale")
+#define POSTFX_PARALLAX_MINL_CVAR    CVAR_ENHANCED_SHADING("ParallaxMinLayers")
+#define POSTFX_PARALLAX_MAXL_CVAR    CVAR_ENHANCED_SHADING("ParallaxMaxLayers")
+
+#define POSTFX_VRS_CVAR              CVAR_ENHANCED_SHADING("VRS")
+#define POSTFX_VRS_THRESH_CVAR       CVAR_ENHANCED_SHADING("VRSThreshold")
+#define POSTFX_VRS_MINRATE_CVAR      CVAR_ENHANCED_SHADING("VRSMinRate")
+#define POSTFX_VRS_MAXRATE_CVAR      CVAR_ENHANCED_SHADING("VRSMaxRate")
+
+// Debug CVars for modern shaders
+#define POSTFX_PBR_DEBUG_CVAR        CVAR_ENHANCED_SHADING("PBRDebug")
+#define POSTFX_LUT_DEBUG_CVAR        CVAR_ENHANCED_SHADING("LUTDebug")
+#define POSTFX_HDR_DEBUG_CVAR        CVAR_ENHANCED_SHADING("HDRDebug")
+#define POSTFX_VOL_DEBUG_CVAR        CVAR_ENHANCED_SHADING("VolDebug")
+#define POSTFX_TAA_DEBUG_CVAR        CVAR_ENHANCED_SHADING("TAADebug")
+#define POSTFX_MB_DEBUG_CVAR         CVAR_ENHANCED_SHADING("MBDebug")
+#define POSTFX_PARALLAX_DEBUG_CVAR   CVAR_ENHANCED_SHADING("ParallaxDebug")
+#define POSTFX_VRS_DEBUG_CVAR        CVAR_ENHANCED_SHADING("VRSDebug")
+
 static int PostFx_ShaderLogLevel() {
     return CVarGetInteger(POSTFX_SHADER_LOG_CVAR, 1);
 }
@@ -285,7 +345,7 @@ struct ShadingPreset {
     float tonemapExposure;
     int tonemapCurve;
     float tonemapBlend;
-    // Post passes
+    // Post passes (original)
     bool ssao;
     float ssaoStrength;
     float ssaoRadius;
@@ -318,6 +378,39 @@ struct ShadingPreset {
     bool specular;
     float specularStrength;
     float specularShininess;
+    // Modern shader suite
+    bool pbr;
+    float pbrEnvIntensity;
+    bool lut;
+    float lutIntensity;
+    int lutIndex;
+    bool hdr;
+    float hdrExposure;
+    int hdrCurve;
+    float hdrAdaptation;
+    bool volumetric;
+    float volDensity;
+    float volDecay;
+    float volWeight;
+    float volThreshold;
+    int volSamples;
+    float volMaxLength;
+    bool taa;
+    float taaJitter;
+    float taaBlend;
+    float taaClamp;
+    bool motionBlur;
+    float mbStrength;
+    int mbSamples;
+    bool mbCamera;
+    bool parallax;
+    float parallaxScale;
+    int parallaxMinLayers;
+    int parallaxMaxLayers;
+    bool vrs;
+    float vrsThreshold;
+    float vrsMinRate;
+    float vrsMaxRate;
 };
 
 static void ApplyPreset(const ShadingPreset& p) {
@@ -383,6 +476,39 @@ static void ApplyPreset(const ShadingPreset& p) {
     CVarSetInteger(POSTFX_SPECULAR_CVAR, p.specular ? 1 : 0);
     CVarSetFloat(POSTFX_SPECULAR_STR_CVAR, p.specularStrength);
     CVarSetFloat(POSTFX_SPECULAR_SHINY_CVAR, p.specularShininess);
+    // Modern shader suite
+    CVarSetInteger(POSTFX_PBR_CVAR, p.pbr ? 1 : 0);
+    CVarSetFloat(POSTFX_PBR_ENV_INT_CVAR, p.pbrEnvIntensity);
+    CVarSetInteger(POSTFX_LUT_CVAR, p.lut ? 1 : 0);
+    CVarSetFloat(POSTFX_LUT_INTENSITY_CVAR, p.lutIntensity);
+    CVarSetInteger(POSTFX_LUT_INDEX_CVAR, p.lutIndex);
+    CVarSetInteger(POSTFX_HDR_CVAR, p.hdr ? 1 : 0);
+    CVarSetFloat(POSTFX_HDR_EXPOSURE_CVAR, p.hdrExposure);
+    CVarSetInteger(POSTFX_HDR_CURVE_CVAR, p.hdrCurve);
+    CVarSetFloat(POSTFX_HDR_ADAPT_CVAR, p.hdrAdaptation);
+    CVarSetInteger(POSTFX_VOLUMETRIC_CVAR, p.volumetric ? 1 : 0);
+    CVarSetFloat(POSTFX_VOL_DENSITY_CVAR, p.volDensity);
+    CVarSetFloat(POSTFX_VOL_DECAY_CVAR, p.volDecay);
+    CVarSetFloat(POSTFX_VOL_WEIGHT_CVAR, p.volWeight);
+    CVarSetFloat(POSTFX_VOL_THRESH_CVAR, p.volThreshold);
+    CVarSetInteger(POSTFX_VOL_SAMPLES_CVAR, p.volSamples);
+    CVarSetFloat(POSTFX_VOL_LENGTH_CVAR, p.volMaxLength);
+    CVarSetInteger(POSTFX_TAA_CVAR, p.taa ? 1 : 0);
+    CVarSetFloat(POSTFX_TAA_JITTER_CVAR, p.taaJitter);
+    CVarSetFloat(POSTFX_TAA_BLEND_CVAR, p.taaBlend);
+    CVarSetFloat(POSTFX_TAA_CLAMP_CVAR, p.taaClamp);
+    CVarSetInteger(POSTFX_MOTIONBLUR_CVAR, p.motionBlur ? 1 : 0);
+    CVarSetFloat(POSTFX_MB_STRENGTH_CVAR, p.mbStrength);
+    CVarSetInteger(POSTFX_MB_SAMPLES_CVAR, p.mbSamples);
+    CVarSetInteger(POSTFX_MB_CAMERA_CVAR, p.mbCamera ? 1 : 0);
+    CVarSetInteger(POSTFX_PARALLAX_CVAR, p.parallax ? 1 : 0);
+    CVarSetFloat(POSTFX_PARALLAX_SCALE_CVAR, p.parallaxScale);
+    CVarSetInteger(POSTFX_PARALLAX_MINL_CVAR, p.parallaxMinLayers);
+    CVarSetInteger(POSTFX_PARALLAX_MAXL_CVAR, p.parallaxMaxLayers);
+    CVarSetInteger(POSTFX_VRS_CVAR, p.vrs ? 1 : 0);
+    CVarSetFloat(POSTFX_VRS_THRESH_CVAR, p.vrsThreshold);
+    CVarSetFloat(POSTFX_VRS_MINRATE_CVAR, p.vrsMinRate);
+    CVarSetFloat(POSTFX_VRS_MAXRATE_CVAR, p.vrsMaxRate);
 }
 
 // Built-in presets -------------------------------------------------------------
@@ -409,6 +535,15 @@ static const ShadingPreset sPresets[] = {
         true, 0.6f, 0.75f, 12.0f,  // bloom
         true, 0.75f, 0.125f, 0.0312f, // FXAA
         true, 0.5f, 32.0f          // specular
+    // Modern shader suite defaults (off)
+    false, 0.0f,          // pbr
+    false, 0.0f, 0,       // lut
+    false, 0.0f, 0, 0.0f, // hdr
+    false, 0.0f, 0.0f, 0.0f, 0.0f, 0, 0.0f, // volumetric
+    false, 0.0f, 0.0f, 0.0f, // taa
+    false, 0.0f, 0, false, // motion blur
+    false, 0.0f, 0, 0,     // parallax
+    false, 0.0f, 0.0f, 0.0f, // vrs
     },
     // "Performance" - minimal post passes, maximum compatibility
     {
@@ -432,6 +567,15 @@ static const ShadingPreset sPresets[] = {
         false, 0, 0, 0,            // no bloom
         true, 0.5f, 0.15f, 0.05f,  // FXAA only (light)
         false, 0, 0                // no specular
+    // Modern shader suite defaults (off)
+    false, 0.0f,          // pbr
+    false, 0.0f, 0,       // lut
+    false, 0.0f, 0, 0.0f, // hdr
+    false, 0.0f, 0.0f, 0.0f, 0.0f, 0, 0.0f, // volumetric
+    false, 0.0f, 0.0f, 0.0f, // taa
+    false, 0.0f, 0, false, // motion blur
+    false, 0.0f, 0, 0,     // parallax
+    false, 0.0f, 0.0f, 0.0f, // vrs
     },
     // "Cinematic" - full effects, best for screenshots/video
     {
@@ -455,6 +599,15 @@ static const ShadingPreset sPresets[] = {
         true, 0.8f, 0.7f, 16.0f,   // bloom
         true, 0.85f, 0.1f, 0.02f,  // FXAA
         true, 0.6f, 48.0f          // specular
+    // Modern shader suite defaults (off)
+    false, 0.0f,          // pbr
+    false, 0.0f, 0,       // lut
+    false, 0.0f, 0, 0.0f, // hdr
+    false, 0.0f, 0.0f, 0.0f, 0.0f, 0, 0.0f, // volumetric
+    false, 0.0f, 0.0f, 0.0f, // taa
+    false, 0.0f, 0, false, // motion blur
+    false, 0.0f, 0, 0,     // parallax
+    false, 0.0f, 0.0f, 0.0f, // vrs
     },
     // "Retro" - close to vanilla N64 look, just slight polish
     {
@@ -478,6 +631,15 @@ static const ShadingPreset sPresets[] = {
         false, 0, 0, 0,
         false, 0, 0, 0,
         false, 0, 0
+    // Modern shader suite defaults (off)
+    false, 0.0f,          // pbr
+    false, 0.0f, 0,       // lut
+    false, 0.0f, 0, 0.0f, // hdr
+    false, 0.0f, 0.0f, 0.0f, 0.0f, 0, 0.0f, // volumetric
+    false, 0.0f, 0.0f, 0.0f, // taa
+    false, 0.0f, 0, false, // motion blur
+    false, 0.0f, 0, 0,     // parallax
+    false, 0.0f, 0.0f, 0.0f, // vrs
     },
     // "Indoor/Underground" - optimized for caves, houses, shops (no sun)
     {
@@ -501,6 +663,15 @@ static const ShadingPreset sPresets[] = {
         false, 0, 0, 0,          // no bloom
         true, 0.6f, 0.12f, 0.03f, // FXAA
         false, 0, 0              // no specular
+    // Modern shader suite defaults (off)
+    false, 0.0f,          // pbr
+    false, 0.0f, 0,       // lut
+    false, 0.0f, 0, 0.0f, // hdr
+    false, 0.0f, 0.0f, 0.0f, 0.0f, 0, 0.0f, // volumetric
+    false, 0.0f, 0.0f, 0.0f, // taa
+    false, 0.0f, 0, false, // motion blur
+    false, 0.0f, 0, 0,     // parallax
+    false, 0.0f, 0.0f, 0.0f, // vrs
     }
 };
 static const int sNumPresets = sizeof(sPresets) / sizeof(sPresets[0]);
@@ -1065,6 +1236,242 @@ static void PostFx_UpdateSpecular() {
     }
 }
 
+// ============ Modern Shader Suite ============
+
+// PBR
+static int sPbrPassId = -1;
+static void PostFx_PushPbr() {
+    const bool on = CVarGetInteger(POSTFX_PBR_CVAR, 0) != 0;
+    float params[4] = {
+        on ? 1.0f : 0.0f,
+        CVarGetInteger(POSTFX_PBR_USE_ORM_CVAR, 0) != 0 ? 1.0f : 0.0f,
+        pbClampf(CVarGetFloat(POSTFX_PBR_ENV_INT_CVAR, 1.0f), 0.0f, 5.0f),
+        (float)CVarGetInteger(POSTFX_PBR_DEBUG_CVAR, 0),
+    };
+    float ov[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+    gfx_set_custom_uniform(40, params);
+    gfx_set_custom_uniform(41, ov);
+}
+static void PostFx_UpdatePbr() {
+    const bool on = pbMasterEnabled() && CVarGetInteger(POSTFX_PBR_CVAR, 0) != 0;
+    Fast::Interpreter* interp = GameEngine_GetInterpreter();
+    if (interp == nullptr) return;
+    if (on && sPbrPassId < 0) {
+        sPbrPassId = interp->RegisterPostPass("shaders/post/pb_pbr.shader");
+        SPDLOG_INFO("[PostFx] PBR pass registered id={}", sPbrPassId);
+        GameEngine_RegisterShaderPassId("shaders/post/pb_pbr.shader", sPbrPassId);
+    } else if (!on && sPbrPassId >= 0) {
+        interp->UnregisterPostPass(sPbrPassId);
+        sPbrPassId = -1;
+        SPDLOG_INFO("[PostFx] PBR pass removed");
+    }
+}
+
+// LUT Color Grading
+static int sLutPassId = -1;
+static void PostFx_PushLut() {
+    const bool on = CVarGetInteger(POSTFX_LUT_CVAR, 0) != 0;
+    float params[4] = {
+        on ? 1.0f : 0.0f,
+        pbClampf(CVarGetFloat(POSTFX_LUT_INTENSITY_CVAR, 1.0f), 0.0f, 1.0f),
+        (float)CVarGetInteger(POSTFX_LUT_INDEX_CVAR, 0),
+        (float)CVarGetInteger(POSTFX_LUT_DEBUG_CVAR, 0),
+    };
+    float cfg[4] = { 16.0f, 0.0f, 0.0f, 0.0f }; // LUT size
+    gfx_set_custom_uniform(42, params);
+    gfx_set_custom_uniform(43, cfg);
+}
+static void PostFx_UpdateLut() {
+    const bool on = pbMasterEnabled() && CVarGetInteger(POSTFX_LUT_CVAR, 0) != 0;
+    Fast::Interpreter* interp = GameEngine_GetInterpreter();
+    if (interp == nullptr) return;
+    if (on && sLutPassId < 0) {
+        sLutPassId = interp->RegisterPostPass("shaders/post/pb_lut.shader");
+        SPDLOG_INFO("[PostFx] LUT pass registered id={}", sLutPassId);
+        GameEngine_RegisterShaderPassId("shaders/post/pb_lut.shader", sLutPassId);
+    } else if (!on && sLutPassId >= 0) {
+        interp->UnregisterPostPass(sLutPassId);
+        sLutPassId = -1;
+        SPDLOG_INFO("[PostFx] LUT pass removed");
+    }
+}
+
+// HDR Tonemap
+static int sHdrPassId = -1;
+static void PostFx_PushHdr() {
+    const bool on = CVarGetInteger(POSTFX_HDR_CVAR, 0) != 0;
+    float params[4] = {
+        on ? 1.0f : 0.0f,
+        pbClampf(CVarGetFloat(POSTFX_HDR_EXPOSURE_CVAR, 1.0f), 0.01f, 16.0f),
+        (float)CVarGetInteger(POSTFX_HDR_CURVE_CVAR, 0), // 0=ACES, 1=Filmic, 2=Reinhard, 3=Custom
+        pbClampf(CVarGetFloat(POSTFX_HDR_ADAPT_CVAR, 0.0f), 0.0f, 1.0f),
+    };
+    float curve[4] = {
+        pbClampf(CVarGetFloat(POSTFX_HDR_WHITE_CVAR, 11.2f), 1.0f, 100.0f),
+        pbClampf(CVarGetFloat(POSTFX_HDR_SHOULDER_CVAR, 0.3f), 0.01f, 1.0f),
+        pbClampf(CVarGetFloat(POSTFX_HDR_TOE_CVAR, 0.02f), 0.001f, 0.5f),
+        pbClampf(CVarGetFloat(POSTFX_HDR_CONTRAST_CVAR, 1.0f), 0.1f, 4.0f),
+    };
+    gfx_set_custom_uniform(44, params);
+    gfx_set_custom_uniform(45, curve);
+}
+static void PostFx_UpdateHdr() {
+    const bool on = pbMasterEnabled() && CVarGetInteger(POSTFX_HDR_CVAR, 0) != 0;
+    Fast::Interpreter* interp = GameEngine_GetInterpreter();
+    if (interp == nullptr) return;
+    if (on && sHdrPassId < 0) {
+        sHdrPassId = interp->RegisterPostPass("shaders/post/pb_hdr_tonemap.shader");
+        SPDLOG_INFO("[PostFx] HDR tonemap pass registered id={}", sHdrPassId);
+        GameEngine_RegisterShaderPassId("shaders/post/pb_hdr_tonemap.shader", sHdrPassId);
+    } else if (!on && sHdrPassId >= 0) {
+        interp->UnregisterPostPass(sHdrPassId);
+        sHdrPassId = -1;
+        SPDLOG_INFO("[PostFx] HDR tonemap pass removed");
+    }
+}
+
+// Volumetric Light Shafts
+static int sVolumetricPassId = -1;
+static void PostFx_PushVolumetric() {
+    // Uses registers 30/31 from sun (CameraPatches) + 32 for config
+    float cfg[4] = {
+        (float)CVarGetInteger(POSTFX_VOL_SAMPLES_CVAR, 32),
+        pbClampf(CVarGetFloat(POSTFX_VOL_LENGTH_CVAR, 1.0f), 0.1f, 4.0f),
+        0.0f, // jitter
+        (float)CVarGetInteger(POSTFX_VOL_DEBUG_CVAR, 0),
+    };
+    gfx_set_custom_uniform(32, cfg);
+}
+static void PostFx_UpdateVolumetric() {
+    const bool on = pbMasterEnabled() && CVarGetInteger(POSTFX_VOLUMETRIC_CVAR, 0) != 0;
+    Fast::Interpreter* interp = GameEngine_GetInterpreter();
+    if (interp == nullptr) return;
+    if (on && sVolumetricPassId < 0) {
+        sVolumetricPassId = interp->RegisterPostPass("shaders/post/pb_volumetric.shader");
+        SPDLOG_INFO("[PostFx] Volumetric pass registered id={}", sVolumetricPassId);
+        GameEngine_RegisterShaderPassId("shaders/post/pb_volumetric.shader", sVolumetricPassId);
+    } else if (!on && sVolumetricPassId >= 0) {
+        interp->UnregisterPostPass(sVolumetricPassId);
+        sVolumetricPassId = -1;
+        SPDLOG_INFO("[PostFx] Volumetric pass removed");
+    }
+}
+
+// TAA
+static int sTaaPassId = -1;
+static void PostFx_PushTaa() {
+    float params[4] = {
+        CVarGetInteger(POSTFX_TAA_CVAR, 0) != 0 ? 1.0f : 0.0f,
+        pbClampf(CVarGetFloat(POSTFX_TAA_JITTER_CVAR, 0.5f), 0.0f, 2.0f),
+        pbClampf(CVarGetFloat(POSTFX_TAA_BLEND_CVAR, 0.9f), 0.0f, 1.0f),
+        pbClampf(CVarGetFloat(POSTFX_TAA_CLAMP_CVAR, 0.75f), 0.0f, 1.0f),
+    };
+    gfx_set_custom_uniform(33, params);
+}
+static void PostFx_UpdateTaa() {
+    const bool on = pbMasterEnabled() && CVarGetInteger(POSTFX_TAA_CVAR, 0) != 0;
+    Fast::Interpreter* interp = GameEngine_GetInterpreter();
+    if (interp == nullptr) return;
+    if (on && sTaaPassId < 0) {
+        sTaaPassId = interp->RegisterPostPass("shaders/post/pb_taa.shader");
+        SPDLOG_INFO("[PostFx] TAA pass registered id={}", sTaaPassId);
+        GameEngine_RegisterShaderPassId("shaders/post/pb_taa.shader", sTaaPassId);
+    } else if (!on && sTaaPassId >= 0) {
+        interp->UnregisterPostPass(sTaaPassId);
+        sTaaPassId = -1;
+        SPDLOG_INFO("[PostFx] TAA pass removed");
+    }
+}
+
+// Motion Blur
+static int sMotionBlurPassId = -1;
+static void PostFx_PushMotionBlur() {
+    float params[4] = {
+        CVarGetInteger(POSTFX_MOTIONBLUR_CVAR, 0) != 0 ? 1.0f : 0.0f,
+        pbClampf(CVarGetFloat(POSTFX_MB_STRENGTH_CVAR, 1.0f), 0.0f, 4.0f),
+        (float)CVarGetInteger(POSTFX_MB_SAMPLES_CVAR, 8),
+        CVarGetInteger(POSTFX_MB_CAMERA_CVAR, 0) != 0 ? 1.0f : 0.0f,
+    };
+    float params2[4] = {
+        pbClampf(CVarGetFloat(POSTFX_MB_VELSCALE_CVAR, 1.0f), 0.1f, 10.0f),
+        pbClampf(CVarGetFloat(POSTFX_MB_MAXBLUR_CVAR, 0.1f), 0.0f, 0.5f),
+        0.0f,
+        (float)CVarGetInteger(POSTFX_MB_DEBUG_CVAR, 0),
+    };
+    gfx_set_custom_uniform(34, params);
+    gfx_set_custom_uniform(35, params2);
+}
+static void PostFx_UpdateMotionBlur() {
+    const bool on = pbMasterEnabled() && CVarGetInteger(POSTFX_MOTIONBLUR_CVAR, 0) != 0;
+    Fast::Interpreter* interp = GameEngine_GetInterpreter();
+    if (interp == nullptr) return;
+    if (on && sMotionBlurPassId < 0) {
+        sMotionBlurPassId = interp->RegisterPostPass("shaders/post/pb_motionblur.shader");
+        SPDLOG_INFO("[PostFx] Motion Blur pass registered id={}", sMotionBlurPassId);
+        GameEngine_RegisterShaderPassId("shaders/post/pb_motionblur.shader", sMotionBlurPassId);
+    } else if (!on && sMotionBlurPassId >= 0) {
+        interp->UnregisterPostPass(sMotionBlurPassId);
+        sMotionBlurPassId = -1;
+        SPDLOG_INFO("[PostFx] Motion Blur pass removed");
+    }
+}
+
+// Parallax Occlusion Mapping
+static int sParallaxPassId = -1;
+static void PostFx_PushParallax() {
+    float params[4] = {
+        CVarGetInteger(POSTFX_PARALLAX_CVAR, 0) != 0 ? 1.0f : 0.0f,
+        pbClampf(CVarGetFloat(POSTFX_PARALLAX_SCALE_CVAR, 0.05f), 0.0f, 0.5f),
+        (float)CVarGetInteger(POSTFX_PARALLAX_MINL_CVAR, 8),
+        (float)CVarGetInteger(POSTFX_PARALLAX_MAXL_CVAR, 32),
+    };
+    float params2[4] = { 1.0f, (float)CVarGetInteger(POSTFX_PARALLAX_DEBUG_CVAR, 0), 0.0f, 0.0f };
+    gfx_set_custom_uniform(36, params);
+    gfx_set_custom_uniform(37, params2);
+}
+static void PostFx_UpdateParallax() {
+    const bool on = pbMasterEnabled() && CVarGetInteger(POSTFX_PARALLAX_CVAR, 0) != 0;
+    Fast::Interpreter* interp = GameEngine_GetInterpreter();
+    if (interp == nullptr) return;
+    if (on && sParallaxPassId < 0) {
+        sParallaxPassId = interp->RegisterPostPass("shaders/post/pb_parallax.shader");
+        SPDLOG_INFO("[PostFx] Parallax pass registered id={}", sParallaxPassId);
+        GameEngine_RegisterShaderPassId("shaders/post/pb_parallax.shader", sParallaxPassId);
+    } else if (!on && sParallaxPassId >= 0) {
+        interp->UnregisterPostPass(sParallaxPassId);
+        sParallaxPassId = -1;
+        SPDLOG_INFO("[PostFx] Parallax pass removed");
+    }
+}
+
+// VRS (Variable Rate Shading) - simulated via post-process
+static int sVrsPassId = -1;
+static void PostFx_PushVrs() {
+    float params[4] = {
+        CVarGetInteger(POSTFX_VRS_CVAR, 0) != 0 ? 1.0f : 0.0f,
+        pbClampf(CVarGetFloat(POSTFX_VRS_THRESH_CVAR, 0.02f), 0.0f, 1.0f),
+        pbClampf(CVarGetFloat(POSTFX_VRS_MINRATE_CVAR, 0.25f), 0.1f, 1.0f),
+        pbClampf(CVarGetFloat(POSTFX_VRS_MAXRATE_CVAR, 1.0f), 0.1f, 1.0f),
+    };
+    float params2[4] = { 8.0f, (float)CVarGetInteger(POSTFX_VRS_DEBUG_CVAR, 0), 0.0f, 0.0f };
+    gfx_set_custom_uniform(38, params);
+    gfx_set_custom_uniform(39, params2);
+}
+static void PostFx_UpdateVrs() {
+    const bool on = pbMasterEnabled() && CVarGetInteger(POSTFX_VRS_CVAR, 0) != 0;
+    Fast::Interpreter* interp = GameEngine_GetInterpreter();
+    if (interp == nullptr) return;
+    if (on && sVrsPassId < 0) {
+        sVrsPassId = interp->RegisterPostPass("shaders/post/pb_vrs.shader");
+        SPDLOG_INFO("[PostFx] VRS pass registered id={}", sVrsPassId);
+        GameEngine_RegisterShaderPassId("shaders/post/pb_vrs.shader", sVrsPassId);
+    } else if (!on && sVrsPassId >= 0) {
+        interp->UnregisterPostPass(sVrsPassId);
+        sVrsPassId = -1;
+        SPDLOG_INFO("[PostFx] VRS pass removed");
+    }
+}
+
 // Periodic report so a playtest log shows what the in-shader effects are doing.
 static void PostFx_LogStatus() {
     static int sFrame = 0;
@@ -1262,6 +1669,16 @@ static void PostFx_FrameUpdate() {
             EnhancedShadingBridge_PushLightingUniforms();
             PostFx_PushRelightAndTonemap();
             PostFx_PushSsao(); // push params even if pass not registered
+            
+            // Modern shader suite params (even on unstable frames for continuity)
+            PostFx_PushPbr();
+            PostFx_PushLut();
+            PostFx_PushHdr();
+            PostFx_PushVolumetric();
+            PostFx_PushTaa();
+            PostFx_PushMotionBlur();
+            PostFx_PushParallax();
+            PostFx_PushVrs();
         } else {
             PostFx_PushNeutralAndTeardownPasses();
         }
@@ -1322,6 +1739,25 @@ static void PostFx_FrameUpdate() {
     PostFx_UpdateFxaa();
     PostFx_PushSpecular();
     PostFx_UpdateSpecular();
+    
+    // Modern shader suite
+    PostFx_PushPbr();
+    PostFx_UpdatePbr();
+    PostFx_PushLut();
+    PostFx_UpdateLut();
+    PostFx_PushHdr();
+    PostFx_UpdateHdr();
+    PostFx_PushVolumetric();
+    PostFx_UpdateVolumetric();
+    PostFx_PushTaa();
+    PostFx_UpdateTaa();
+    PostFx_PushMotionBlur();
+    PostFx_UpdateMotionBlur();
+    PostFx_PushParallax();
+    PostFx_UpdateParallax();
+    PostFx_PushVrs();
+    PostFx_UpdateVrs();
+    
     PostFx_LogStatus();
 }
 
@@ -1335,7 +1771,9 @@ extern "C" s32 PostFx_ShouldSplitWorldLayer(void) {
         return 0;
     }
     return (sSsaoPassId >= 0 || sDepthDebugPassId >= 0 || sSunShadePassId >= 0 || sGodRaysPassId >= 0 ||
-            sContactShadowPassId >= 0 || sScreenSpaceShadowPassId >= 0 || sSpecularPassId >= 0)
+            sContactShadowPassId >= 0 || sScreenSpaceShadowPassId >= 0 || sSpecularPassId >= 0 ||
+            sPbrPassId >= 0 || sLutPassId >= 0 || sHdrPassId >= 0 || sVolumetricPassId >= 0 ||
+            sTaaPassId >= 0 || sMotionBlurPassId >= 0 || sParallaxPassId >= 0 || sVrsPassId >= 0)
                ? 1
                : 0;
 }

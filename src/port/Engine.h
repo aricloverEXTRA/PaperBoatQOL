@@ -147,6 +147,16 @@ void GameEngine_InvalidateTextureCache(const void* addr);
 void GameEngine_PrefetchTexture(const char* path);
 void gfx_texture_cache_clear(void);
 
+// Shader Compilation Dashboard API
+void GameEngine_OnShaderCompileStart(const char* shaderName);
+void GameEngine_OnShaderCompileEnd(const char* shaderName, bool success, float timeMs);
+void GameEngine_RegisterShaderPassId(const char* shaderName, int passId);
+int GameEngine_GetShaderCompileCount(void);
+int GameEngine_GetShaderTotalCount(void);
+const char* GameEngine_GetShaderCompileStatus(int index);
+float GameEngine_GetShaderCompileTime(int index);
+void GameEngine_RequestShaderRecompile(const char* shaderName);
+
 void port_nuGfxOnSubmit(void* task);
 void port_runOnRenderThread(void (*fn)(void*), void* arg);
 
