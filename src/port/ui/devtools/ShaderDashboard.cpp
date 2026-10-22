@@ -5,6 +5,8 @@
 #include "port/ui/cvar_prefixes.h"
 #include <spdlog/spdlog.h>
 #include <sstream>
+#include <fast/Fast3dWindow.h>
+#include <libultraship/libultraship.h>
 
 extern "C" {
     // These are called from the graphics backend when shaders compile
@@ -15,6 +17,7 @@ extern "C" {
     const char* GameEngine_GetShaderCompileStatus(int index);
     float GameEngine_GetShaderCompileTime(int index);
     void GameEngine_RequestShaderRecompile(const char* shaderName);
+    Fast::Interpreter* GameEngine_GetInterpreter();
 }
 
 namespace {
@@ -36,35 +39,33 @@ void RefreshShaderList() {
     // Get the current post-fx passes from PostFx.cpp
     // We'll query the interpreter for registered passes
     Fast::Interpreter* interp = GameEngine_GetInterpreter();
-    if (interp) {
-        // Try to get registered post passes
-        // For now, manually list known shaders
-        static const char* knownShaders[] = {
-            "shaders/post/pb_depthdebug.shader",
-            "shaders/post/pb_ssao.shader",
-            "shaders/post/pb_sunshade.shader",
-            "shaders/post/pb_godrays.shader",
-            "shaders/post/pb_contactshadow.shader",
-            "shaders/post/pb_ssshadow.shader",
-            "shaders/post/pb_bloom.shader",
-            "shaders/post/pb_fxaa.shader",
-            "shaders/post/pb_specular.shader",
-            "shaders/post/pb_pbr.shader",
-            "shaders/post/pb_lut.shader",
-            "shaders/post/pb_hdr_tonemap.shader",
-            "shaders/post/pb_volumetric.shader",
-            "shaders/post/pb_taa.shader",
-            "shaders/post/pb_motionblur.shader",
-            "shaders/post/pb_parallax.shader",
-            "shaders/post/pb_vrs.shader",
-        };
-        
-        for (const char* shader : knownShaders) {
-            ShaderInfo info;
-            info.name = shader;
-            info.status = "pending";
-            gShaderList.push_back(info);
-        }
+    (void)interp; // suppress unused warning
+    // For now, manually list known shaders
+    static const char* knownShaders[] = {
+        "shaders/post/pb_depthdebug.shader",
+        "shaders/post/pb_ssao.shader",
+        "shaders/post/pb_sunshade.shader",
+        "shaders/post/pb_godrays.shader",
+        "shaders/post/pb_contactshadow.shader",
+        "shaders/post/pb_ssshadow.shader",
+        "shaders/post/pb_bloom.shader",
+        "shaders/post/pb_fxaa.shader",
+        "shaders/post/pb_specular.shader",
+        "shaders/post/pb_pbr.shader",
+        "shaders/post/pb_lut.shader",
+        "shaders/post/pb_hdr_tonemap.shader",
+        "shaders/post/pb_volumetric.shader",
+        "shaders/post/pb_taa.shader",
+        "shaders/post/pb_motionblur.shader",
+        "shaders/post/pb_parallax.shader",
+        "shaders/post/pb_vrs.shader",
+    };
+    
+    for (const char* shader : knownShaders) {
+        ShaderInfo info;
+        info.name = shader;
+        info.status = "pending";
+        gShaderList.push_back(info);
     }
     
     // Update counts from engine
@@ -98,7 +99,7 @@ void ShaderDashboardWindow::DrawElement() {
 
     ImGui::SetNextWindowSize(ImVec2(700, 500), ImGuiCond_FirstUseEver);
     
-    if (!ImGui::Begin(mWindowName.c_str(), &mIsVisible, ImGuiWindowFlags_MenuBar)) {
+    if (!ImGui::Begin(GetName().c_str(), &mIsVisible, ImGuiWindowFlags_MenuBar)) {
         ImGui::End();
         return;
     }
