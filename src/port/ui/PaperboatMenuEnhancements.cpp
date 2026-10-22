@@ -122,6 +122,12 @@ void PaperboatMenu::AddMenuEnhancements() {
         .CVar(CVAR_ENHANCEMENT("MuteISpySound"))
         .Options(CheckboxOptions().Tooltip("Mute the notification sound when ISpy is going off."));
 
+    // TTYD64 Battle Music toggle
+    path.column = SECTION_COLUMN_2;
+    AddWidget(path, "TTYD64 Battle Tracks", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("TTYD64BattleMusic"))
+        .Options(CheckboxOptions().DefaultValue(false).Tooltip("Replace vanilla battle themes with TTYD64 tracks (Normal Battle, Mini-Boss, Battle Won, Level Up). Requires game restart to take effect."));
+
     // Enhancements > Graphics
     path = { "Enhancements", "Graphics", SECTION_COLUMN_1 };
     AddSidebarEntry("Enhancements", "Graphics", 1);
@@ -141,6 +147,107 @@ void PaperboatMenu::AddMenuEnhancements() {
     AddWidget(path, "Disable Mipmaps", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCEMENT("Graphics.DisableMipmaps"))
         .Options(CheckboxOptions().Tooltip("Just like emulator!"));
+
+    // Enhancements > Shaders
+    path = { "Enhancements", "Shaders", SECTION_COLUMN_1 };
+    AddSidebarEntry("Enhancements", "Shaders", 1);
+
+    // Master toggle (enhanced shading must be on)
+    AddWidget(path, "Enhanced Shading (Master)", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCED_SHADING("Enabled"))
+        .Options(CheckboxOptions().DefaultValue(true).Tooltip("Master switch for all enhanced shading and post-processing effects."));
+
+    // In-shader effects
+    AddWidget(path, "Engine Lighting", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCED_SHADING("EngineLighting"))
+        .Options(CheckboxOptions().Tooltip("Replace N64 vertex lighting with per-fragment lighting using sun/hemisphere/rim."));
+    
+    AddWidget(path, "Modern Look (Color Grade)", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCED_SHADING("ModernLook"))
+        .Options(CheckboxOptions().DefaultValue(true).Tooltip("Saturation/Contrast/Brightness color grade applied in main shader."));
+    
+    AddWidget(path, "Area Ambient", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCED_SHADING("AreaAmbient"))
+        .Options(CheckboxOptions().DefaultValue(true).Tooltip("Derive per-area ambient tint from background palette."));
+    
+    AddWidget(path, "Fragment Lighting", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCED_SHADING("FragmentLighting"))
+        .Options(CheckboxOptions().DefaultValue(true).Tooltip("Per-fragment directional + hemisphere + rim lighting."));
+    
+    AddWidget(path, "Relight Mode", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCED_SHADING("RelightMode"))
+        .Options(CheckboxOptions().DefaultValue(true).Tooltip("Albedo recovery relighting for baked vertex colors."));
+    
+    AddWidget(path, "Tone Mapping", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCED_SHADING("ToneMapping"))
+        .Options(CheckboxOptions().DefaultValue(true).Tooltip("Filmic/ACES/Reinhard tonemapping for HDR look."));
+
+    // Post-processing passes
+    path.column = SECTION_COLUMN_2;
+    AddWidget(path, "SSAO", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCED_SHADING("SSAO"))
+        .Options(CheckboxOptions().Tooltip("Screen-space ambient occlusion."));
+    
+    AddWidget(path, "Depth Sun Shading", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCED_SHADING("DepthSunShading"))
+        .Options(CheckboxOptions().Tooltip("Depth-based sun shading."));
+    
+    AddWidget(path, "God Rays", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCED_SHADING("GodRays"))
+        .Options(CheckboxOptions().Tooltip("Volumetric light shafts from sun position."));
+    
+    AddWidget(path, "Contact Shadows", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCED_SHADING("ContactShadows"))
+        .Options(CheckboxOptions().Tooltip("Short-range screen-space contact shadows."));
+    
+    AddWidget(path, "Screen-Space Shadows", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCED_SHADING("ScreenSpaceShadows"))
+        .Options(CheckboxOptions().Tooltip("Long-range screen-space directional shadows."));
+    
+    AddWidget(path, "Bloom", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCED_SHADING("Bloom"))
+        .Options(CheckboxOptions().Tooltip("Bloom/glow post-process."));
+    
+    AddWidget(path, "FXAA", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCED_SHADING("FXAA"))
+        .Options(CheckboxOptions().DefaultValue(true).Tooltip("Fast approximate anti-aliasing."));
+    
+    AddWidget(path, "Specular", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCED_SHADING("Specular"))
+        .Options(CheckboxOptions().Tooltip("Screen-space specular highlights."));
+
+    // Modern Shader Suite
+    AddWidget(path, "PBR (Metallic/Roughness)", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCED_SHADING("PBR"))
+        .Options(CheckboxOptions().Tooltip("Physically Based Rendering using ORM textures."));
+    
+    AddWidget(path, "3D LUT Color Grading", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCED_SHADING("LUT"))
+        .Options(CheckboxOptions().Tooltip("3D LUT-based color grading for per-area mood."));
+    
+    AddWidget(path, "HDR Tonemap (ACES/Filmic)", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCED_SHADING("HDR"))
+        .Options(CheckboxOptions().Tooltip("HDR rendering with ACES/Filmic/Reinhard/Custom tonemapping + auto-exposure."));
+    
+    AddWidget(path, "Volumetric Light Shafts", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCED_SHADING("Volumetric"))
+        .Options(CheckboxOptions().Tooltip("Ray-marched volumetric light shafts (god rays)."));
+    
+    AddWidget(path, "TAA (Temporal AA)", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCED_SHADING("TAA"))
+        .Options(CheckboxOptions().Tooltip("Temporal Anti-Aliasing with jitter + history blending."));
+    
+    AddWidget(path, "Motion Blur", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCED_SHADING("MotionBlur"))
+        .Options(CheckboxOptions().Tooltip("Camera and object motion blur using velocity buffer."));
+    
+    AddWidget(path, "Parallax Occlusion Mapping", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCED_SHADING("Parallax"))
+        .Options(CheckboxOptions().Tooltip("POM for depth illusion on flat surfaces."));
+    
+    AddWidget(path, "VRS (Variable Rate Shading)", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCED_SHADING("VRS"))
+        .Options(CheckboxOptions().Tooltip("Simulated Variable Rate Shading (adaptive shading rate)."));
 
     // Enhancements > Status Bar
     path = { "Enhancements", "Status Bar", SECTION_COLUMN_1 };
