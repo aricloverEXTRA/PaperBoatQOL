@@ -61,23 +61,31 @@ float3 EnvBRDF(float3 V, float3 N, float3 F0, float roughness, float NdotV) {
     return D * G * F;
 }
 
+// Sample texture or return white
+float3 SampleTex0(PSInput input) {
+    @if(o_textures[0]) { return g_texture0.Sample(g_sampler0, input.uv0).rgb; } @else { return float3(1,1,1); } @end
+}
+
+float3 SampleTex1(PSInput input) {
+    @if(o_textures[1]) { return g_texture1.Sample(g_sampler1, input.uv1).rgb * 2.0 - 1.0; } @else { return float3(0,0,1); } @end
+}
+
+float3 SampleTex2(PSInput input) {
+    @if(o_textures[2]) { return g_texture2.Sample(g_sampler2, input.uv2).rgb; } @else { return float3(1, 0.5, 0); } @end
+}
+
 float4 PSMain(PSInput input) : SV_TARGET {
     float4 p = uCustom[40];
     if (p.x < 0.5) return float4(1,1,1,1);
     
-    float3 albedo = @if(o_textures[0]) g_texture0.Sample(g_sampler0, input.uv0).rgb @else float3(1,1,1) @end;
+    float3 albedo = SampleTex0(input);
     
     float3 normal = float3(0,0,1);
-    @if(o_textures[1]) {
-        float3 nm = g_texture1.Sample(g_sampler1, input.uv1).rgb * 2.0 - 1.0;
-        normal = normalize(nm);
-    } @end
+    normal = SampleTex1(input);
     
     float ao = 1.0, roughness = 0.5, metallic = 0.0;
-    @if(o_textures[2]) {
-        float3 orm = g_texture2.Sample(g_sampler2, input.uv2).rgb;
-        ao = orm.r; roughness = orm.g; metallic = orm.b;
-    } @end
+    float3 orm = SampleTex2(input);
+    ao = orm.r; roughness = orm.g; metallic = orm.b;
     
     float4 ov = uCustom[41];
     roughness = max(0.01, p.y > 0.5 ? ov.x : roughness);

@@ -50,8 +50,23 @@ cbuffer PerFrameCB : register(b0) {
 // uCustom[31] = (density, decay, weight, threshold)
 // uCustom[32] = (num_samples, max_length, jitter, debug_mode)
 
+// Sample base color
+float4 SampleBase(PSInput input) {
+    @if(o_textures[0]) { return g_texture0.Sample(g_sampler0, input.uv0); } @else { return float4(1,1,1,1); } @end
+}
+
+// Sample depth
+float SampleDepth(PSInput input, float2 coord) {
+    @if(o_textures[1]) { return g_texture1.Sample(g_sampler1, coord).r; } @else { return 1.0; } @end
+}
+
+// Sample color at coordinate
+float3 SampleColor(PSInput input, float2 coord) {
+    @if(o_textures[0]) { return g_texture0.Sample(g_sampler0, coord).rgb; } @else { return float3(1,1,1); } @end
+}
+
 float4 PSMain(PSInput input) : SV_TARGET {
-    float4 base = @if(o_textures[0]) g_texture0.Sample(g_sampler0, input.uv0) @else float4(1,1,1,1) @end;
+    float4 base = SampleBase(input);
     float4 p30 = uCustom[30];
     float4 p31 = uCustom[31];
     float4 p32 = uCustom[32];
@@ -83,15 +98,12 @@ float4 PSMain(PSInput input) : SV_TARGET {
         if (i >= numSamples) break;
         
         // Sample depth for occlusion
-        float depth = 1.0;
-        @if(o_textures[1]) {
-            depth = g_texture1.Sample(g_sampler1, coord).r;
-        } @end
+        float depth = SampleDepth(input, coord);
         
         // Occlusion: stop if we hit geometry
         if (depth < 0.01) break;
         
-        float3 sample = @if(o_textures[0]) g_texture0.Sample(g_sampler0, coord).rgb @else float3(1,1,1) @end;
+        float3 sample = SampleColor(input, coord);
         float lum = dot(sample, float3(0.2126, 0.7152, 0.0722));
         
         if (lum > threshold) {

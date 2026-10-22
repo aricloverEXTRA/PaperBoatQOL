@@ -48,20 +48,50 @@ cbuffer PerFrameCB : register(b0) {
 @if(o_textures[2]) Texture2D g_texture2 : register(t2); SamplerState g_sampler2 : register(s2); @end
 @if(o_textures[3]) Texture2D g_texture3 : register(t3); SamplerState g_sampler3 : register(s3); @end
 
+// Sample color texture
+float4 SampleColor0(PSInput input, float2 uv) {
+    @if(o_textures[0]) { return g_texture0.Sample(g_sampler0, uv); } @else { return float4(1,1,1,1); } @end
+}
+
+// Sample depth texture
+float SampleDepth(PSInput input, float2 uv) {
+    @if(o_textures[1]) { return g_texture1.Sample(g_sampler1, uv).r; } @else { return 1.0; } @end
+}
+
+// Sample velocity texture
+float2 SampleVelocity(PSInput input) {
+    @if(o_textures[2]) { return g_texture2.Sample(g_sampler2, input.uv2).xy; } @else { return float2(0,0); } @end
+}
+
+// Sample history texture
+float4 SampleHistory(PSInput input, float2 uv) {
+    @if(o_textures[3]) { return g_texture3.Sample(g_sampler3, uv); } @else { return SampleColor0(input, uv); } @end
+}
+
+// Sample current color
+float4 SampleCurrent(PSInput input) {
+    @if(o_textures[0]) { return g_texture0.Sample(g_sampler0, input.uv0); } @else { return float4(1,1,1,1); } @end
+}
+
+// Sample neighbor color
+float4 SampleNeighbor(PSInput input, float2 uv) {
+    @if(o_textures[0]) { return g_texture0.Sample(g_sampler0, uv); } @else { return SampleCurrent(input); } @end
+}
+
 float4 PSMain(PSInput input) : SV_TARGET {
     float4 p = uCustom[33];
     if (p.x < 0.5) {
-        return @if(o_textures[0]) g_texture0.Sample(g_sampler0, input.uv0) @else float4(1,1,1,1) @end;
+        @if(o_textures[0]) { return g_texture0.Sample(g_sampler0, input.uv0); } @else { return float4(1,1,1,1); } @end;
     }
     
-    float4 current = @if(o_textures[0]) g_texture0.Sample(g_sampler0, input.uv0) @else float4(1,1,1,1) @end;
-    float4 history = @if(o_textures[3]) g_texture3.Sample(g_sampler3, input.uv3) @else current @end;
-    float2 velocity = @if(o_textures[2]) g_texture2.Sample(g_sampler2, input.uv2).xy @else float2(0,0) @end;
-    float depth = @if(o_textures[1]) g_texture1.Sample(g_sampler1, input.uv1).r @else 1.0 @end;
+    float4 current = SampleCurrent(input);
+    float4 history = SampleHistory(input, input.uv3);
+    float2 velocity = SampleVelocity(input);
+    float depth = SampleDepth(input, input.uv1);
     
     // Reproject history using velocity
     float2 historyUV = input.uv0 - velocity * 0.5;
-    history = @if(o_textures[3]) g_texture3.Sample(g_sampler3, historyUV) @else current @end;
+    history = SampleHistory(input, historyUV);
     
     // Neighborhood clamping (YCoCg color space for better clamping)
     float3 YCoCg = float3(
@@ -77,7 +107,7 @@ float4 PSMain(PSInput input) : SV_TARGET {
         for (int x = -1; x <= 1; x++) {
             if (x == 0 && y == 0) continue;
             float2 nuv = input.uv0 + float2(x, y) * texel;
-            float4 ncol = @if(o_textures[0]) g_texture0.Sample(g_sampler0, nuv) @else current @end;
+            float4 ncol = SampleNeighbor(input, nuv);
             float3 nYCoCg = float3(
                 dot(ncol.rgb, float3(0.25, 0.5, 0.25)),
                 dot(ncol.rgb, float3(-0.25, 0.5, -0.25)),

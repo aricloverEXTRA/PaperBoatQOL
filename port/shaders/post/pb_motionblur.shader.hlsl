@@ -46,14 +46,25 @@ cbuffer PerFrameCB : register(b0) {
 @if(o_textures[0]) Texture2D g_texture0 : register(t0); SamplerState g_sampler0 : register(s0); @end
 @if(o_textures[1]) Texture2D g_texture1 : register(t1); SamplerState g_sampler1 : register(s1); @end
 
+// Sample color texture
+float4 SampleColor(PSInput input, float2 uv) {
+    @if(o_textures[0]) { return g_texture0.Sample(g_sampler0, uv); } @else { return float4(1,1,1,1); } @end
+}
+
+// Sample velocity texture
+float2 SampleVelocity(PSInput input) {
+    @if(o_textures[1]) { return g_texture1.Sample(g_sampler1, input.uv1).xy; } @else { return float2(0,0); } @end
+}
+
 float4 PSMain(PSInput input) : SV_TARGET {
     float4 p = uCustom[34];
     if (p.x < 0.5) {
-        return @if(o_textures[0]) g_texture0.Sample(g_sampler0, input.uv0) @else float4(1,1,1,1) @end;
+        float4 color = SampleColor(input, input.uv0);
+        return color;
     }
     
-    float4 color = @if(o_textures[0]) g_texture0.Sample(g_sampler0, input.uv0) @else float4(1,1,1,1) @end;
-    float2 velocity = @if(o_textures[1]) g_texture1.Sample(g_sampler1, input.uv1).xy @else float2(0,0) @end;
+    float4 color = SampleColor(input, input.uv0);
+    float2 velocity = SampleVelocity(input);
     
     float strength = p.y;
     int numSamples = max(1, int(p.z + 0.5));
@@ -90,14 +101,14 @@ float4 PSMain(PSInput input) : SV_TARGET {
         float t = float(i) / float(numSamples);
         float2 offset = dir * blurRadius * t;
         
-        float4 sample = @if(o_textures[0]) g_texture0.Sample(g_sampler0, input.uv0 - offset) @else color @end;
+        float4 sample = SampleColor(input, input.uv0 - offset);
         float w = 1.0 - t * 0.5;
         accum += sample.rgb * w;
         weightSum += w;
         
         if (cameraBlur > 0.5) {
             float2 camOffset = camDir * blurRadius * cameraBlur * t;
-            float4 camSample = @if(o_textures[0]) g_texture0.Sample(g_sampler0, input.uv0 - camOffset) @else color @end;
+            float4 camSample = SampleColor(input, input.uv0 - camOffset);
             accum += camSample.rgb * w * cameraBlur * 0.5;
             weightSum += w * cameraBlur * 0.5;
         }
