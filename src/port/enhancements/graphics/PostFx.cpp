@@ -534,16 +534,16 @@ static const ShadingPreset sPresets[] = {
         true, 0.7f, 96.0f, 8.0f, 0.05f, // screen-space shadow
         true, 0.6f, 0.75f, 12.0f,  // bloom
         true, 0.75f, 0.125f, 0.0312f, // FXAA
-        true, 0.5f, 32.0f          // specular
-    // Modern shader suite defaults (off)
-    false, 0.0f,          // pbr
-    false, 0.0f, 0,       // lut
-    false, 0.0f, 0, 0.0f, // hdr
-    false, 0.0f, 0.0f, 0.0f, 0.0f, 0, 0.0f, // volumetric
-    false, 0.0f, 0.0f, 0.0f, // taa
-    false, 0.0f, 0, false, // motion blur
-    false, 0.0f, 0, 0,     // parallax
-    false, 0.0f, 0.0f, 0.0f, // vrs
+        true, 0.5f, 32.0f,         // specular
+        // Modern shader suite defaults (off)
+        false, 0.0f,          // pbr
+        false, 0.0f, 0,       // lut
+        false, 0.0f, 0, 0.0f, // hdr
+        false, 0.0f, 0.0f, 0.0f, 0.0f, 0, 0.0f, // volumetric
+        false, 0.0f, 0.0f, 0.0f, // taa
+        false, 0.0f, 0, false, // motion blur
+        false, 0.0f, 0, 0,     // parallax
+        false, 0.0f, 0.0f, 0.0f, // vrs
     },
     // "Performance" - minimal post passes, maximum compatibility
     {
@@ -566,16 +566,16 @@ static const ShadingPreset sPresets[] = {
         false, 0, 0, 0, 0,         // no screen-space shadow
         false, 0, 0, 0,            // no bloom
         true, 0.5f, 0.15f, 0.05f,  // FXAA only (light)
-        false, 0, 0                // no specular
-    // Modern shader suite defaults (off)
-    false, 0.0f,          // pbr
-    false, 0.0f, 0,       // lut
-    false, 0.0f, 0, 0.0f, // hdr
-    false, 0.0f, 0.0f, 0.0f, 0.0f, 0, 0.0f, // volumetric
-    false, 0.0f, 0.0f, 0.0f, // taa
-    false, 0.0f, 0, false, // motion blur
-    false, 0.0f, 0, 0,     // parallax
-    false, 0.0f, 0.0f, 0.0f, // vrs
+        false, 0, 0,               // no specular
+        // Modern shader suite defaults (off)
+        false, 0.0f,          // pbr
+        false, 0.0f, 0,       // lut
+        false, 0.0f, 0, 0.0f, // hdr
+        false, 0.0f, 0.0f, 0.0f, 0.0f, 0, 0.0f, // volumetric
+        false, 0.0f, 0.0f, 0.0f, // taa
+        false, 0.0f, 0, false, // motion blur
+        false, 0.0f, 0, 0,     // parallax
+        false, 0.0f, 0.0f, 0.0f, // vrs
     },
     // "Cinematic" - full effects, best for screenshots/video
     {
@@ -598,16 +598,16 @@ static const ShadingPreset sPresets[] = {
         true, 0.8f, 128.0f, 10.0f, 0.08f, // screen-space shadow
         true, 0.8f, 0.7f, 16.0f,   // bloom
         true, 0.85f, 0.1f, 0.02f,  // FXAA
-        true, 0.6f, 48.0f          // specular
-    // Modern shader suite defaults (off)
-    false, 0.0f,          // pbr
-    false, 0.0f, 0,       // lut
-    false, 0.0f, 0, 0.0f, // hdr
-    false, 0.0f, 0.0f, 0.0f, 0.0f, 0, 0.0f, // volumetric
-    false, 0.0f, 0.0f, 0.0f, // taa
-    false, 0.0f, 0, false, // motion blur
-    false, 0.0f, 0, 0,     // parallax
-    false, 0.0f, 0.0f, 0.0f, // vrs
+        true, 0.6f, 48.0f,         // specular
+        // Modern shader suite defaults (off)
+        false, 0.0f,          // pbr
+        false, 0.0f, 0,       // lut
+        false, 0.0f, 0, 0.0f, // hdr
+        false, 0.0f, 0.0f, 0.0f, 0.0f, 0, 0.0f, // volumetric
+        false, 0.0f, 0.0f, 0.0f, // taa
+        false, 0.0f, 0, false, // motion blur
+        false, 0.0f, 0, 0,     // parallax
+        false, 0.0f, 0.0f, 0.0f, // vrs
     },
     // "Retro" - close to vanilla N64 look, just slight polish
     {
@@ -630,16 +630,16 @@ static const ShadingPreset sPresets[] = {
         false, 0, 0, 0, 0,
         false, 0, 0, 0,
         false, 0, 0, 0,
-        false, 0, 0
-    // Modern shader suite defaults (off)
-    false, 0.0f,          // pbr
-    false, 0.0f, 0,       // lut
-    false, 0.0f, 0, 0.0f, // hdr
-    false, 0.0f, 0.0f, 0.0f, 0.0f, 0, 0.0f, // volumetric
-    false, 0.0f, 0.0f, 0.0f, // taa
-    false, 0.0f, 0, false, // motion blur
-    false, 0.0f, 0, 0,     // parallax
-    false, 0.0f, 0.0f, 0.0f, // vrs
+        false, 0, 0,
+        // Modern shader suite defaults (off)
+        false, 0.0f,          // pbr
+        false, 0.0f, 0,       // lut
+        false, 0.0f, 0, 0.0f, // hdr
+        false, 0.0f, 0.0f, 0.0f, 0.0f, 0, 0.0f, // volumetric
+        false, 0.0f, 0.0f, 0.0f, // taa
+        false, 0.0f, 0, false, // motion blur
+        false, 0.0f, 0, 0,     // parallax
+        false, 0.0f, 0.0f, 0.0f, // vrs
     },
     // "Indoor/Underground" - optimized for caves, houses, shops (no sun)
     {
@@ -662,16 +662,16 @@ static const ShadingPreset sPresets[] = {
         false, 0, 0, 0, 0,       // no screen-space shadow
         false, 0, 0, 0,          // no bloom
         true, 0.6f, 0.12f, 0.03f, // FXAA
-        false, 0, 0              // no specular
-    // Modern shader suite defaults (off)
-    false, 0.0f,          // pbr
-    false, 0.0f, 0,       // lut
-    false, 0.0f, 0, 0.0f, // hdr
-    false, 0.0f, 0.0f, 0.0f, 0.0f, 0, 0.0f, // volumetric
-    false, 0.0f, 0.0f, 0.0f, // taa
-    false, 0.0f, 0, false, // motion blur
-    false, 0.0f, 0, 0,     // parallax
-    false, 0.0f, 0.0f, 0.0f, // vrs
+        false, 0, 0,              // no specular
+        // Modern shader suite defaults (off)
+        false, 0.0f,          // pbr
+        false, 0.0f, 0,       // lut
+        false, 0.0f, 0, 0.0f, // hdr
+        false, 0.0f, 0.0f, 0.0f, 0.0f, 0, 0.0f, // volumetric
+        false, 0.0f, 0.0f, 0.0f, // taa
+        false, 0.0f, 0, false, // motion blur
+        false, 0.0f, 0, 0,     // parallax
+        false, 0.0f, 0.0f, 0.0f, // vrs
     }
 };
 static const int sNumPresets = sizeof(sPresets) / sizeof(sPresets[0]);
