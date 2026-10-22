@@ -128,6 +128,10 @@ void PaperboatMenu::AddMenuEnhancements() {
         .CVar(CVAR_ENHANCEMENT("TTYD64BattleMusic"))
         .Options(CheckboxOptions().DefaultValue(false).Tooltip("Replace vanilla battle themes with TTYD64 tracks (Normal Battle, Mini-Boss, Battle Won, Level Up). Requires game restart to take effect."));
 
+    AddWidget(path, "TTYD64 Battle Tracks (Safe Mode)", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("TTYD64BattleMusicSafeMode"))
+        .Options(CheckboxOptions().DefaultValue(true).Tooltip("Only inject tracks known to be stable (excludes Mini-Boss which crashes). Disable to use all 4 tracks at your own risk."));
+
     // Enhancements > Graphics
     path = { "Enhancements", "Graphics", SECTION_COLUMN_1 };
     AddSidebarEntry("Enhancements", "Graphics", 1);
