@@ -1,0 +1,58 @@
+# Place this file under port/shaders/ in the repository so GeneratePortO2R will include it.
+# Mods may override by providing the same path inside their .o2r or mod folder (mods/shaders/lighting_profiles.yml).
+#
+# Schema:
+# profiles: - name: (string)
+#             area_id: (int) optional, -1 = wildcard
+#             map_id:  (int) optional, -1 = wildcard
+#             post_passes: [ "shaders/post/your.shader", ... ]
+#             uniforms:
+#               custom_u2: [ r, g, b, a ]   # sets uCustom2 register
+#             blend:
+#               duration: float seconds (optional)
+#
+# Only shaders that actually ship in this repo may be referenced here:
+#   shaders/post/cs_color_adjust.shader  (exposure / contrast / saturation / tint / tone map)
+#   shaders/post/cs_glow.shader          (bright glow / bloom)
+
+profiles:
+  - name: "default_soft"
+    # global default
+    post_passes:
+      - "shaders/post/cs_color_adjust.shader"
+    uniforms:
+      custom_u2: [ 1.0, 1.0, 1.0, 0.0 ]  # exposure, contrast, saturation, tint mix
+      u3:       [ 1.0, 1.0, 1.0, 0.0 ]   # tint r, g, b, tone map enable
+    blend:
+      duration: 0.0
+
+  - name: "outdoor_day"
+    area_id: 0    # example area ID for outdoors; replace with real area IDs
+    post_passes:
+      - "shaders/post/cs_color_adjust.shader"
+      - "shaders/post/cs_glow.shader"
+    uniforms:
+      custom_u2: [ 1.05, 1.02, 0.95, 1.0 ]
+      custom_u4: [ 1.0, 0.3, 2.0, 1.0 ]  # glow threshold, intensity, radius, enabled
+    blend:
+      duration: 0.3
+
+  - name: "cave_dark"
+    area_id: 10
+    post_passes:
+      - "shaders/post/cs_color_adjust.shader"
+    uniforms:
+      custom_u2: [ 0.9, 1.1, 0.95, 0.0 ]
+      u5:       [ 0.0, 0.0, 0.0, 1.0 ]
+    blend:
+      duration: 0.25
+
+  - name: "boss_arena"
+    area_id: 99
+    map_id: 1
+    post_passes:
+      - "shaders/post/cs_glow.shader"
+    uniforms:
+      custom_u4: [ 1.0, 0.5, 3.0, 1.0 ]
+    blend:
+      duration: 0.15

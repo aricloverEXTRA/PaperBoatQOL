@@ -4,6 +4,8 @@
 #include "port/patches/Patches.h"
 #include "port/hooks/Events.h"
 
+extern void create_enhanced_shading_palette(Matrix4f mtx, s32 uls, s32 ult, s32 lrs, s32 lrt, s32 alpha, s32 otherModeLBits);
+
 // perhaps extend to 0x200 and change animID fields for dx from SSSSPPAA --> SSSPPAAA
 #define MAX_SPRITE_ID 0xFF
 
@@ -258,7 +260,7 @@ void spr_appendGfx_component_flat(
             gDPPipeSync(gMainGfxPos++);
         }
         port_set_shading_source_palette(palette); // [port] the shading palette is built from this one
-        create_shading_palette(mtx, 0, 0, width, height, alpha, alpha == 255 ? 0x111238 : 0x104B50); // TODO make macro for render mode
+        create_enhanced_shading_palette(mtx, 0, 0, width, height, alpha, alpha == 255 ? 0x111238 : 0x104B50); // TODO make macro for render mode
     } else {
         gDPScrollTextureBlock_4b(gMainGfxPos++, raster, G_IM_FMT_CI, width, height, 0,
                                  G_TX_CLAMP, G_TX_CLAMP, 8, 8, G_TX_NOLOD, G_TX_NOLOD,

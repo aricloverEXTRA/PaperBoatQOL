@@ -298,6 +298,8 @@ FetchContent_MakeAvailable(dr_libs)
 file(GLOB_RECURSE PORT_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
     src/port/*.cpp
     src/port/*.c
+    src/port/**/*.cpp
+    src/port/**/*.c
 )
 
 list(FILTER PORT_SOURCES EXCLUDE REGEX ".*.inc.c")
