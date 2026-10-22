@@ -75,6 +75,14 @@ void au_engine_init(s32 outputRate) {
     globals->dataPRG = alHeapAlloc(alHeap, 1, PRG_MAX_COUNT * sizeof(BGMInstrumentInfo));
     globals->musicEventQueue = alHeapAlloc(alHeap, 1, MUS_QUEUE_SIZE * sizeof(MusicEventTrigger));
     globals->outputRate = outputRate;
+    // Fix DummyInstrumentEnvelope offsets at runtime to point to actual envelope arrays
+    // The static DummyInstrumentEnvelope in sfx_player.c has hardcoded offsets (0x8, 0xC)
+    // that point into the struct itself instead of the actual envelope arrays.
+    // Fix the offsets at runtime to point to the actual envelope arrays.
+    DummyInstrumentEnvelope.count = 1;
+    DummyInstrumentEnvelope.offsets[0].offsetPress = (u16)((uintptr_t)EnvelopePressDefault - (uintptr_t)&DummyInstrumentEnvelope);
+    DummyInstrumentEnvelope.offsets[0].offsetRelease = (u16)((uintptr_t)EnvelopeReleaseDefault - (uintptr_t)&DummyInstrumentEnvelope);
+    
     au_reset_instrument(globals->defaultInstrument);
     au_reset_drum_entry(&globals->defaultDrumEntry);
     au_reset_instrument_entry(&globals->defaultPRGEntry);
@@ -182,14 +190,8 @@ static void au_reset_instrument(Instrument* instrument) {
     instrument->loopCount = 0;
     instrument->type = 0;
     instrument->useDma = false;
-    // Set up a proper envelope for the default instrument at runtime
-    // DummyInstrumentEnvelope has incorrect offsets (pointing into struct itself).
-    // Create a proper envelope pointing to EnvelopePressDefault/EnvelopeReleaseDefault.
-    static EnvelopePreset sDefaultEnvelope;
-    sDefaultEnvelope.count = 1;
-    sDefaultEnvelope.offsets[0].offsetPress = (u16)((uintptr_t)EnvelopePressDefault - (uintptr_t)&sDefaultEnvelope);
-    sDefaultEnvelope.offsets[0].offsetRelease = (u16)((uintptr_t)EnvelopeReleaseDefault - (uintptr_t)&sDefaultEnvelope);
-    instrument->envelopes = &sDefaultEnvelope;
+    // Use the global default envelope which has correct offsets set up at init time
+    instrument->envelopes = &DummyInstrumentEnvelope;
     instrument->unused_26 = 0;
     instrument->unused_27 = 0;
     instrument->unused_28 = 0;
