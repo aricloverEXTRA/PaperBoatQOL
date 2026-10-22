@@ -157,6 +157,9 @@ const char* GameEngine_GetShaderCompileStatus(int index);
 float GameEngine_GetShaderCompileTime(int index);
 void GameEngine_RequestShaderRecompile(const char* shaderName);
 
+// Camera view-projection matrix publishing (for volumetric/god-rays shaders)
+void gfx_set_camera_view_projection(const float out[4][4]);
+
 void port_nuGfxOnSubmit(void* task);
 void port_runOnRenderThread(void (*fn)(void*), void* arg);
 

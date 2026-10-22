@@ -1428,6 +1428,18 @@ Fast::Interpreter* GameEngine_GetInterpreter() {
     return wnd->GetInterpreterWeak().lock().get();
 }
 
+// Stores the camera view-projection matrix for depth-based post-processing shaders
+// (volumetric, god-rays, etc.). Called once per frame from CameraPatches.
+static float sCameraViewProj[4][4] = {{0}};
+
+extern "C" void gfx_set_camera_view_projection(const float out[4][4]) {
+    for (int i = 0; i < 4; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            sCameraViewProj[i][j] = out[i][j];
+        }
+    }
+}
+
 extern "C" float GameEngine_GetAspectRatio(void) {
     auto interp = GameEngine_GetInterpreter();
     return interp != nullptr ? interp->mCurDimensions.aspect_ratio : (WS_NATIVE_WIDTH / WS_NATIVE_HEIGHT);

@@ -17,8 +17,9 @@ extern "C" {
     const char* GameEngine_GetShaderCompileStatus(int index);
     float GameEngine_GetShaderCompileTime(int index);
     void GameEngine_RequestShaderRecompile(const char* shaderName);
-    Fast::Interpreter* GameEngine_GetInterpreter();
 }
+// GameEngine_GetInterpreter is C++ linkage (returns Fast::Interpreter*)
+Fast::Interpreter* GameEngine_GetInterpreter();
 
 namespace {
 
