@@ -1533,7 +1533,7 @@ extern "C" void GameEngine_OnShaderCompileStart(const char* shaderName) {
     entry->compileTimeMs = 0.0f;
 }
 
-extern "C" void GameEngine_OnShaderCompileEnd(const char* shaderName, bool success, float timeMs) {
+extern "C" void GameEngine_OnShaderCompileEnd(const char* shaderName, int success, float timeMs) {
     if (!shaderName) return;
     std::lock_guard<std::mutex> lock(sShaderCompileMutex);
     auto* entry = FindShaderEntry(shaderName);

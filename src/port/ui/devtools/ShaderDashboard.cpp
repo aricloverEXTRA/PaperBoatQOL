@@ -9,7 +9,7 @@
 extern "C" {
     // These are called from the graphics backend when shaders compile
     void GameEngine_OnShaderCompileStart(const char* shaderName);
-    void GameEngine_OnShaderCompileEnd(const char* shaderName, bool success, float timeMs);
+    void GameEngine_OnShaderCompileEnd(const char* shaderName, int success, float timeMs);
     int GameEngine_GetShaderCompileCount();
     int GameEngine_GetShaderTotalCount();
     const char* GameEngine_GetShaderCompileStatus(int index);

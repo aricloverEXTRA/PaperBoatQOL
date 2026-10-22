@@ -149,7 +149,7 @@ void gfx_texture_cache_clear(void);
 
 // Shader Compilation Dashboard API
 void GameEngine_OnShaderCompileStart(const char* shaderName);
-void GameEngine_OnShaderCompileEnd(const char* shaderName, bool success, float timeMs);
+void GameEngine_OnShaderCompileEnd(const char* shaderName, int success, float timeMs);
 void GameEngine_RegisterShaderPassId(const char* shaderName, int passId);
 int GameEngine_GetShaderCompileCount(void);
 int GameEngine_GetShaderTotalCount(void);

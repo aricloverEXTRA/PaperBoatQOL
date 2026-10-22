@@ -21,7 +21,7 @@
 #include "port/hooks/Events.h"
 #include "port/hooks/impl/EventSystem.h"
 #include "port/ui/cvar_prefixes.h"
-
+#include "port/Engine.h"
 #include <spdlog/spdlog.h>
 
 #include <cmath>
