@@ -515,7 +515,18 @@ void au_fade_update_envelope(Fade* fade) {
 /// access into AuGlobals::bankSets. This does not affect values above 3, but 1 and 2 differ.
 Instrument* au_get_instrument(AuGlobals* globals, BankSetIndex bank, s32 patch, EnvelopeData* envData) {
     // note that patch here can be up to 255, selecting from a maximum of 16 instruments and 16 banks per group
-    Instrument* instrument = (*globals->bankSets[(bank & 0x70) >> 4])[patch];
+    // Add bounds checking to prevent crashes from invalid patch indices (e.g., from TTYD64 sequences)
+    InstrumentBank* bankSet = globals->bankSets[(bank & 0x70) >> 4];
+    // Each bank set has 16 instruments max (0-15)
+    if (patch < 0 || patch >= 16) {
+        // Return default instrument for out-of-bounds patch
+        return globals->defaultInstrument;
+    }
+    Instrument* instrument = (*bankSet)[patch];
+    if (instrument == nullptr) {
+        // Return default instrument if instrument is null
+        return globals->defaultInstrument;
+    }
     EnvelopePreset* envelope = instrument->envelopes;
     u32 envelopeIdx = bank & 3;
 

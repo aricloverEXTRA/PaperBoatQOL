@@ -1256,9 +1256,22 @@ void au_bgm_player_update_playing(BGMPlayer *player) {
                                 note->length = noteLength;
                                 if (track->isDrumTrack) {
                                     if (notePitch < 72) { // = 6 * 12
-                                        drumInfo = &player->globals->dataPER->drums[notePitch];
+                                        // PER drums (0-71) from globals
+                                        if (notePitch < (s32)ARRAY_COUNT(player->globals->dataPER->drums)) {
+                                            drumInfo = &player->globals->dataPER->drums[notePitch];
+                                        } else {
+                                            // Fallback to default drum if out of bounds
+                                            drumInfo = &player->globals->defaultDrumEntry;
+                                        }
                                     } else {
-                                        drumInfo = player->drums[notePitch - 72]; // = 6 * 12
+                                        // Player drums array (indices 0-63 for notePitch 72-135)
+                                        s32 drumIdx = notePitch - 72;
+                                        if (drumIdx >= 0 && drumIdx < (s32)ARRAY_COUNT(player->drums)) {
+                                            drumInfo = player->drums[drumIdx];
+                                        } else {
+                                            // Fallback to default drum if out of bounds
+                                            drumInfo = &player->globals->defaultDrumEntry;
+                                        }
                                     }
                                     note->ins = au_get_instrument(player->globals, drumInfo->bankPatch >> 8, drumInfo->bankPatch & 0xFF, &voice->envelope);
                                     if (drumInfo->randVolume != 0) {

@@ -1185,7 +1185,7 @@ typedef struct BGMPlayer {
     /* 0x074 */ u8* tickRatePtr; // related to legacy command system, unused
     /* 0x078 */ BGMDrumInfo* drumsInfo;
     /* 0x07C */ BGMInstrumentInfo* instrumentsInfo;
-    /* 0x080 */ BGMDrumInfo* drums[12];
+    /* 0x080 */ BGMDrumInfo* drums[64]; // Increased from 12 to support TTYD64 drum patches (up to ~64 drums)
     /* 0x0B0 */ s32 masterTempo;
     /* 0x0B4 */ s32 masterTempoStep;
     /* 0x0B8 */ s32 masterTempoTarget;
