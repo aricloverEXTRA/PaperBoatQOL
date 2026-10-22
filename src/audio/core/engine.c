@@ -182,7 +182,14 @@ static void au_reset_instrument(Instrument* instrument) {
     instrument->loopCount = 0;
     instrument->type = 0;
     instrument->useDma = false;
-    instrument->envelopes = &DummyInstrumentEnvelope;
+    // Set up a proper envelope for the default instrument at runtime
+    // DummyInstrumentEnvelope has incorrect offsets (pointing into struct itself).
+    // Create a proper envelope pointing to EnvelopePressDefault/EnvelopeReleaseDefault.
+    static EnvelopePreset sDefaultEnvelope;
+    sDefaultEnvelope.count = 1;
+    sDefaultEnvelope.offsets[0].offsetPress = (u16)((uintptr_t)EnvelopePressDefault - (uintptr_t)&sDefaultEnvelope);
+    sDefaultEnvelope.offsets[0].offsetRelease = (u16)((uintptr_t)EnvelopeReleaseDefault - (uintptr_t)&sDefaultEnvelope);
+    instrument->envelopes = &sDefaultEnvelope;
     instrument->unused_26 = 0;
     instrument->unused_27 = 0;
     instrument->unused_28 = 0;
