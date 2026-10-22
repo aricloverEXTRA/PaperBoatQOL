@@ -1054,10 +1054,10 @@ static void PostFx_PushSunShade() {
         }
     }
 
-    // Get camera world position (from CameraPatches or interpreter)
+    // Get camera world position (from CameraPatches via interpreter)
     Fast::Interpreter* interp = GameEngine_GetInterpreter();
     if (interp != nullptr) {
-        float camPos[4] = { interp->mCurCameraPos.x, interp->mCurCameraPos.y, interp->mCurCameraPos.z, 0.0f };
+        float camPos[4] = { interp->mCameraWorldPos[0], interp->mCameraWorldPos[1], interp->mCameraWorldPos[2], 0.0f };
         gfx_set_custom_uniform(27, camPos);
     }
 

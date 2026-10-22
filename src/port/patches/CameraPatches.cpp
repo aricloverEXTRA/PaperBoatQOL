@@ -26,6 +26,8 @@ void hud_element_draw_complex_hud_next(s32 hid);
 // Engine: publishes the camera view-projection matrix for depth-based
 // post-processing.
 void gfx_set_camera_view_projection(const float out[4][4]);
+// Engine: publishes the camera world position for depth-based post-processing.
+void gfx_set_camera_world_position(const float pos[3]);
 }
 
 // Defined in 43F0.c; transforms a point (row-vector convention) by a Matrix4f.
@@ -303,6 +305,14 @@ static void RegisterCameraPatches_Init() {
     // a depth-based post pass can reconstruct world-space geometry.
     REGISTER_LISTENER(GameFrameUpdate, EVENT_PRIORITY_NORMAL, [](IEvent*) {
         gfx_set_camera_view_projection(gCameras[CAM_DEFAULT].mtxPerspective);
+        // Publish camera world position for depth-based post-processing shaders
+        // The camera eye position is in lookAt_eye
+        float camPos[3] = {
+            gCameras[CAM_DEFAULT].lookAt_eye.x,
+            gCameras[CAM_DEFAULT].lookAt_eye.y,
+            gCameras[CAM_DEFAULT].lookAt_eye.z
+        };
+        gfx_set_camera_world_position(camPos);
     });
 }
 

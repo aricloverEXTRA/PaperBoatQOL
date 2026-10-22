@@ -1448,6 +1448,18 @@ extern "C" void gfx_get_camera_view_projection(float out[4][4]) {
     }
 }
 
+// Stores the camera world position for depth-based post-processing shaders.
+static float sCameraWorldPos[3] = {0.0f, 0.0f, 0.0f};
+
+extern "C" void gfx_set_camera_world_position(const float pos[3]) {
+    sCameraWorldPos[0] = pos[0];
+    sCameraWorldPos[1] = pos[1];
+    sCameraWorldPos[2] = pos[2];
+    // Also write to custom uniform register 27 for shader access
+    float camPos[4] = { pos[0], pos[1], pos[2], 0.0f };
+    gfx_set_custom_uniform(27, camPos);
+}
+
 extern "C" float GameEngine_GetAspectRatio(void) {
     auto interp = GameEngine_GetInterpreter();
     return interp != nullptr ? interp->mCurDimensions.aspect_ratio : (WS_NATIVE_WIDTH / WS_NATIVE_HEIGHT);

@@ -159,8 +159,9 @@ void GameEngine_RequestShaderRecompile(const char* shaderName);
 
 // Camera view-projection matrix publishing (for volumetric/god-rays shaders)
 void gfx_set_camera_view_projection(const float out[4][4]);
-// Get the current camera view-projection matrix (row-major, row-vector: clip = world * VP)
 void gfx_get_camera_view_projection(float out[4][4]);
+// Camera world position publishing (for depth-based post-processing shaders)
+void gfx_set_camera_world_position(const float pos[3]);
 
 void port_nuGfxOnSubmit(void* task);
 void port_runOnRenderThread(void (*fn)(void*), void* arg);
