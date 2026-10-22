@@ -45,16 +45,14 @@ typedef struct TtydBgmFile {
     const unsigned char* bytes;
     unsigned int size;
     s32 songId;
-    bool safe;  // Known to work without drum reference crashes
 } TtydBgmFile;
 
-#define TTYD_FILE_COUNT 4
+#define TTYD_FILE_COUNT 3
 
 static const TtydBgmFile kTtydFiles[TTYD_FILE_COUNT] = {
-    { gTtydBgm_TTYD_BattleTheme_Updated, gTtydBgm_TTYD_BattleTheme_Updated_size, SONG_NORMAL_BATTLE, true },
-    { gTtydBgm_TTYD_mini_boss_theme, gTtydBgm_TTYD_mini_boss_theme_size, SONG_SPECIAL_BATTLE, false },  // Crashes: invalid drum refs
-    { gTtydBgm_TTYD_BattleWon, gTtydBgm_TTYD_BattleWon_size, SONG_BATTLE_END, true },
-    { gTtydBgm_TTYD_level_up_theme, gTtydBgm_TTYD_level_up_theme_size, SONG_LEVEL_UP, true },
+    { gTtydBgm_TTYD_BattleTheme_Updated, gTtydBgm_TTYD_BattleTheme_Updated_size, SONG_NORMAL_BATTLE },
+    { gTtydBgm_TTYD_BattleWon, gTtydBgm_TTYD_BattleWon_size, SONG_BATTLE_END },
+    { gTtydBgm_TTYD_level_up_theme, gTtydBgm_TTYD_level_up_theme_size, SONG_LEVEL_UP },
 };
 
 // Shared with engine.c, which owns the definitions.
@@ -91,27 +89,14 @@ void PortInjectBattleMusic(void) {
         return; // already injected
     }
 
-    bool safeMode = CVarGetInteger(CVAR_ENHANCEMENT("TTYD64BattleMusicSafeMode"), 1) != 0;
-    GameEngine_LogInfo("[BattleMusic] injecting TTYD64 tracks into SBN (safeMode=%d)", safeMode);
+    GameEngine_LogInfo("[BattleMusic] injecting %d TTYD64 tracks into SBN", TTYD_FILE_COUNT);
 
     AuGlobals* globals = gSoundGlobals;
-
-    // Count how many tracks we'll inject (respecting safe mode)
-    s32 injectCount = 0;
-    for (s32 i = 0; i < TTYD_FILE_COUNT; i++) {
-        if (!safeMode || kTtydFiles[i].safe) {
-            injectCount++;
-        }
-    }
-    if (injectCount == 0) {
-        GameEngine_LogInfo("[BattleMusic] no safe tracks to inject");
-        return;
-    }
 
     // Copy the original file list so we can extend it without touching memory
     // we do not own.
     const s32 originalCount = globals->fileListLength;
-    SBNFileEntry* grown = (SBNFileEntry*)malloc((originalCount + injectCount) * sizeof(SBNFileEntry));
+    SBNFileEntry* grown = (SBNFileEntry*)malloc((originalCount + TTYD_FILE_COUNT) * sizeof(SBNFileEntry));
     if (grown == NULL) {
         return;
     }
@@ -125,7 +110,6 @@ void PortInjectBattleMusic(void) {
     size_t total = 0;
     s32 i;
     for (i = 0; i < TTYD_FILE_COUNT; i++) {
-        if (safeMode && !kTtydFiles[i].safe) continue;
         total += (kTtydFiles[i].size + 0xF) & ~(size_t)0xF;
     }
     u8* aux = (u8*)malloc(total);
@@ -137,10 +121,6 @@ void PortInjectBattleMusic(void) {
 
     size_t cursor = 0;
     for (i = 0; i < TTYD_FILE_COUNT; i++) {
-        if (safeMode && !kTtydFiles[i].safe) {
-            GameEngine_LogInfo("[BattleMusic] skipping unsafe track for song 0x%02X", kTtydFiles[i].songId);
-            continue;
-        }
         memcpy(aux + cursor, kTtydFiles[i].bytes, kTtydFiles[i].size);
         // data byte layout: high byte = AU_FMT_BGM, low 24 bits = size.
         const u32 packed = ((u32)AU_FMT_BGM << 0x18) | ((u32)kTtydFiles[i].size & 0xFFFFFF);
@@ -151,7 +131,7 @@ void PortInjectBattleMusic(void) {
         const s32 songId = kTtydFiles[i].songId;
         if (songId < globals->songListLength) {
             globals->songList[songId].bgmFileIndex = (u16)fileIdx;
-            GameEngine_LogInfo("[BattleMusic] remapped song 0x%02X -> fileIdx %d (safe=%d)", songId, fileIdx, kTtydFiles[i].safe);
+            GameEngine_LogInfo("[BattleMusic] remapped song 0x%02X -> fileIdx %d", songId, fileIdx);
         }
         cursor += (kTtydFiles[i].size + 0xF) & ~(size_t)0xF;
     }
@@ -159,5 +139,5 @@ void PortInjectBattleMusic(void) {
     // The grown list is now longer than fileListLength; update it so
     // au_fetch_SBN_file accepts the synthetic indices.
     globals->fileListLength = sAugFileCount;
-    GameEngine_LogInfo("[BattleMusic] injection complete, auxSize=%d fileListLength=%d injected=%d", gAudioAuxSize, globals->fileListLength, injectCount);
+    GameEngine_LogInfo("[BattleMusic] injection complete, auxSize=%d fileListLength=%d", gAudioAuxSize, globals->fileListLength);
 }

@@ -1430,35 +1430,7 @@ Fast::Interpreter* GameEngine_GetInterpreter() {
 
 // Stores the camera view-projection matrix for depth-based post-processing shaders
 // (volumetric, god-rays, etc.). Called once per frame from CameraPatches.
-static float sCameraViewProj[4][4] = {{0}};
 
-extern "C" void gfx_set_camera_view_projection(const float out[4][4]) {
-    for (int i = 0; i < 4; ++i) {
-        for (int j = 0; j < 4; ++j) {
-            sCameraViewProj[i][j] = out[i][j];
-        }
-    }
-}
-
-extern "C" void gfx_get_camera_view_projection(float out[4][4]) {
-    for (int i = 0; i < 4; ++i) {
-        for (int j = 0; j < 4; ++j) {
-            out[i][j] = sCameraViewProj[i][j];
-        }
-    }
-}
-
-// Stores the camera world position for depth-based post-processing shaders.
-static float sCameraWorldPos[3] = {0.0f, 0.0f, 0.0f};
-
-extern "C" void gfx_set_camera_world_position(const float pos[3]) {
-    sCameraWorldPos[0] = pos[0];
-    sCameraWorldPos[1] = pos[1];
-    sCameraWorldPos[2] = pos[2];
-    // Also write to custom uniform register 27 for shader access
-    float camPos[4] = { pos[0], pos[1], pos[2], 0.0f };
-    gfx_set_custom_uniform(27, camPos);
-}
 
 extern "C" float GameEngine_GetAspectRatio(void) {
     auto interp = GameEngine_GetInterpreter();
