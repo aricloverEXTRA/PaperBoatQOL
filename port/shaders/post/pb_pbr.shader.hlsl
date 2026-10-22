@@ -1,8 +1,6 @@
 @prism(type='hlsl', name='PaperBoat PBR', version='1.0.0', description='Physically Based Rendering for materials (metallic/roughness)', author='PaperBoat')
 
-// PBR post-process that applies GGX BRDF to materials with metallic/roughness
-// textures. Requires g_texture0 (albedo), g_texture1 (normal), g_texture2 (ORM:
-// Occlusion=R, Roughness=G, Metallic=B). Falls back gracefully if textures missing.
+// PBR post-process applying GGX BRDF. Requires g_texture0 (albedo), g_texture1 (normal), g_texture2 (ORM: Occlusion=R, Roughness=G, Metallic=B).
 
 struct PSInput {
     float4 position : SV_POSITION;
@@ -50,70 +48,54 @@ cbuffer PerFrameCB : register(b0) {
 // uCustom[40] = (enabled, use_orm, env_intensity, debug_mode)
 // uCustom[41] = (roughness_override, metallic_override, ao_override, 0)
 
-float3 EnvironmentBRDF(float3 V, float3 N, float3 F0, float roughness, float NdotV) {
-    // Schlick's approximation for Fresnel
+float3 EnvBRDF(float3 V, float3 N, float3 F0, float roughness, float NdotV) {
     float3 F = F0 + (1.0 - F0) * pow(1.0 - NdotV, 5.0);
-    
-    // GGX NDF
     float a = roughness * roughness;
     float a2 = a * a;
     float NdotH = max(dot(N, normalize(V)), 0.001);
     float denom = NdotH * NdotH * (a2 - 1.0) + 1.0;
     float D = a2 / (3.14159 * denom * denom);
-    
-    // Smith GGX geometry term
     float k = (roughness + 1.0) * (roughness + 1.0) / 8.0;
     float GGX_V = NdotV / (NdotV * (1.0 - k) + k);
     float G = GGX_V;
-    
     return D * G * F;
 }
 
 float4 PSMain(PSInput input) : SV_TARGET {
     float4 p = uCustom[40];
-    if (p.x < 0.5) return float4(1,1,1,1); // pass through
+    if (p.x < 0.5) return float4(1,1,1,1);
     
     float3 albedo = @if(o_textures[0]) g_texture0.Sample(g_sampler0, input.uv0).rgb @else float3(1,1,1) @end;
     
-    // Sample normal map
     float3 normal = float3(0,0,1);
     @if(o_textures[1]) {
         float3 nm = g_texture1.Sample(g_sampler1, input.uv1).rgb * 2.0 - 1.0;
         normal = normalize(nm);
     } @end
     
-    // Sample ORM (Occlusion=R, Roughness=G, Metallic=B)
     float ao = 1.0, roughness = 0.5, metallic = 0.0;
     @if(o_textures[2]) {
         float3 orm = g_texture2.Sample(g_sampler2, input.uv2).rgb;
-        ao = orm.r;
-        roughness = orm.g;
-        metallic = orm.b;
+        ao = orm.r; roughness = orm.g; metallic = orm.b;
     } @end
     
-    // Overrides
     float4 ov = uCustom[41];
     roughness = max(0.01, p.y > 0.5 ? ov.x : roughness);
     metallic = saturate(p.y > 0.5 ? ov.y : metallic);
     ao = saturate(p.y > 0.5 ? ov.z : ao);
     
-    // Dielectric F0 = 0.04, Metallic F0 = albedo
     float3 F0 = lerp(float3(0.04), albedo, metallic);
-    
-    float3 V = normalize(float3(0,0,1)); // view direction (screen space approx)
+    float3 V = normalize(float3(0,0,1));
     float NdotV = max(dot(normal, V), 0.001);
     
-    float3 brdf = EnvironmentBRDF(V, normal, F0, roughness, NdotV);
+    float3 brdf = EnvBRDF(V, normal, F0, roughness, NdotV);
+    float3 ambient = uCustom[21].rgb * uCustom[21].a;
+    float3 color = albedo * ambient * ao + brdf * p.z;
     
-    // Simple IBL approximation - use ambient from register 21
-    float3 ambient = uCustom[21].rgb * uCustom[21].a; // sun color * ambient level
-    float3 color = albedo * ambient * ao + brdf * p.z; // p.z = env_intensity
-    
-    // Debug modes
-    if (p.w > 0.5) color = normal * 0.5 + 0.5;       // 1 = normal
-    else if (p.w > 1.5) color = float3(roughness);    // 2 = roughness
-    else if (p.w > 2.5) color = float3(metallic);     // 3 = metallic
-    else if (p.w > 3.5) color = float3(ao);           // 4 = AO
+    if (p.w > 0.5) color = normal * 0.5 + 0.5;
+    else if (p.w > 1.5) color = float3(roughness);
+    else if (p.w > 2.5) color = float3(metallic);
+    else if (p.w > 3.5) color = float3(ao);
     
     return float4(color, 1.0);
 }

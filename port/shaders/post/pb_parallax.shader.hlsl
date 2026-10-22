@@ -48,6 +48,16 @@ cbuffer PerFrameCB : register(b0) {
 @if(o_textures[1]) Texture2D g_texture1 : register(t1); SamplerState g_sampler1 : register(s1); @end  // normal (height in alpha)
 @if(o_textures[2]) Texture2D g_texture2 : register(t2); SamplerState g_sampler2 : register(s2); @end  // height (optional)
 
+float GetHeight(float2 u) {
+    @if(o_textures[2]) {
+        return g_texture2.Sample(g_sampler2, u).r;
+    } @else @if(o_textures[1]) {
+        return g_texture1.Sample(g_sampler1, u).a;
+    } @else {
+        return 0.0;
+    }
+}
+
 float4 PSMain(PSInput input) : SV_TARGET {
     float4 p = uCustom[36];
     if (p.x < 0.5) {
@@ -75,17 +85,6 @@ float4 PSMain(PSInput input) : SV_TARGET {
     float currHeight = 1.0;
     float prevHeight = 1.0;
     int layer = 0;
-    
-    // Sample height from normal map alpha or separate height texture
-    auto GetHeight = [&](float2 u) -> float {
-        @if(o_textures[2]) {
-            return g_texture2.Sample(g_sampler2, u).r;
-        } @else @if(o_textures[1]) {
-            return g_texture1.Sample(g_sampler1, u).a;
-        } @else {
-            return 0.0;
-        }
-    };
     
     currHeight = GetHeight(currUV);
     

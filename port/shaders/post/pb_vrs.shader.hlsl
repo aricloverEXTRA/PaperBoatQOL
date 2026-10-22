@@ -54,24 +54,21 @@ float4 PSMain(PSInput input) : SV_TARGET {
     }
     
     float varianceThreshold = p.y;
-    float minRate = p.z; // 1.0 = full rate, 0.25 = 4x4 coarse
+    float minRate = p.z;
     float maxRate = p.w;
     float4 p2 = uCustom[39];
-    float tileSize = max(2.0, p2.x); // pixels per tile
+    float tileSize = max(2.0, p2.x);
     float debugMode = p2.y;
     
     float2 uv = input.uv0;
     float2 texel = 1.0 / float2(textures[0].width, textures[0].height);
     
-    // Compute tile coordinate
     float2 tileUV = floor(uv / (tileSize * texel)) * (tileSize * texel);
     float2 tileCenter = tileUV + (tileSize * texel) * 0.5;
     
-    // Sample tile center for base color
     float4 centerColor = @if(o_textures[0]) g_texture0.Sample(g_sampler0, tileCenter) @else float4(1,1,1,1) @end;
     float centerLum = dot(centerColor.rgb, float3(0.2126, 0.7152, 0.0722));
     
-    // Sample neighbors for variance
     float maxDiff = 0.0;
     for (int y = -1; y <= 1; y++) {
         for (int x = -1; x <= 1; x++) {
@@ -83,28 +80,21 @@ float4 PSMain(PSInput input) : SV_TARGET {
         }
     }
     
-    // Determine shading rate based on variance
     float rate = lerp(maxRate, minRate, saturate(maxDiff / max(varianceThreshold, 0.001)));
     
-    // In real VRS, this would configure the shading rate image.
-    // Here we simulate by either using center color (coarse) or per-pixel (fine)
     float4 result;
     if (rate < 0.5) {
-        // Coarse shading - use tile center color
         result = centerColor;
     } else {
-        // Fine shading - use per-pixel
         result = @if(o_textures[0]) g_texture0.Sample(g_sampler0, uv) @else centerColor @end;
     }
     
-    // Smooth transition
     float blend = smoothstep(0.3, 0.7, rate);
     result = lerp(centerColor, @if(o_textures[0]) g_texture0.Sample(g_sampler0, uv) @else centerColor @end, blend);
     
-    // Debug visualization
-    if (debugMode > 0.5) return float4(float3(rate), 1.0);              // 1 = shading rate
-    else if (debugMode > 1.5) return float4(float3(maxDiff * 10.0), 1.0); // 2 = variance
-    else if (debugMode > 2.5) return float4(float3(tileUV.x * 10.0), 1.0); // 3 = tile grid
+    if (debugMode > 0.5) return float4(float3(rate), 1.0);
+    else if (debugMode > 1.5) return float4(float3(maxDiff * 10.0), 1.0);
+    else if (debugMode > 2.5) return float4(float3(tileUV.x * 10.0), 1.0);
     
     return result;
 }

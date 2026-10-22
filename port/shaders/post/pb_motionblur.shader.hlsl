@@ -43,8 +43,8 @@ cbuffer PerFrameCB : register(b0) {
     float noise_scale;
 }
 
-@if(o_textures[0]) Texture2D g_texture0 : register(t0); SamplerState g_sampler0 : register(s0); @end  // color
-@if(o_textures[1]) Texture2D g_texture1 : register(t1); SamplerState g_sampler1 : register(s1); @end  // velocity
+@if(o_textures[0]) Texture2D g_texture0 : register(t0); SamplerState g_sampler0 : register(s0); @end
+@if(o_textures[1]) Texture2D g_texture1 : register(t1); SamplerState g_sampler1 : register(s1); @end
 
 float4 PSMain(PSInput input) : SV_TARGET {
     float4 p = uCustom[34];
@@ -73,11 +73,9 @@ float4 PSMain(PSInput input) : SV_TARGET {
         return color;
     }
     
-    // Limit blur radius
     float blurRadius = min(velLen * strength, maxBlur);
     float2 dir = velocity / max(velLen, 0.001);
     
-    // Camera motion blur uses screen-center radial blur
     float2 camCenter = float2(0.5, 0.5);
     float2 camDir = input.uv0 - camCenter;
     float camDist = length(camDir);
@@ -88,17 +86,15 @@ float4 PSMain(PSInput input) : SV_TARGET {
     float3 accum = color.rgb;
     float weightSum = 1.0;
     
-    // Sample along velocity (object motion)
     for (int i = 1; i <= numSamples; ++i) {
         float t = float(i) / float(numSamples);
         float2 offset = dir * blurRadius * t;
         
         float4 sample = @if(o_textures[0]) g_texture0.Sample(g_sampler0, input.uv0 - offset) @else color @end;
-        float w = 1.0 - t * 0.5; // trapezoidal weighting
+        float w = 1.0 - t * 0.5;
         accum += sample.rgb * w;
         weightSum += w;
         
-        // Camera blur component
         if (cameraBlur > 0.5) {
             float2 camOffset = camDir * blurRadius * cameraBlur * t;
             float4 camSample = @if(o_textures[0]) g_texture0.Sample(g_sampler0, input.uv0 - camOffset) @else color @end;
@@ -109,10 +105,9 @@ float4 PSMain(PSInput input) : SV_TARGET {
     
     float3 result = accum / weightSum;
     
-    // Debug
-    if (debugMode > 0.5) result = float3(velLen * 10.0);        // 1 = velocity magnitude
-    else if (debugMode > 1.5) result = dir * 0.5 + 0.5;         // 2 = velocity direction
-    else if (debugMode > 2.5) result = color.rgb;               // 3 = original
+    if (debugMode > 0.5) result = float3(velLen * 10.0);
+    else if (debugMode > 1.5) result = dir * 0.5 + 0.5;
+    else if (debugMode > 2.5) result = color.rgb;
     
     return float4(saturate(result), color.a);
 }

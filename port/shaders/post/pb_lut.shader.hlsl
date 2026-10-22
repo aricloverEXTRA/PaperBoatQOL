@@ -1,8 +1,8 @@
 @prism(type='hlsl', name='PaperBoat LUT', version='1.0.0', description='3D LUT color grading for per-area mood', author='PaperBoat')
 
-// 3D LUT color grading. Samples a 3D texture (LUT) for color transformation.
+// 3D LUT color grading using 2D texture with LUT slices laid out in a grid.
 // uCustom[42] = (enabled, intensity, lut_index, debug_view)
-// uCustom[43] = (lut_size, 0, 0, 0) -- lut_size is cube root of 3D texture depth
+// uCustom[43] = (lut_size, grid_width, grid_height, 0)
 
 struct PSInput {
     float4 position : SV_POSITION;
@@ -44,7 +44,7 @@ cbuffer PerFrameCB : register(b0) {
 }
 
 @if(o_textures[0]) Texture2D g_texture0 : register(t0); SamplerState g_sampler0 : register(s0); @end
-@if(o_textures[1]) Texture3D g_texture1 : register(t1); SamplerState g_sampler1 : register(s1); @end
+@if(o_textures[1]) Texture2D g_texture1 : register(t1); SamplerState g_sampler1 : register(s1); @end
 
 float4 PSMain(PSInput input) : SV_TARGET {
     float4 p = uCustom[42];
@@ -55,13 +55,23 @@ float4 PSMain(PSInput input) : SV_TARGET {
     float4 color = @if(o_textures[0]) g_texture0.Sample(g_sampler0, input.uv0) @else float4(1,1,1,1) @end;
     float intensity = saturate(p.y);
     
-    // Apply 3D LUT if available
+    // Apply 2D LUT (slices in grid) if available
     @if(o_textures[1]) {
         float lutSize = uCustom[43].x;
+        float gridW = uCustom[43].y > 0 ? uCustom[43].y : 16.0;
+        float gridH = uCustom[43].z > 0 ? uCustom[43].z : 16.0;
         if (lutSize > 1.0) {
-            // Sample 3D LUT
             float3 lutCoord = color.rgb;
-            color.rgb = g_texture1.SampleLevel(g_sampler1, lutCoord, 0).rgb;
+            float slice = lutCoord.b * (gridH * gridW - 1);
+            float sliceIdx = floor(slice);
+            float sliceFrac = frac(slice);
+            
+            float2 sliceUV = float2(
+                fmod(sliceIdx, gridW) / gridW + lutCoord.r / (lutSize * gridW),
+                floor(sliceIdx / gridW) / gridH + lutCoord.g / (lutSize * gridH)
+            );
+            
+            color.rgb = g_texture1.Sample(g_sampler1, sliceUV).rgb;
         }
     } @end
     
@@ -71,7 +81,7 @@ float4 PSMain(PSInput input) : SV_TARGET {
     
     // Debug: show LUT slice
     if (p.w > 0.5) {
-        float slice = frac(p.w - 0.5) * 6.0; // 0-6 slices
+        float slice = frac(p.w - 0.5) * 6.0;
         float z = floor(slice) / 6.0;
         float2 uv = float2(frac(slice) * 0.166 + color.r * 0.166, color.g);
         color.rgb = g_texture1.Sample(g_sampler1, float3(uv, z)).rgb;

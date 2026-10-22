@@ -43,40 +43,10 @@ cbuffer PerFrameCB : register(b0) {
     float noise_scale;
 }
 
-@if(o_textures[0]) Texture2D g_texture0 : register(t0); SamplerState g_sampler0 : register(s0); @end  // current color
-@if(o_textures[1]) Texture2D g_texture1 : register(t1); SamplerState g_sampler1 : register(s1); @end  // depth
-@if(o_textures[2]) Texture2D g_texture2 : register(t2); SamplerState g_sampler2 : register(s2); @end  // velocity
-@if(o_textures[3]) Texture2D g_texture3 : register(t3); SamplerState g_sampler3 : register(s3); @end  // history
-
-float3 HaltonSeq(uint index, uint base) {
-    float f = 1.0, r = 0.0;
-    while (index > 0) {
-        f /= base;
-        r += f * (index % base);
-        index /= base;
-    }
-    return float3(r, 0, 0); // simplified for 2D
-}
-
-float2 GetJitter(uint frame, float scale) {
-    // Halton sequence (2,3) for good distribution
-    float u = 0, v = 0;
-    uint i = frame + 1;
-    float f = 1.0;
-    while (i > 0) {
-        f *= 0.5;
-        u += f * (i & 1);
-        i >>= 1;
-    }
-    i = frame + 1;
-    f = 1.0 / 3.0;
-    while (i > 0) {
-        v += f * (i % 3);
-        i /= 3;
-        f /= 3.0;
-    }
-    return (float2(u, v) - 0.5) * scale;
-}
+@if(o_textures[0]) Texture2D g_texture0 : register(t0); SamplerState g_sampler0 : register(s0); @end
+@if(o_textures[1]) Texture2D g_texture1 : register(t1); SamplerState g_sampler1 : register(s1); @end
+@if(o_textures[2]) Texture2D g_texture2 : register(t2); SamplerState g_sampler2 : register(s2); @end
+@if(o_textures[3]) Texture2D g_texture3 : register(t3); SamplerState g_sampler3 : register(s3); @end
 
 float4 PSMain(PSInput input) : SV_TARGET {
     float4 p = uCustom[33];
@@ -90,7 +60,7 @@ float4 PSMain(PSInput input) : SV_TARGET {
     float depth = @if(o_textures[1]) g_texture1.Sample(g_sampler1, input.uv1).r @else 1.0 @end;
     
     // Reproject history using velocity
-    float2 historyUV = input.uv0 - velocity * 0.5; // half-pixel correction
+    float2 historyUV = input.uv0 - velocity * 0.5;
     history = @if(o_textures[3]) g_texture3.Sample(g_sampler3, historyUV) @else current @end;
     
     // Neighborhood clamping (YCoCg color space for better clamping)
@@ -140,9 +110,9 @@ float4 PSMain(PSInput input) : SV_TARGET {
     float3 result = lerp(current.rgb, historyClamped, blend);
     
     // Debug
-    if (p.w > 1.5) result = velocity.xy * 100.0; // velocity visualization
-    else if (p.w > 2.5) result = history.rgb;      // history only
-    else if (p.w > 3.5) result = current.rgb;      // current only
+    if (p.w > 1.5) result = velocity.xy * 100.0;
+    else if (p.w > 2.5) result = history.rgb;
+    else if (p.w > 3.5) result = current.rgb;
     
     return float4(result, current.a);
 }

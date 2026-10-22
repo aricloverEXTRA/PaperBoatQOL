@@ -977,6 +977,55 @@ static void PostFx_UpdateSsao() {
 // enable/strength registers are written here.
 static int sSunShadePassId = -1;
 
+// 4x4 matrix inverse (for view-projection matrix)
+static bool Mat4Inverse(const float m[4][4], float out[4][4]) {
+    // Simple Gauss-Jordan elimination
+    float aug[4][8];
+    for (int i = 0; i < 4; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            aug[i][j] = m[i][j];
+            aug[i][j + 4] = (i == j) ? 1.0f : 0.0f;
+        }
+    }
+    for (int col = 0; col < 4; ++col) {
+        // Find pivot
+        int pivot = col;
+        float maxVal = fabsf(aug[pivot][col]);
+        for (int row = col + 1; row < 4; ++row) {
+            float val = fabsf(aug[row][col]);
+            if (val > maxVal) {
+                maxVal = val;
+                pivot = row;
+            }
+        }
+        if (maxVal < 1e-6f) return false; // Singular
+        if (pivot != col) {
+            for (int j = 0; j < 8; ++j) {
+                float tmp = aug[col][j];
+                aug[col][j] = aug[pivot][j];
+                aug[pivot][j] = tmp;
+            }
+        }
+        // Normalize pivot row
+        float pivVal = aug[col][col];
+        for (int j = 0; j < 8; ++j) aug[col][j] /= pivVal;
+        // Eliminate other rows
+        for (int row = 0; row < 4; ++row) {
+            if (row == col) continue;
+            float factor = aug[row][col];
+            for (int j = 0; j < 8; ++j) {
+                aug[row][j] -= factor * aug[col][j];
+            }
+        }
+    }
+    for (int i = 0; i < 4; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            out[i][j] = aug[i][j + 4];
+        }
+    }
+    return true;
+}
+
 static void PostFx_PushSunShade() {
     const bool on = CVarGetInteger(POSTFX_SUNSHADE_CVAR, 0) != 0;
     float params[4] = {
@@ -988,6 +1037,72 @@ static void PostFx_PushSunShade() {
     float dbg[4] = { CVarGetInteger(POSTFX_SUNSHADE_DEBUG_CVAR, 0) != 0 ? 1.0f : 0.0f, 0.0f, 0.0f, 0.0f };
     gfx_set_custom_uniform(28, params);
     gfx_set_custom_uniform(29, dbg);
+
+    if (!on) return;
+
+    // Get camera view-projection matrix from CameraPatches
+    float vp[4][4];
+    extern void gfx_get_camera_view_projection(float out[4][4]);
+    gfx_get_camera_view_projection(vp);
+
+    // Compute inverse VP for world position reconstruction
+    float invVP[4][4];
+    if (Mat4Inverse(vp, invVP)) {
+        // Pass inverse VP rows (registers 23-26)
+        for (int i = 0; i < 4; ++i) {
+            gfx_set_custom_uniform(23 + i, invVP[i]);
+        }
+    }
+
+    // Get camera world position (from CameraPatches or interpreter)
+    Fast::Interpreter* interp = GameEngine_GetInterpreter();
+    if (interp != nullptr) {
+        float camPos[4] = { interp->mCurCameraPos.x, interp->mCurCameraPos.y, interp->mCurCameraPos.z, 0.0f };
+        gfx_set_custom_uniform(27, camPos);
+    }
+
+    // Pass sun direction + intensity (register 12) - from fragment lighting
+    float sunDir[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+    const float az = CVarGetFloat(POSTFX_SUN_AZIMUTH_CVAR, 45.0f) * 3.14159265f / 180.0f;
+    const float el = CVarGetFloat(POSTFX_SUN_ELEVATION_CVAR, 55.0f) * 3.14159265f / 180.0f;
+    sunDir[0] = cosf(el) * sinf(az);
+    sunDir[1] = sinf(el);
+    sunDir[2] = cosf(el) * cosf(az);
+    sunDir[3] = CVarGetFloat(POSTFX_SUN_INTENSITY_CVAR, 0.45f);
+    gfx_set_custom_uniform(12, sunDir);
+
+    // Pass hemisphere sky/ground colors (registers 13, 14) - from fragment lighting
+    float hemiSky[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+    float hemiGround[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+    if (CVarGetInteger(POSTFX_HEMISPHERE_CVAR, 1) != 0) {
+        float r = 0.5f, g = 0.5f, b = 0.5f;
+        extern void port_get_area_ambient(float*, float*, float*);
+        port_get_area_ambient(&r, &g, &b);
+        hemiSky[0] = r; hemiSky[1] = g; hemiSky[2] = b;
+        hemiSky[3] = CVarGetFloat(POSTFX_FRAGLIGHT_STR_CVAR, 0.6f);
+        hemiGround[0] = r * 0.5f; hemiGround[1] = g * 0.5f; hemiGround[2] = b * 0.5f;
+        hemiGround[3] = hemiSky[3] * 0.5f;
+    }
+    gfx_set_custom_uniform(13, hemiSky);
+    gfx_set_custom_uniform(14, hemiGround);
+
+    // Pass sun color + ambient level (register 21) - from sunlight
+    float sunColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+    const float warmth = pbClampf(CVarGetFloat(POSTFX_SUN_WARMTH_CVAR, 0.45f), 0.0f, 1.0f);
+    sunColor[0] = 1.0f;
+    sunColor[1] = 1.0f - 0.16f * warmth;
+    sunColor[2] = 1.0f - 0.40f * warmth;
+    sunColor[3] = pbClampf(CVarGetFloat(POSTFX_SUN_AMBIENT_CVAR, 0.80f), 0.05f, 1.50f);
+    gfx_set_custom_uniform(21, sunColor);
+
+    // Pass exposure + debug mode (register 22)
+    float exposure[4] = {
+        pbClampf(CVarGetFloat(POSTFX_SUN_EXPOSURE_CVAR, 1.0f), 0.10f, 2.0f),
+        0.0f,
+        (float)CVarGetInteger(POSTFX_SUN_DEBUG_CVAR, 0),
+        0.0f
+    };
+    gfx_set_custom_uniform(22, exposure);
 }
 
 static void PostFx_UpdateSunShade() {

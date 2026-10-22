@@ -4,10 +4,7 @@
 // depth buffer (tile 1, bound by the engine during post-processing) and the
 // camera view-projection matrix the port publishes, derives a per-pixel normal
 // from the reconstructed geometry, and applies a world-space sun + hemisphere
-// light on top of the game image. Because the normal comes from depth it is
-// screen-space and resolution-independent, unlike the in-shader object-space
-// normals; this lets shadows and sky/ground shading follow real geometry.
-//
+// light on top of the game image.
 // Parameters:
 //   uCustom[23..26] = inverse(view-projection) rows (row-major, row-vector)
 //   uCustom[27]     = (cameraWorldX, cameraWorldY, cameraWorldZ, unused)
@@ -23,12 +20,12 @@
 struct PSInput {
     float4 position : SV_POSITION;
     @{update_floats(1)} // aMtxSlot vertex attribute (matrix palette index)
-@for(i in 0..2)
-    @if(o_textures[i])
-        float2 uv@{i} : TEXCOORD@{i};
-        @{update_floats(2)}
+    @for(i in 0..2)
+        @if(o_textures[i])
+            float2 uv@{i} : TEXCOORD@{i};
+            @{update_floats(2)}
+        @end
     @end
-@end
 };
 
 // Mirrors struct TransformUniforms in gfx_rendering_api.h
@@ -52,7 +49,7 @@ cbuffer PerDrawCB : register(b1) {
     float4 fog_params;
     float4 palette_params[2];
     float4 lod_params;
-    float4 uCustom[32];
+    float4 uCustom[48];
     float4 debug_tint;
 }
 
@@ -101,14 +98,12 @@ float4x4 invViewProj() {
 }
 
 // Reconstructs the world-space position for a screen uv / hardware depth pair.
-// Hardware depth d is in 0..1 (near..far); clip.z/clip.w = 2d - 1. The y axis is
-// flipped so uv (0, 0) is NDC (+,-); invVP was built with the same convention the
-// default vertex shader used, so no extra sign handling is needed here.
+// Hardware depth d is in 0..1 (near..far); clip.z/clip.w = 2d - 1.
 float3 worldFromDepth(float2 uv, float d) {
     float2 ndc = float2(uv.x * 2.0 - 1.0, 1.0 - uv.y * 2.0);
     float4 clip = float4(ndc, 2.0 * d - 1.0, 1.0);
     float4 wp = mul(clip, invViewProj());
-    return wp.xyz / wp.w;
+    return wp.xyz / max(wp.w, 0.001);
 }
 
 float4 PSMain(PSInput input) : SV_TARGET {
@@ -119,6 +114,16 @@ float4 PSMain(PSInput input) : SV_TARGET {
         return float4(color, 1.0);
     }
 
+    // Check if inverse VP matrix is valid (not all zeros)
+    float4x4 invVP = invViewProj();
+    bool vpValid = any(abs(invVP[0]) > 0.001) || any(abs(invVP[1]) > 0.001) || 
+                   any(abs(invVP[2]) > 0.001) || any(abs(invVP[3]) > 0.001);
+    
+    if (!vpValid) {
+        // VP matrix not set up - return original color with simple lighting
+        return float4(color * float3(1.2, 1.2, 1.2), 1.0);
+    }
+
     float dc = g_pbDepth.Sample(g_pbDepthSampler, input.uv0).r;
     // Cleared background / skybox carries no geometry: leave it unlit.
     if (dc >= 0.9999) {
@@ -127,17 +132,36 @@ float4 PSMain(PSInput input) : SV_TARGET {
 
     uint w, h;
     g_pbDepth.GetDimensions(w, h);
+    if (w == 0 || h == 0) {
+        return float4(color, 1.0);
+    }
     float2 texel = 1.0 / float2((float)w, (float)h);
 
     float3 P = worldFromDepth(input.uv0, dc);
+    // Check if world position is valid
+    if (any(isnan(P)) || any(isinf(P))) {
+        return float4(color, 1.0);
+    }
+    
     // Neighbouring world positions; their cross product is the surface normal.
     float3 Px = worldFromDepth(input.uv0 + float2(texel.x, 0.0), g_pbDepth.Sample(g_pbDepthSampler, input.uv0 + float2(texel.x, 0.0)).r);
     float3 Py = worldFromDepth(input.uv0 + float2(0.0, texel.y), g_pbDepth.Sample(g_pbDepthSampler, input.uv0 + float2(0.0, texel.y)).r);
+    
+    if (any(isnan(Px)) || any(isinf(Px)) || any(isnan(Py)) || any(isinf(Py))) {
+        return float4(color, 1.0);
+    }
+    
     float3 n = normalize(cross(normalize(Px - P), normalize(Py - P)));
+    if (any(isnan(n)) || any(isinf(n))) {
+        return float4(color, 1.0);
+    }
 
     // Keep the normal facing the camera so a depth-derived sign flip never makes
     // a surface read as lit from behind.
     float3 viewDir = normalize(uCustom[27].xyz - P);
+    if (any(isnan(viewDir)) || any(isinf(viewDir))) {
+        return float4(color, 1.0);
+    }
     if (dot(n, viewDir) < 0.0) {
         n = -n;
     }
