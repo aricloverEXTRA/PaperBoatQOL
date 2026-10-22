@@ -4,6 +4,8 @@
 #include "port/ui/cvar_prefixes.h"
 #include <libultraship/bridge/consolevariablebridge.h>
 
+#include <cmath>
+
 #define LETTERBOX_VIEW_X SCREEN_INSET_X
 #define LETTERBOX_VIEW_Y SCREEN_INSET_Y
 #define LETTERBOX_VIEW_W (SCREEN_WIDTH - 2 * SCREEN_INSET_X)
@@ -21,7 +23,14 @@ void set_cam_viewport(s16 id, s16 x, s16 y, s16 width, s16 height);
 void hud_element_set_render_pos(s32 id, s32 x, s32 y);
 void hud_element_set_transform_scale(s32 id, f32 x, f32 y, f32 z);
 void hud_element_draw_complex_hud_next(s32 hid);
+// Engine: publishes the camera view-projection matrix for depth-based
+// post-processing.
+void gfx_set_camera_view_projection(const float out[4][4]);
 }
+
+// Defined in 43F0.c; transforms a point (row-vector convention) by a Matrix4f.
+extern "C" void transform_point(Matrix4f mtx, f32 inX, f32 inY, f32 inZ, f32 inS, f32* outX, f32* outY, f32* outZ,
+                                f32* outW);
 
 static s32 cam_abs(s32 v) {
     return v < 0 ? -v : v;
@@ -192,6 +201,53 @@ static void cam_sync_full_height(void) {
     }
 }
 
+// Projects the world sun direction to screen space for the god-rays post pass.
+// The port publishes the camera view-projection matrix (row-major, row-vector:
+// clip = world * VP, matching cam_main.c's guMtxCatF) via gfx_set_camera_view_projection;
+// we reuse it here so the shafts track the sun as the camera turns. Returns the
+// sun's uv and whether it is in front of the camera and on screen.
+extern "C" void port_get_sun_screen_uv(float* outU, float* outV, int* outVisible) {
+    *outU = 0.5f;
+    *outV = 0.5f;
+    *outVisible = 0;
+
+    const float az = CVarGetFloat(CVAR_ENHANCED_SHADING("SunAzimuth"), 45.0f) * 3.14159265f / 180.0f;
+    const float el =
+        CVarGetFloat(CVAR_ENHANCED_SHADING("SunElevation"), 55.0f) * 3.14159265f / 180.0f;
+    const float sunDir[3] = { cosf(el) * sinf(az), sinf(el), cosf(el) * cosf(az) };
+
+    const Vec3f* eye = &gCameras[CAM_DEFAULT].lookAt_eye;
+    // A point far along the sun direction from the camera, in world space.
+    const float px = eye->x + sunDir[0] * 1000.0f;
+    const float py = eye->y + sunDir[1] * 1000.0f;
+    const float pz = eye->z + sunDir[2] * 1000.0f;
+
+    // mtxPerspective is V*P (row-vector convention), exactly what the world pass
+    // loads; transform_point applies it the same way the rest of the game does.
+    f32 cx;
+    f32 cy;
+    f32 cz;
+    f32 cw;
+    transform_point(gCameras[CAM_DEFAULT].mtxPerspective, px, py, pz, 1.0f, &cx, &cy, &cz, &cw);
+
+    if (cw <= 0.0001f) {
+        return; // sun is behind the camera
+    }
+
+    const float ndcX = cx / cw;
+    const float ndcY = cy / cw;
+    const float u = ndcX * 0.5f + 0.5f;
+    const float v = 0.5f - ndcY * 0.5f; // hardware NDC -> uv (y flipped)
+
+    if (u < -0.5f || u > 1.5f || v < -0.5f || v > 1.5f) {
+        return; // sun is well off screen
+    }
+
+    *outU = u;
+    *outV = v;
+    *outVisible = 1;
+}
+
 static void RegisterCameraPatches_Init() {
     REGISTER_LISTENER(CameraSetViewport, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         auto* ev = (CameraSetViewport*) event;
@@ -237,6 +293,16 @@ static void RegisterCameraPatches_Init() {
         if (ev->camera->viewportH != 0) {
             *ev->aspect = cam_get_display_aspect(ev->camID, ev->camera);
         }
+    });
+
+    // Publishes the world camera's view-projection matrix once per rendered
+    // frame. cam_main.c folds the view into the projection with
+    // guMtxCatF(mtxViewPlayer, mtxPerspective, mtxPerspective), so
+    // cam->mtxPerspective is already V*P and is exactly what the world pass
+    // loads. Hand it to the engine here (frame start, before the world draws) so
+    // a depth-based post pass can reconstruct world-space geometry.
+    REGISTER_LISTENER(GameFrameUpdate, EVENT_PRIORITY_NORMAL, [](IEvent*) {
+        gfx_set_camera_view_projection(gCameras[CAM_DEFAULT].mtxPerspective);
     });
 }
 

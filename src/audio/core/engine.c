@@ -116,7 +116,7 @@ void au_engine_init(s32 outputRate) {
     {
         extern void PortInjectBattleMusic(void);
         
-        SPDLOG_INFO("[BattleMusic] Calling PortInjectBattleMusic");
+        GameEngine_LogInfo("[BattleMusic] Calling PortInjectBattleMusic");
         PortInjectBattleMusic();
     }
 

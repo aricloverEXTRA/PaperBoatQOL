@@ -62,6 +62,7 @@ PAL_PTR port_msg_glyph_palette(PAL_PTR palette);
 extern char* gBgPalettePath;
 void port_load_map_bg(char* optAssetName);
 void port_appendGfx_background_texture(void);
+void port_get_area_ambient(f32* outR, f32* outG, f32* outB);
 
 // Flame effect (FlamePatches.c)
 void port_flame_appendGfx(void* effect);

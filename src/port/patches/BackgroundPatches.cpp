@@ -49,6 +49,49 @@ static char* bg_intern_path(const char* path) {
 static char* sBgRasterPath = NULL;
 char* gBgPalettePath = NULL;
 
+// Per-area ambient colour, auto-derived from the map's own background palette so
+// every area is covered without any authored per-area data. Returns the average
+// RGB (0..1) of the opaque palette entries; a mid-grey is returned when the map
+// has no palette loaded (menus, transitions).
+void port_get_area_ambient(f32* outR, f32* outG, f32* outB) {
+    PAL_PTR pal = gGameStatusPtr->backgroundPalette;
+    u32 i;
+    u32 rSum = 0;
+    u32 gSum = 0;
+    u32 bSum = 0;
+    u32 count = 0;
+
+    if (pal != NULL) {
+        for (i = 0; i < 256; i++) {
+            u16 color = pal[i];
+            u32 r;
+            u32 g;
+            u32 b;
+
+            if (color == 0) {
+                continue;
+            }
+            r = UNPACK_PAL_R(color);
+            g = UNPACK_PAL_G(color);
+            b = UNPACK_PAL_B(color);
+            rSum += r;
+            gSum += g;
+            bSum += b;
+            count++;
+        }
+    }
+
+    if (count == 0) {
+        *outR = 0.5f;
+        *outG = 0.5f;
+        *outB = 0.5f;
+    } else {
+        *outR = (f32) rSum / (f32) count / 31.0f;
+        *outG = (f32) gSum / (f32) count / 31.0f;
+        *outB = (f32) bSum / (f32) count / 31.0f;
+    }
+}
+
 void port_load_map_bg(char* optAssetName) {
     if (optAssetName == NULL) {
         return;

@@ -56,9 +56,9 @@ static const TtydBgmFile kTtydFiles[TTYD_FILE_COUNT] = {
     { gTtydBgm_TTYD_level_up_theme, gTtydBgm_TTYD_level_up_theme_size, SONG_LEVEL_UP },
 };
 
-// Shared with engine.c: aux buffer that synthetic SBN entries read from.
-u8* gAudioAuxData = NULL;
-s32 gAudioAuxSize = 0;
+// Shared with engine.c, which owns the definitions.
+extern u8* gAudioAuxData;
+extern s32 gAudioAuxSize;
 
 // Grow the file list so synthetic entries can be appended. The original list
 // lives inside gSbnData (owned by the ResourceManager) and is not writable past
