@@ -49,6 +49,25 @@ extern "C" b32 EnhancedShadingBridge_CurrentAreaHasPreset(void);
 // Defined in port/Engine.cpp; returns the active Fast3D interpreter (or null).
 Fast::Interpreter* GameEngine_GetInterpreter();
 
+// Forward declarations for pass IDs (defined later in this file)
+static int sDepthDebugPassId;
+static int sSsaoPassId;
+static int sSunShadePassId;
+static int sGodRaysPassId;
+static int sContactShadowPassId;
+static int sScreenSpaceShadowPassId;
+static int sBloomPassId;
+static int sFxaaPassId;
+static int sSpecularPassId;
+static int sPbrPassId;
+static int sLutPassId;
+static int sHdrPassId;
+static int sVolumetricPassId;
+static int sTaaPassId;
+static int sMotionBlurPassId;
+static int sParallaxPassId;
+static int sVrsPassId;
+
 static float pbClampf(float v, float lo, float hi) {
     return v < lo ? lo : (v > hi ? hi : v);
 }
