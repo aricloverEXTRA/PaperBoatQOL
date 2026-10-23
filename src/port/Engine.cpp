@@ -1050,6 +1050,13 @@ void GameEngine::AudioInit() {
 
     create_audio_system();
 
+    // Runtime inject TTYD64 Battle Tracks if enabled
+    if (CVarGetInteger(CVAR_ENHANCEMENT("TTYD64BattleTracks"), 0)) {
+        extern void PortInjectBattleMusic(void);
+        SPDLOG_INFO("[BattleMusic] Calling PortInjectBattleMusic");
+        PortInjectBattleMusic();
+    }
+
     ThreadWatchdog_Start();
     mAudio.running = true;
 

@@ -510,18 +510,18 @@ static const ShadingPreset sPresets[] = {
         true, 0.5f, 0.45f, 1.1f,   // engine lighting
         true, 1.1f, 1.05f, 1.0f,   // modern look
         true, 0.6f,                // area ambient
-        true, 0.6f, 0.35f,         // fragment lighting
+        false, 0.0f, 0.0f,         // fragment lighting (OFF - too dark)
         45.0f, 55.0f, 0.45f,       // sun azimuth, elevation, intensity
         0.45f, 0.80f, 1.0f,        // sun warmth, ambient, exposure
-        true, true, 1.0f,          // hemisphere, rim, rim intensity
-        0.85f, 0.15f,              // relight
+        true, false, 0.0f,         // hemisphere ON, rim OFF
+        0.0f, 0.0f,                // relight OFF (too dark)
         true, 0.9f, 0, 1.0f,       // tonemap
         // Post passes
-        true, 1.0f, 10.0f, 0.0004f, // SSAO
-        true, 0.7f,                // sunshade
-        true, 0.6f, 0.8f, 0.96f, 0.5f, 0.65f, // god rays
-        true, 0.6f, 48.0f, 4.0f,   // contact shadow
-        true, 0.7f, 96.0f, 8.0f, 0.05f, // screen-space shadow
+        true, 1.0f, 50.0f, 0.0004f, // SSAO - INCREASED RADIUS 5x (10->50)
+        false, 0.0f,                // sunshade OFF (too dark)
+        false, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, // god rays OFF
+        true, 0.6f, 240.0f, 4.0f,   // contact shadow - INCREASED RADIUS 5x (48->240)
+        false, 0.0f, 0.0f, 0.0f, 0.0f, // screen-space shadow OFF
         true, 0.6f, 0.75f, 12.0f,  // bloom
         true, 0.75f, 0.125f, 0.0312f, // FXAA
         true, 0.5f, 32.0f,         // specular
@@ -1443,17 +1443,14 @@ static void PostFx_PushVolumetric() {
     gfx_set_custom_uniform(32, cfg);
 }
 static void PostFx_UpdateVolumetric() {
-    const bool on = pbMasterEnabled() && CVarGetInteger(POSTFX_VOLUMETRIC_CVAR, 0) != 0;
+    // DISABLED: Volumetric shader crashes prism parser (get_children crash)
+    // TODO: Fix volumetric shader prism compatibility
     Fast::Interpreter* interp = GameEngine_GetInterpreter();
     if (interp == nullptr) return;
-    if (on && sVolumetricPassId < 0) {
-        sVolumetricPassId = interp->RegisterPostPass("shaders/post/pb_volumetric.shader");
-        SPDLOG_INFO("[PostFx] Volumetric pass registered id={}", sVolumetricPassId);
-        GameEngine_RegisterShaderPassId("shaders/post/pb_volumetric.shader", sVolumetricPassId);
-    } else if (!on && sVolumetricPassId >= 0) {
+    if (sVolumetricPassId >= 0) {
         interp->UnregisterPostPass(sVolumetricPassId);
         sVolumetricPassId = -1;
-        SPDLOG_INFO("[PostFx] Volumetric pass removed");
+        SPDLOG_INFO("[PostFx] Volumetric pass removed (disabled due to prism crash)");
     }
 }
 

@@ -66,8 +66,8 @@ constexpr const char* kThreadLoops[WATCHDOG_NUM_THREADS] = {
 
 // nuAuMgr skips retraces while the backend's FIFO is full, so it gets a longer
 // leash than the frame-paced threads.
-constexpr auto kStallAfter = std::chrono::seconds(5);
-constexpr auto kRelaxedStallAfter = std::chrono::seconds(10);
+constexpr auto kStallAfter = std::chrono::seconds(30);
+constexpr auto kRelaxedStallAfter = std::chrono::seconds(60);
 constexpr auto kSampleEvery = std::chrono::milliseconds(500);
 constexpr auto kRedumpEvery = std::chrono::seconds(10);
 
