@@ -47,15 +47,10 @@ cbuffer PerFrameCB : register(b0) {
 
 @if(o_textures[0]) Texture2D g_texture0 : register(t0); SamplerState g_sampler0 : register(s0); @end
 
-// Sample texture or return white
-float4 SampleTex0(PSInput input) {
-    @if(o_textures[0]) { return g_texture0.Sample(g_sampler0, input.uv0); } @else { return float4(1,1,1,1); } @end
-}
-
 float4 PSMain(PSInput input) : SV_TARGET {
     float4 p = uCustom[38];
     if (p.x < 0.5) {
-        return SampleTex0(input);
+        @if(o_textures[0]) { return g_texture0.Sample(g_sampler0, input.uv0); } @else { return float4(1,1,1,1); } @end;
     }
     
     float varianceThreshold = p.y;
@@ -71,9 +66,8 @@ float4 PSMain(PSInput input) : SV_TARGET {
     float2 tileUV = floor(uv / (tileSize * texel)) * (tileSize * texel);
     float2 tileCenter = tileUV + (tileSize * texel) * 0.5;
     
-    float4 centerColor = SampleTex0(input);
-    centerColor = SampleTex0(input); // Note: we need to sample at tileCenter, but prism doesn't support dynamic UV well
-    // Simplified: use center pixel for now
+    // SampleTex0 inline - sample at tileCenter
+    float4 centerColor = @if(o_textures[0]) g_texture0.Sample(g_sampler0, tileCenter) @else float4(1,1,1,1) @end;
     
     float centerLum = dot(centerColor.rgb, float3(0.2126, 0.7152, 0.0722));
     
@@ -82,7 +76,7 @@ float4 PSMain(PSInput input) : SV_TARGET {
         for (int x = -1; x <= 1; x++) {
             if (x == 0 && y == 0) continue;
             float2 nuv = tileUV + float2(x, y) * (tileSize * texel) * 0.5;
-            float4 ncol = SampleTex0(input); // Simplified
+            float4 ncol = @if(o_textures[0]) g_texture0.Sample(g_sampler0, nuv) @else float4(1,1,1,1) @end;
             float nlum = dot(ncol.rgb, float3(0.2126, 0.7152, 0.0722));
             maxDiff = max(maxDiff, abs(nlum - centerLum));
         }
@@ -90,13 +84,13 @@ float4 PSMain(PSInput input) : SV_TARGET {
     
     float rate = lerp(maxRate, minRate, saturate(maxDiff / max(varianceThreshold, 0.001)));
     
-    float4 result = SampleTex0(input);
+    float4 result = @if(o_textures[0]) g_texture0.Sample(g_sampler0, input.uv0) @else float4(1,1,1,1) @end;
     if (rate < 0.5) {
         result = centerColor;
     }
     
     float blend = smoothstep(0.3, 0.7, rate);
-    result = lerp(centerColor, SampleTex0(input), blend);
+    result = lerp(centerColor, @if(o_textures[0]) g_texture0.Sample(g_sampler0, input.uv0) @else float4(1,1,1,1) @end, blend);
     
     if (debugMode > 0.5) return float4(float3(rate), 1.0);
     else if (debugMode > 1.5) return float4(float3(maxDiff * 10.0), 1.0);

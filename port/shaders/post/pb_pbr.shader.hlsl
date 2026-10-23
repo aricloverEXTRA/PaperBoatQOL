@@ -48,44 +48,22 @@ cbuffer PerFrameCB : register(b0) {
 // uCustom[40] = (enabled, use_orm, env_intensity, debug_mode)
 // uCustom[41] = (roughness_override, metallic_override, ao_override, 0)
 
-float3 EnvBRDF(float3 V, float3 N, float3 F0, float roughness, float NdotV) {
-    float3 F = F0 + (1.0 - F0) * pow(1.0 - NdotV, 5.0);
-    float a = roughness * roughness;
-    float a2 = a * a;
-    float NdotH = max(dot(N, normalize(V)), 0.001);
-    float denom = NdotH * NdotH * (a2 - 1.0) + 1.0;
-    float D = a2 / (3.14159 * denom * denom);
-    float k = (roughness + 1.0) * (roughness + 1.0) / 8.0;
-    float GGX_V = NdotV / (NdotV * (1.0 - k) + k);
-    float G = GGX_V;
-    return D * G * F;
-}
-
-// Sample texture or return white
-float3 SampleTex0(PSInput input) {
-    @if(o_textures[0]) { return g_texture0.Sample(g_sampler0, input.uv0).rgb; } @else { return float3(1,1,1); } @end
-}
-
-float3 SampleTex1(PSInput input) {
-    @if(o_textures[1]) { return g_texture1.Sample(g_sampler1, input.uv1).rgb * 2.0 - 1.0; } @else { return float3(0,0,1); } @end
-}
-
-float3 SampleTex2(PSInput input) {
-    @if(o_textures[2]) { return g_texture2.Sample(g_sampler2, input.uv2).rgb; } @else { return float3(1, 0.5, 0); } @end
-}
-
 float4 PSMain(PSInput input) : SV_TARGET {
     float4 p = uCustom[40];
     if (p.x < 0.5) return float4(1,1,1,1);
     
-    float3 albedo = SampleTex0(input);
+    // Sample albedo
+    float3 albedo;
+    @if(o_textures[0]) { albedo = g_texture0.Sample(g_sampler0, input.uv0).rgb; } @else { albedo = float3(1,1,1); } @end
     
-    float3 normal = float3(0,0,1);
-    normal = SampleTex1(input);
+    // Sample normal (unpack from [0,1] to [-1,1])
+    float3 normal;
+    @if(o_textures[1]) { normal = g_texture1.Sample(g_sampler1, input.uv1).rgb * 2.0 - 1.0; } @else { normal = float3(0,0,1); } @end
     
-    float ao = 1.0, roughness = 0.5, metallic = 0.0;
-    float3 orm = SampleTex2(input);
-    ao = orm.r; roughness = orm.g; metallic = orm.b;
+    // Sample ORM (Occlusion=R, Roughness=G, Metallic=B)
+    float3 orm;
+    @if(o_textures[2]) { orm = g_texture2.Sample(g_sampler2, input.uv2).rgb; } @else { orm = float3(1, 0.5, 0); } @end
+    float ao = orm.r, roughness = orm.g, metallic = orm.b;
     
     float4 ov = uCustom[41];
     roughness = max(0.01, p.y > 0.5 ? ov.x : roughness);
@@ -96,7 +74,18 @@ float4 PSMain(PSInput input) : SV_TARGET {
     float3 V = normalize(float3(0,0,1));
     float NdotV = max(dot(normal, V), 0.001);
     
-    float3 brdf = EnvBRDF(V, normal, F0, roughness, NdotV);
+    // Inline EnvBRDF (GGX BRDF)
+    float3 F = F0 + (1.0 - F0) * pow(1.0 - NdotV, 5.0);
+    float a = roughness * roughness;
+    float a2 = a * a;
+    float NdotH = max(dot(normal, normalize(V)), 0.001);
+    float denom = NdotH * NdotH * (a2 - 1.0) + 1.0;
+    float D = a2 / (3.14159 * denom * denom);
+    float k = (roughness + 1.0) * (roughness + 1.0) / 8.0;
+    float GGX_V = NdotV / (NdotV * (1.0 - k) + k);
+    float G = GGX_V;
+    float3 brdf = D * G * F;
+    
     float3 ambient = uCustom[21].rgb * uCustom[21].a;
     float3 color = albedo * ambient * ao + brdf * p.z;
     

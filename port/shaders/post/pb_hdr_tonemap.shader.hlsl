@@ -47,49 +47,6 @@ cbuffer PerFrameCB : register(b0) {
 
 @if(o_textures[0]) Texture2D g_texture0 : register(t0); SamplerState g_sampler0 : register(s0); @end
 
-// Sample color texture
-float4 SampleColor(PSInput input) {
-    @if(o_textures[0]) { return g_texture0.Sample(g_sampler0, input.uv0); } @else { return float4(1,1,1,1); } @end
-}
-
-// ACES approximation (from Stephen Hill)
-float3 ACESFilm(float3 x) {
-    float a = 2.51;
-    float b = 0.03;
-    float c = 2.43;
-    float d = 0.59;
-    float e = 0.14;
-    return saturate((x*(a*x+b))/(x*(c*x+d)+e));
-}
-
-// Filmic (Uncharted 2) - John Hable
-float3 FilmicTonemap(float3 x) {
-    float A = 0.15;
-    float B = 0.50;
-    float C = 0.10;
-    float D = 0.20;
-    float E = 0.02;
-    float F = 0.30;
-    float W = 11.2;
-    float3 num = x*(x*A+B*C)+D*E;
-    float3 den = x*(x*A+B)+D*F;
-    return saturate((num/den - E/F) * (1.0 / (W*W/(W*W-1.0))));
-}
-
-// Reinhard
-float3 ReinhardTonemap(float3 x, float whitePoint) {
-    float3 num = x * (1.0 + x / (whitePoint * whitePoint));
-    return num / (1.0 + x);
-}
-
-// Custom curve with shoulder/toe
-float3 CustomTonemap(float3 x, float shoulder, float toe, float contrast) {
-    x = x / (x + toe);           // toe
-    x = pow(x, contrast);        // contrast
-    x = x / (x + shoulder);      // shoulder
-    return saturate(x);
-}
-
 float4 PSMain(PSInput input) : SV_TARGET {
     float4 p = uCustom[44];
     if (p.x < 0.5) {

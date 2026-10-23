@@ -48,23 +48,6 @@ cbuffer PerFrameCB : register(b0) {
 @if(o_textures[1]) Texture2D g_texture1 : register(t1); SamplerState g_sampler1 : register(s1); @end  // normal (height in alpha)
 @if(o_textures[2]) Texture2D g_texture2 : register(t2); SamplerState g_sampler2 : register(s2); @end  // height (optional)
 
-// Sample height from texture 2 (dedicated) or texture 1 alpha (normal map alpha)
-float GetHeight(float2 u) {
-    @if(o_textures[2]) { return g_texture2.Sample(g_sampler2, u).r; }
-    @else @if(o_textures[1]) { return g_texture1.Sample(g_sampler1, u).a; }
-    @else { return 0.0; }
-}
-
-// Sample albedo
-float4 SampleAlbedo(float2 uv) {
-    @if(o_textures[0]) { return g_texture0.Sample(g_sampler0, uv); } @else { return float4(1,1,1,1); } @end
-}
-
-// Sample normal
-float3 SampleNormal(float2 uv) {
-    @if(o_textures[1]) { return g_texture1.Sample(g_sampler1, uv).rgb * 2.0 - 1.0; } @else { return float3(0,0,1); } @end
-}
-
 float4 PSMain(PSInput input) : SV_TARGET {
     float4 p = uCustom[36];
     if (p.x < 0.5) {
@@ -93,13 +76,20 @@ float4 PSMain(PSInput input) : SV_TARGET {
     float prevHeight = 1.0;
     int layer = 0;
     
-    currHeight = GetHeight(currUV);
+    // GetHeight inline
+    float currHeightVal;
+    @if(o_textures[2]) { currHeightVal = g_texture2.Sample(g_sampler2, currUV).r; }
+    @else @if(o_textures[1]) { currHeightVal = g_texture1.Sample(g_sampler1, currUV).a; }
+    @else { currHeightVal = 0.0; }
     
     // Find intersection
     for (layer = 0; layer < maxLayers; ++layer) {
         currUV -= deltaUV;
         prevHeight = currHeight;
-        currHeight = GetHeight(currUV);
+        // GetHeight inline
+        @if(o_textures[2]) { currHeight = g_texture2.Sample(g_sampler2, currUV).r; }
+        @else @if(o_textures[1]) { currHeight = g_texture1.Sample(g_sampler1, currUV).a; }
+        @else { currHeight = 0.0; }
         
         // Intersection test: height map crosses view ray
         float layerDepth = float(layer + 1) / float(maxLayers);
@@ -121,9 +111,10 @@ float4 PSMain(PSInput input) : SV_TARGET {
         finalUV = currUV;
     }
     
-    // Sample final color
-    float4 albedo = SampleAlbedo(finalUV);
-    float3 normal = SampleNormal(finalUV);
+    // SampleAlbedo inline
+    float4 albedo = @if(o_textures[0]) g_texture0.Sample(g_sampler0, finalUV) @else float4(1,1,1,1) @end;
+    // SampleNormal inline
+    float3 normal = @if(o_textures[1]) g_texture1.Sample(g_sampler1, finalUV).rgb * 2.0 - 1.0 @else float3(0,0,1) @end;
     
     // Simple lighting with perturbed normal
     float3 lightDir = normalize(float3(0.5, 0.5, -1.0));
