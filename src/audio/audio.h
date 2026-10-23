@@ -44,12 +44,12 @@ typedef u8* WaveData;
 
 #if VERSION_PAL
 #define VIDEO_FRAMES_PER_SECOND 50
-#define AUDIO_HEAP_SIZE 0x80000
+#define AUDIO_HEAP_SIZE 0x5B000
 #define AUDIO_MAX_SAMPLES   (AUDIO_SAMPLES * 2)
 #define AUDIO_COMMAND_LIST_BUFFER_SIZE 0x5558
 #else
 #define VIDEO_FRAMES_PER_SECOND 60
-#define AUDIO_HEAP_SIZE 0x80000
+#define AUDIO_HEAP_SIZE 0x56000
 #define AUDIO_MAX_SAMPLES   AUDIO_SAMPLES
 #define AUDIO_COMMAND_LIST_BUFFER_SIZE 0x4000
 #endif
@@ -1185,7 +1185,7 @@ typedef struct BGMPlayer {
     /* 0x074 */ u8* tickRatePtr; // related to legacy command system, unused
     /* 0x078 */ BGMDrumInfo* drumsInfo;
     /* 0x07C */ BGMInstrumentInfo* instrumentsInfo;
-    /* 0x080 */ BGMDrumInfo* drums[64]; // Increased from 12 to support TTYD64 drum patches (up to ~64 drums)
+    /* 0x080 */ BGMDrumInfo* drums[12];
     /* 0x0B0 */ s32 masterTempo;
     /* 0x0B4 */ s32 masterTempoStep;
     /* 0x0B8 */ s32 masterTempoTarget;
@@ -1341,7 +1341,7 @@ typedef struct AmbienceSavedVoice {
 typedef union AmbVoiceStateInfo {
     struct {
         u8 playerIndex;     /// Index of the owning ambience player
-        u8 trackIndex;      ///< Track index within the player (0–9)
+        u8 trackIndex;      ///< Track index within the player (0â€“9)
         u8 tune;            ///< Note or drum ID used to differentiate voices on the same track
         u8 released;        ///< Set to true when the voice should be released/stopped
     };

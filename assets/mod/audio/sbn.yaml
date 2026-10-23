@@ -1,14 +1,11 @@
-# SBN patch for TTYD64 Battle Tracks
-# Adds 4 new BGM files and remaps battle song entries to use them
+# SBN patch for TTYD64 Battle Tracks (3 safe tracks only)
+# Adds 3 new BGM files and remaps battle song entries to use them
 
 files:
   # File IDs 0xXX (appended after vanilla files)
   - id: "auto"
     file: "TTYD_BattleTheme_Updated.bgm"
     fakesize: 7440
-  - id: "auto"
-    file: "TTYD_mini_boss_theme.bgm"
-    fakesize: 20608
   - id: "auto"
     file: "TTYD_BattleWon.bgm"
     fakesize: 896
@@ -20,10 +17,6 @@ songs:
   # SONG_NORMAL_BATTLE = 0x02 -> TTYD Battle Theme
   - id: 2
     file: "TTYD_BattleTheme_Updated.bgm"
-    bk_files: [null, null, null]
-  # SONG_SPECIAL_BATTLE = 0x03 -> TTYD Mini Boss Theme
-  - id: 3
-    file: "TTYD_mini_boss_theme.bgm"
     bk_files: [null, null, null]
   # SONG_BATTLE_END = 0x8B -> TTYD Battle Won
   - id: 139

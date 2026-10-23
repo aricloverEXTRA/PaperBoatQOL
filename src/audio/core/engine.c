@@ -9,11 +9,6 @@
 
 u8* gSbnData = NULL;
 
-// Auxiliary audio buffer for runtime-injected songs (e.g. TTYD64 battle tracks).
-// See port/enhancements/audio/BattleMusicInject.c.
-u8* gAudioAuxData = NULL;
-s32 gAudioAuxSize = 0;
-
 AuCallback BeginSoundUpdateCallback;
 BGMPlayer* gBGMPlayerA;
 BGMPlayer* gBGMPlayerB;
@@ -60,11 +55,11 @@ void au_engine_init(s32 outputRate) {
     gAuAmbienceManager->globals = gSoundGlobals;
 
     globals = gSoundGlobals;
-    dummyTrackData = alHeapAlloc(alHeap, 1, 0x10000);
-    globals->dataBGM[0] = (BGMHeader*) ((u8*) dummyTrackData + 0x0000);
-    globals->dataBGM[1] = (BGMHeader*) ((u8*) dummyTrackData + 0x6000);
-    globals->dataMSEQ[0] = (MSEQHeader*) ((u8*) dummyTrackData + 0xC000);
-    globals->dataMSEQ[1] = (MSEQHeader*) ((u8*) dummyTrackData + 0xE000);
+    dummyTrackData = alHeapAlloc(alHeap, 1, 0x8000);
+    globals->dataBGM[0] = (BGMHeader*) &dummyTrackData[0];
+    globals->dataBGM[1] = (BGMHeader*) &dummyTrackData[0x1400];
+    globals->dataMSEQ[0] = (MSEQHeader*) &dummyTrackData[0x1C00];
+    globals->dataMSEQ[1] = (MSEQHeader*) &dummyTrackData[0x1400];
 
     for (i = 0; i < ARRAY_COUNT(globals->snapshots); i++) {
         globals->snapshots[i].bgmPlayer = alHeapAlloc(alHeap, 1, sizeof(BGMPlayer));
@@ -75,14 +70,6 @@ void au_engine_init(s32 outputRate) {
     globals->dataPRG = alHeapAlloc(alHeap, 1, PRG_MAX_COUNT * sizeof(BGMInstrumentInfo));
     globals->musicEventQueue = alHeapAlloc(alHeap, 1, MUS_QUEUE_SIZE * sizeof(MusicEventTrigger));
     globals->outputRate = outputRate;
-    // Fix DummyInstrumentEnvelope offsets at runtime to point to actual envelope arrays
-    // The static DummyInstrumentEnvelope in sfx_player.c has hardcoded offsets (0x8, 0xC)
-    // that point into the struct itself instead of the actual envelope arrays.
-    // Fix the offsets at runtime to point to the actual envelope arrays.
-    DummyInstrumentEnvelope.count = 1;
-    DummyInstrumentEnvelope.offsets[0].offsetPress = (u16)((uintptr_t)EnvelopePressDefault - (uintptr_t)&DummyInstrumentEnvelope);
-    DummyInstrumentEnvelope.offsets[0].offsetRelease = (u16)((uintptr_t)EnvelopeReleaseDefault - (uintptr_t)&DummyInstrumentEnvelope);
-    
     au_reset_instrument(globals->defaultInstrument);
     au_reset_drum_entry(&globals->defaultDrumEntry);
     au_reset_instrument_entry(&globals->defaultPRGEntry);
@@ -119,14 +106,6 @@ void au_engine_init(s32 outputRate) {
 
     gSbnData = (u8*)LOAD_ASSET(AUDIO_SBN);
     au_load_INIT(globals, gSbnData, alHeap);
-
-    // Runtime-inject the TTYD64 battle tracks into the song list, if enabled.
-    {
-        extern void PortInjectBattleMusic(void);
-        
-        GameEngine_LogInfo("[BattleMusic] Calling PortInjectBattleMusic");
-        PortInjectBattleMusic();
-    }
 
     au_bgm_player_init(gBGMPlayerA, AU_PRIORITY_BGM_PLAYER_MAIN, FX_BUS_BGMA_MAIN, globals);
     effects[0] = FX_BUS_BGMA_MAIN;
@@ -190,14 +169,7 @@ static void au_reset_instrument(Instrument* instrument) {
     instrument->loopCount = 0;
     instrument->type = 0;
     instrument->useDma = false;
-    // Set up a proper envelope for the default instrument at runtime
-    // DummyInstrumentEnvelope has incorrect offsets (pointing into struct itself).
-    // Create a proper envelope pointing to EnvelopePressDefault/EnvelopeReleaseDefault.
-    static EnvelopePreset sDefaultEnvelope;
-    sDefaultEnvelope.count = 1;
-    sDefaultEnvelope.offsets[0].offsetPress = (u16)((uintptr_t)EnvelopePressDefault - (uintptr_t)&sDefaultEnvelope);
-    sDefaultEnvelope.offsets[0].offsetRelease = (u16)((uintptr_t)EnvelopeReleaseDefault - (uintptr_t)&sDefaultEnvelope);
-    instrument->envelopes = &sDefaultEnvelope;
+    instrument->envelopes = &DummyInstrumentEnvelope;
     instrument->unused_26 = 0;
     instrument->unused_27 = 0;
     instrument->unused_28 = 0;
@@ -530,18 +502,7 @@ void au_fade_update_envelope(Fade* fade) {
 /// access into AuGlobals::bankSets. This does not affect values above 3, but 1 and 2 differ.
 Instrument* au_get_instrument(AuGlobals* globals, BankSetIndex bank, s32 patch, EnvelopeData* envData) {
     // note that patch here can be up to 255, selecting from a maximum of 16 instruments and 16 banks per group
-    // Add bounds checking to prevent crashes from invalid patch indices (e.g., from TTYD64 sequences)
-    InstrumentBank* bankSet = globals->bankSets[(bank & 0x70) >> 4];
-    // Each bank set has 16 instruments max (0-15)
-    if (patch < 0 || patch >= 16) {
-        // Return default instrument for out-of-bounds patch
-        return globals->defaultInstrument;
-    }
-    Instrument* instrument = (*bankSet)[patch];
-    if (instrument == nullptr) {
-        // Return default instrument if instrument is null
-        return globals->defaultInstrument;
-    }
+    Instrument* instrument = (*globals->bankSets[(bank & 0x70) >> 4])[patch];
     EnvelopePreset* envelope = instrument->envelopes;
     u32 envelopeIdx = bank & 3;
 
@@ -832,11 +793,7 @@ AuResult au_fetch_SBN_file(u32 fileIdx, AuFileFormat format, SBNFileEntry* outEn
 
     if (fileIdx < gSoundGlobals->fileListLength) {
         SBNFileEntry* entry = &gSoundGlobals->sbnFileList[fileIdx];
-        // Auxiliary (runtime-injected) entries carry a 0x40000000 tag and are
-        // resolved by au_read_rom directly; do not mask or rebase them.
-        s32 offset = (entry->offset & 0x40000000)
-                       ? entry->offset
-                       : (entry->offset & 0xFFFFFF) + gSoundGlobals->baseRomOffset;
+        s32 offset = (entry->offset & 0xFFFFFF) + gSoundGlobals->baseRomOffset;
 
         fileEntry.offset = offset;
         fileEntry.data = entry->data;
@@ -1265,18 +1222,6 @@ void au_sync_channel_delay_enabled(u32 bMonoSound) {
 // probable split
 
 void* au_read_rom(s32 offset) {
-    // Offsets tagged with 0x40000000 resolve into the auxiliary audio buffer
-    // (runtime-injected songs, e.g. the TTYD64 battle tracks). See
-    // port/enhancements/audio/BattleMusicInject.c.
-    if (offset & 0x40000000) {
-        extern u8* gAudioAuxData;
-        extern s32 gAudioAuxSize;
-        s32 idx = offset & 0x3FFFFFFF;
-        if (gAudioAuxData != NULL && idx >= 0 && idx < gAudioAuxSize) {
-            return gAudioAuxData + idx;
-        }
-    }
-
     return gSbnData + offset;
 }
 
