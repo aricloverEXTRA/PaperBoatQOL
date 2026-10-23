@@ -131,6 +131,12 @@ void PaperboatMenu::AddMenuEnhancements() {
             )
         );
 
+    // TTYD64 Battle Tracks toggle
+    path.column = SECTION_COLUMN_2;
+    AddWidget(path, "TTYD64 Battle Tracks", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("TTYD64BattleTracks"))
+        .Options(CheckboxOptions().DefaultValue(false).Tooltip("Replace vanilla battle tracks with TTYD64 versions (Battle Theme, Battle Won, Level Up). Requires game restart to take effect."));
+
     // Enhancements > Graphics
     path = { "Enhancements", "Graphics", SECTION_COLUMN_1 };
     AddSidebarEntry("Enhancements", "Graphics", 1);

@@ -303,17 +303,6 @@ static bool sDesiredFxaa = false;
 static bool sDesiredSpecular = false;
 static bool sFirstFrame = true;
 
-// Area type auto-detection -----------------------------------------------------
-enum AreaType {
-    AREA_OUTDOOR = 0,
-    AREA_INDOOR  = 1,
-    AREA_UNDERGROUND = 2,
-    AREA_UNKNOWN = 3
-};
-static AreaType sCurrentAreaType = AREA_UNKNOWN;
-static bool sIsIndoor = false;  // Track indoor state internally (no CVar changes)
-static const char* sPrevAreaName = nullptr;
-
 // Preset handling --------------------------------------------------------------
 struct ShadingPreset {
     const char* name;
@@ -687,52 +676,6 @@ extern "C" void PostFx_ApplyPreset(int idx) {
 }
 
 // Area type detection ----------------------------------------------------------
-extern "C" AreaType DetectAreaType(const char* areaName) {
-    if (areaName == nullptr) {
-        return AREA_UNKNOWN;
-    }
-    // Indoor keywords
-    const char* indoorKeywords[] = {
-        "house", "shop", "inn", "museum", "library", "office", "room",
-        "hall", "chamber", "cellar", "basement", "attic", "closet",
-        "kitchen", "bedroom", "bathroom", "living", "dining", "study",
-        "toy", "post", "bank", "cafe", "bar", "restaurant", "hotel",
-        "mayor", "gate", "guard", "jail", "prison", "dungeon"
-    };
-    // Underground keywords
-    const char* undergroundKeywords[] = {
-        "cave", "cavern", "mine", "tunnel", "sewer", "catacomb",
-        "ruin", "temple", "tomb", "crypt", "underground", "subterrain",
-        "lava", "volcan", "crystal", "gem", "ore", "depth",
-        "mim_", "dro_", "tubba_", "gloom", "shyguy_", "bow_",
-        "jr_", "koopa_", "mt_", "vulcan", "flower_", "tree_",
-        "wind_", "cloud_", "star_", "peach_", "toad_", "yoshi_"
-    };
-    // Check for underground first (more specific)
-    for (const char* kw : undergroundKeywords) {
-        if (std::strstr(areaName, kw) != nullptr) {
-            return AREA_UNDERGROUND;
-        }
-    }
-    // Check for indoor
-    for (const char* kw : indoorKeywords) {
-        if (std::strstr(areaName, kw) != nullptr) {
-            return AREA_INDOOR;
-        }
-    }
-    // Default to outdoor
-    return AREA_OUTDOOR;
-}
-
-extern "C" void UpdateAreaType() {
-    const char* area = EnhancedShadingBridge_CurrentAreaName();
-    if (area != sPrevAreaName) {
-        sPrevAreaName = area;
-        sCurrentAreaType = DetectAreaType(area);
-        SPDLOG_INFO("[PostFx] area='{}' type={}", area ? area : "null", (int)sCurrentAreaType);
-    }
-}
-
 // Stability helpers ------------------------------------------------------------
 // Returns true if the game is in a stable gameplay state (not loading, not
 // transitioning alt assets, not in a soft reset, window has valid size).
@@ -754,6 +697,23 @@ extern "C" bool IsStableFrame() {
     // (we can't directly access private members, but we can check if renderer is ready)
     return true;
 }
+
+// Check if we are running on DirectX 11 backend (Windows only)
+extern "C" bool PostFx_IsDirectX11() {
+    // Get the window from the global context
+    auto ctx = Ship::Context::GetRawInstance();
+    if (ctx == nullptr) {
+        return false;
+    }
+    auto window = ctx->GetWindow();
+    if (!window) {
+        return false;
+    }
+    // Fast3dWindow backend IDs: FAST3D_DXGI_DX11 = 1
+    return window->GetWindowBackend() == 1;  // FAST3D_DXGI_DX11
+}
+
+
 
 // Hands the engine's lighting parameters to the reserved uCustom registers every
 // frame. Register 8 = (enabled, wrap, groundScale, ambientBoost); register 11 =
@@ -926,6 +886,10 @@ static void PostFx_UpdateDepthDebug() {
     if (interp == nullptr) {
         return;
     }
+    // Only register passes on DirectX 11 (Windows)
+    if (!PostFx_IsDirectX11()) {
+        return;
+    }
 
     if (on && sDepthDebugPassId < 0) {
         sDepthDebugPassId = interp->RegisterPostPass("shaders/post/pb_depthdebug.shader");
@@ -959,6 +923,10 @@ static void PostFx_UpdateSsao() {
     const bool on = pbMasterEnabled() && CVarGetInteger(POSTFX_SSAO_CVAR, 0) != 0;
     Fast::Interpreter* interp = GameEngine_GetInterpreter();
     if (interp == nullptr) {
+        return;
+    }
+    // Only register passes on DirectX 11 (Windows)
+    if (!PostFx_IsDirectX11()) {
         return;
     }
 
@@ -1028,7 +996,7 @@ static bool Mat4Inverse(const float m[4][4], float out[4][4]) {
 }
 
 static void PostFx_PushSunShade() {
-    const bool on = CVarGetInteger(POSTFX_SUNSHADE_CVAR, 0) != 0 && !sIsIndoor;
+    const bool on = CVarGetInteger(POSTFX_SUNSHADE_CVAR, 0) != 0;
     float params[4] = {
         on ? 1.0f : 0.0f,
         pbClampf(CVarGetFloat(POSTFX_SUNSHADE_STR_CVAR, 0.7f), 0.0f, 1.0f),
@@ -1112,6 +1080,10 @@ static void PostFx_UpdateSunShade() {
     if (interp == nullptr) {
         return;
     }
+    // Only register passes on DirectX 11 (Windows)
+    if (!PostFx_IsDirectX11()) {
+        return;
+    }
 
     if (on && sSunShadePassId < 0) {
         sSunShadePassId = interp->RegisterPostPass("shaders/post/pb_sunshade.shader");
@@ -1130,7 +1102,7 @@ static void PostFx_UpdateSunShade() {
 static int sGodRaysPassId = -1;
 
 static void PostFx_PushGodRays() {
-    const bool on = CVarGetInteger(POSTFX_GODRAYS_CVAR, 0) != 0 && !sIsIndoor;
+    const bool on = CVarGetInteger(POSTFX_GODRAYS_CVAR, 0) != 0;
 
     float sunU = 0.5f;
     float sunV = 0.5f;
@@ -1157,6 +1129,10 @@ static void PostFx_UpdateGodRays() {
     const bool on = pbMasterEnabled() && CVarGetInteger(POSTFX_GODRAYS_CVAR, 0) != 0;
     Fast::Interpreter* interp = GameEngine_GetInterpreter();
     if (interp == nullptr) {
+        return;
+    }
+    // Only register passes on DirectX 11 (Windows)
+    if (!PostFx_IsDirectX11()) {
         return;
     }
 
@@ -1198,6 +1174,10 @@ static void PostFx_UpdateContactShadows() {
     const bool on = pbMasterEnabled() && CVarGetInteger(POSTFX_CONTACT_CVAR, 0) != 0;
     Fast::Interpreter* interp = GameEngine_GetInterpreter();
     if (interp == nullptr) {
+        return;
+    }
+    // Only register passes on DirectX 11 (Windows)
+    if (!PostFx_IsDirectX11()) {
         return;
     }
 
@@ -1244,6 +1224,10 @@ static void PostFx_UpdateScreenSpaceShadows() {
     const bool on = pbMasterEnabled() && CVarGetInteger(POSTFX_SSSHADOW_CVAR, 0) != 0;
     Fast::Interpreter* interp = GameEngine_GetInterpreter();
     if (interp == nullptr) {
+        return;
+    }
+    // Only register passes on DirectX 11 (Windows)
+    if (!PostFx_IsDirectX11()) {
         return;
     }
 
@@ -1795,14 +1779,16 @@ static void PostFx_FrameUpdate() {
             PostFx_PushSsao(); // push params even if pass not registered
             
             // Modern shader suite params (even on unstable frames for continuity)
-            PostFx_PushPbr();
-            PostFx_PushLut();
-            PostFx_PushHdr();
-            PostFx_PushVolumetric();
-            PostFx_PushTaa();
-            PostFx_PushMotionBlur();
-            PostFx_PushParallax();
-            PostFx_PushVrs();
+            if (PostFx_IsDirectX11()) {
+                PostFx_PushPbr();
+                PostFx_PushLut();
+                PostFx_PushHdr();
+                PostFx_PushVolumetric();
+                PostFx_PushTaa();
+                PostFx_PushMotionBlur();
+                PostFx_PushParallax();
+                PostFx_PushVrs();
+            }
         } else {
             PostFx_PushNeutralAndTeardownPasses();
         }
@@ -1820,9 +1806,7 @@ static void PostFx_FrameUpdate() {
         return;
     }
 
-    // Auto-detect area type - track internally, DON'T modify CVars (avoids pass re-reg storm)
-    UpdateAreaType();
-    sIsIndoor = (sCurrentAreaType == AREA_INDOOR || sCurrentAreaType == AREA_UNDERGROUND);
+    // Area type detection removed - use CVars directly for sun-dependent effects;
 
     // The engine lighting and modern grade simply need per-frame values latched in
     // the shader uniforms.
