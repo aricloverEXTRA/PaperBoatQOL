@@ -92,6 +92,10 @@ s32 _show_message(Evt* script, s32 isInitialCall, s32 mode) {
             script->varTable[15] = playerStatus->targetYaw;
         } else {
             speakerNpc = resolve_npc(script, speakerNpcID);
+            if (speakerNpc == nullptr) {
+                // Invalid NPC ID - fall back to player
+                speakerNpc = (Npc*) NPC_PLAYER;
+            }
             get_screen_coords(gCurrentCameraID, speakerNpc->pos.x, speakerNpc->pos.y + speakerNpc->collisionHeight, speakerNpc->pos.z,
                               &screenX, &screenY, &screenZ);
             script->functionTemp[3] = speakerNpc->curAnim;

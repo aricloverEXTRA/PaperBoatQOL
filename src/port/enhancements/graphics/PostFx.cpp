@@ -1746,6 +1746,7 @@ static void PostFx_FrameUpdate() {
     // Track stability state to re-apply preset when stability returns
     static bool sWasStable = false;
     static bool sFirstFrameEver = true;
+    static int sStabilityCooldown = 0;  // Cooldown frames after stability gained
     const bool isStable = IsStableFrame();
 
     // FIRST FRAME EVER: apply preset immediately regardless of stability
@@ -1767,6 +1768,12 @@ static void PostFx_FrameUpdate() {
         }
     }
 
+    // Cooldown: after stability is gained, ignore brief instability for N frames
+    // to prevent flickering on area transitions (alt-assets loading)
+    if (sStabilityCooldown > 0) {
+        sStabilityCooldown--;
+    }
+
     // If frame became unstable, don't teardown passes - just skip pass registration
     // Passes will be re-registered when stability returns
     if (!isStable) {
@@ -1775,6 +1782,7 @@ static void PostFx_FrameUpdate() {
             SPDLOG_INFO("[PostFx] frame skipped for passes (unstable), wasStable={}", sWasStable);
         }
         sWasStable = false;
+        sStabilityCooldown = 120;  // 2 second cooldown after instability
         // Still push in-shader uniforms even on unstable frames so lighting/grade works
         if (pbMasterEnabled()) {
             PostFx_PushEngineLighting();
@@ -1802,7 +1810,7 @@ static void PostFx_FrameUpdate() {
     }
 
     // Frame is stable now
-    if (!sWasStable) {
+    if (!sWasStable && sStabilityCooldown == 0) {
         sWasStable = true;
         SPDLOG_INFO("[PostFx] stability gained");
     }
