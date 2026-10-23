@@ -331,6 +331,7 @@ struct ShadingPreset {
     float rimIntensity;
     float relightStrength;
     float relightFloor;
+    bool relight;
     bool tonemap;
     float tonemapExposure;
     int tonemapCurve;
@@ -404,6 +405,36 @@ struct ShadingPreset {
 };
 
 static void ApplyPreset(const ShadingPreset& p) {
+    // Unregister passes that should be off in this preset
+    Fast::Interpreter* interp = GameEngine_GetInterpreter();
+    if (interp != nullptr) {
+        auto unregister_if_off = [&](int& passId, bool shouldBeOn, const char* shaderPath) {
+            if (!shouldBeOn && passId >= 0) {
+                interp->UnregisterPostPass(passId);
+                passId = -1;
+                SPDLOG_INFO("[PostFx] {} pass removed by preset", shaderPath);
+            }
+        };
+        
+        unregister_if_off(sSsaoPassId, p.ssao, "shaders/post/pb_ssao.shader");
+        unregister_if_off(sDepthDebugPassId, false, "shaders/post/pb_depthdebug.shader");
+        unregister_if_off(sSunShadePassId, p.sunshade, "shaders/post/pb_sunshade.shader");
+        unregister_if_off(sGodRaysPassId, p.godrays, "shaders/post/pb_godrays.shader");
+        unregister_if_off(sContactShadowPassId, p.contactShadow, "shaders/post/pb_contactshadow.shader");
+        unregister_if_off(sScreenSpaceShadowPassId, p.screenSpaceShadow, "shaders/post/pb_ssshadow.shader");
+        unregister_if_off(sBloomPassId, p.bloom, "shaders/post/pb_bloom.shader");
+        unregister_if_off(sFxaaPassId, p.fxaa, "shaders/post/pb_fxaa.shader");
+        unregister_if_off(sSpecularPassId, p.specular, "shaders/post/pb_specular.shader");
+        unregister_if_off(sPbrPassId, p.pbr, "shaders/post/pb_pbr.shader");
+        unregister_if_off(sLutPassId, p.lut, "shaders/post/pb_lut.shader");
+        unregister_if_off(sHdrPassId, p.hdr, "shaders/post/pb_hdr_tonemap.shader");
+        unregister_if_off(sVolumetricPassId, p.volumetric, "shaders/post/pb_volumetric.shader");
+        unregister_if_off(sTaaPassId, p.taa, "shaders/post/pb_taa.shader");
+        unregister_if_off(sMotionBlurPassId, p.motionBlur, "shaders/post/pb_motionblur.shader");
+        unregister_if_off(sParallaxPassId, p.parallax, "shaders/post/pb_parallax.shader");
+        unregister_if_off(sVrsPassId, p.vrs, "shaders/post/pb_vrs.shader");
+    }
+    
     // In-shader
     CVarSetInteger(POSTFX_ENGINE_LIGHTING_CVAR, p.engineLighting ? 1 : 0);
     CVarSetFloat(POSTFX_ENGINE_LIGHTING_WRAP_CVAR, p.engineLightingWrap);
@@ -427,6 +458,7 @@ static void ApplyPreset(const ShadingPreset& p) {
     CVarSetInteger(POSTFX_HEMISPHERE_CVAR, p.hemisphere ? 1 : 0);
     CVarSetInteger(POSTFX_RIM_CVAR, p.rim ? 1 : 0);
     CVarSetFloat(POSTFX_RIM_INTENSITY_CVAR, p.rimIntensity);
+    CVarSetInteger(POSTFX_RELIGHT_CVAR, p.relight ? 1 : 0);
     CVarSetFloat(POSTFX_RELIGHT_STR_CVAR, p.relightStrength);
     CVarSetFloat(POSTFX_RELIGHT_FLOOR_CVAR, p.relightFloor);
     CVarSetInteger(POSTFX_TONEMAP_CVAR, p.tonemap ? 1 : 0);
@@ -514,8 +546,8 @@ static const ShadingPreset sPresets[] = {
         45.0f, 55.0f, 0.45f,       // sun azimuth, elevation, intensity
         0.45f, 0.80f, 1.0f,        // sun warmth, ambient, exposure
         true, false, 0.0f,         // hemisphere ON, rim OFF
-        0.0f, 0.0f,                // relight OFF (too dark)
-        true, 0.9f, 0, 1.0f,       // tonemap
+        0.0f, 0.0f,                // relightStrength, relightFloor
+        false, true, 0.9f, 0, 1.0f, // relight OFF, tonemap ON
         // Post passes
         true, 1.0f, 50.0f, 0.0004f, // SSAO - INCREASED RADIUS 5x (10->50)
         false, 0.0f,                // sunshade OFF (too dark)
@@ -547,7 +579,7 @@ static const ShadingPreset sPresets[] = {
         0.3f, 0.7f, 1.0f,
         true, false, 0.0f,
         0.5f, 0.1f,
-        true, 0.85f, 0, 1.0f,
+        false, true, 0.85f, 0, 1.0f,
         // Post passes (only cheap ones)
         false, 0, 0, 0,            // no SSAO
         false, 0,                  // no sunshade
@@ -579,7 +611,7 @@ static const ShadingPreset sPresets[] = {
         0.55f, 0.85f, 1.05f,
         true, true, 1.2f,
         0.9f, 0.2f,
-        true, 1.0f, 1, 1.0f,
+        true, true, 1.0f, 1, 1.0f,
         // Post passes (all on, slightly stronger)
         true, 1.2f, 12.0f, 0.0005f, // SSAO
         true, 0.8f,                // sunshade
@@ -611,7 +643,7 @@ static const ShadingPreset sPresets[] = {
         0.2f, 0.6f, 0.95f,
         false, false, 0,
         0.4f, 0.0f,
-        false, 0, 0, 1.0f,
+        false, false, 0, 0, 1.0f,
         // Post passes (minimal)
         false, 0, 0, 0,
         false, 0,
@@ -643,7 +675,7 @@ static const ShadingPreset sPresets[] = {
         0.1f, 0.9f, 0.95f,
         true, false, 0,
         0.4f, 0.1f,
-        true, 0.8f, 0, 1.0f,
+        false, true, 0.8f, 0, 1.0f,
         // Post passes (depth-based only, no sun-dependent)
         true, 0.8f, 8.0f, 0.0003f, // SSAO
         false, 0,                 // no sunshade
