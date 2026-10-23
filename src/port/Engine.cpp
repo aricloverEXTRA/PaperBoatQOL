@@ -1050,11 +1050,10 @@ void GameEngine::AudioInit() {
 
     create_audio_system();
 
-    // Runtime inject TTYD64 Battle Tracks if enabled
+    // TTYD64 Battle Tracks are injected at build-time via assets/mod/audio/sbn.yaml
+    // No runtime injection needed; the CVar TTYD64BattleTracks controls the build-time SBN patch
     if (CVarGetInteger(CVAR_ENHANCEMENT("TTYD64BattleTracks"), 0)) {
-        extern void PortInjectBattleMusic(void);
-        SPDLOG_INFO("[BattleMusic] Calling PortInjectBattleMusic");
-        PortInjectBattleMusic();
+        SPDLOG_INFO("[BattleMusic] TTYD64 tracks enabled (build-time SBN patch)");
     }
 
     ThreadWatchdog_Start();
