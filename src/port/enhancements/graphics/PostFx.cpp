@@ -1893,7 +1893,17 @@ extern "C" s32 PostFx_ShouldSplitWorldLayer(void) {
                : 0;
 }
 
+static void PostFx_OnWindowPreDraw(void) {
+    if (PostFx_ShouldSplitWorldLayer()) {
+        Fast::Interpreter* interp = GameEngine_GetInterpreter();
+        if (interp) {
+            interp->RunPostPassesMidFrame();
+        }
+    }
+}
+
 void register_postfx_hooks(void) {
     SPDLOG_INFO("[PostFx] register_postfx_hooks called");
     REGISTER_LISTENER(GameFrameUpdate, EVENT_PRIORITY_NORMAL, [](IEvent* event) { PostFx_FrameUpdate(); });
+    REGISTER_LISTENER(WindowPreDraw, EVENT_PRIORITY_NORMAL, [](IEvent* event) { PostFx_OnWindowPreDraw(); });
 }
