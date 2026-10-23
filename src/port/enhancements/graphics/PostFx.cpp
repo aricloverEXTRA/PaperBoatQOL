@@ -50,23 +50,23 @@ extern "C" b32 EnhancedShadingBridge_CurrentAreaHasPreset(void);
 Fast::Interpreter* GameEngine_GetInterpreter();
 
 // Forward declarations for pass IDs (defined later in this file)
-static int sDepthDebugPassId;
-static int sSsaoPassId;
-static int sSunShadePassId;
-static int sGodRaysPassId;
-static int sContactShadowPassId;
-static int sScreenSpaceShadowPassId;
-static int sBloomPassId;
-static int sFxaaPassId;
-static int sSpecularPassId;
-static int sPbrPassId;
-static int sLutPassId;
-static int sHdrPassId;
-static int sVolumetricPassId;
-static int sTaaPassId;
-static int sMotionBlurPassId;
-static int sParallaxPassId;
-static int sVrsPassId;
+extern int sDepthDebugPassId;
+extern int sSsaoPassId;
+extern int sSunShadePassId;
+extern int sGodRaysPassId;
+extern int sContactShadowPassId;
+extern int sScreenSpaceShadowPassId;
+extern int sBloomPassId;
+extern int sFxaaPassId;
+extern int sSpecularPassId;
+extern int sPbrPassId;
+extern int sLutPassId;
+extern int sHdrPassId;
+extern int sVolumetricPassId;
+extern int sTaaPassId;
+extern int sMotionBlurPassId;
+extern int sParallaxPassId;
+extern int sVrsPassId;
 
 static float pbClampf(float v, float lo, float hi) {
     return v < lo ? lo : (v > hi ? hi : v);
@@ -929,7 +929,7 @@ static void PostFx_PushRelightAndTonemap() {
 // Depth-debug post pass. Registers a fullscreen pass that samples the scene
 // depth buffer the engine exposes on tile 1 during post-processing, and removes
 // it again when the CVar is cleared. The pass id is tracked so we register once.
-static int sDepthDebugPassId = -1;
+int sDepthDebugPassId = -1;
 
 static void PostFx_UpdateDepthDebug() {
     const bool on = pbMasterEnabled() && CVarGetInteger(POSTFX_DEPTH_DEBUG_CVAR, 0) != 0;
@@ -955,7 +955,7 @@ static void PostFx_UpdateDepthDebug() {
 // Screen-space ambient occlusion post pass. Hands the current tuning to register
 // 19 and registers the pass while the CVar is set. The pass id is tracked so the
 // pass is registered exactly once.
-static int sSsaoPassId = -1;
+int sSsaoPassId = -1;
 
 static void PostFx_PushSsao() {
     const bool on = CVarGetInteger(POSTFX_SSAO_CVAR, 0) != 0;
@@ -995,7 +995,7 @@ static void PostFx_UpdateSsao() {
 // already written for the in-shader fragment light (registers 12..14, 21, 22)
 // and the view-projection matrix the engine publishes (23..27); only its own
 // enable/strength registers are written here.
-static int sSunShadePassId = -1;
+int sSunShadePassId = -1;
 
 // 4x4 matrix inverse (for view-projection matrix)
 static bool Mat4Inverse(const float m[4][4], float out[4][4]) {
@@ -1150,7 +1150,7 @@ static void PostFx_UpdateSunShade() {
 // screen position comes from CameraPatches via port_get_sun_screen_uv) and
 // registers the pass while the CVar is set. Disabled (register 30.x == 0) when
 // the sun is behind the camera or off screen, so the shader passes through.
-static int sGodRaysPassId = -1;
+int sGodRaysPassId = -1;
 
 static void PostFx_PushGodRays() {
     const bool on = CVarGetInteger(POSTFX_GODRAYS_CVAR, 0) != 0;
@@ -1200,7 +1200,7 @@ static void PostFx_UpdateGodRays() {
 // Screen-space contact shadows post pass. Tuning in registers 0/1; the sun
 // direction already lives in register 12 (fragment lighting), which the shader
 // reads. Requires depth, so it runs at the world/UI boundary like SSAO.
-static int sContactShadowPassId = -1;
+int sContactShadowPassId = -1;
 
 static void PostFx_PushContactShadows() {
     const bool on = CVarGetInteger(POSTFX_CONTACT_CVAR, 0) != 0;
@@ -1245,7 +1245,7 @@ static void PostFx_UpdateContactShadows() {
 // Screen-space cast shadows post pass. Registers 36/37; the sun direction comes
 // from register 12. When the sun is not on screen the shader falls back to a ray
 // along the sun direction, so the pass still works (with a fixed direction).
-static int sScreenSpaceShadowPassId = -1;
+int sScreenSpaceShadowPassId = -1;
 
 static void PostFx_PushScreenSpaceShadows() {
     const bool on = CVarGetInteger(POSTFX_SSSHADOW_CVAR, 0) != 0;
@@ -1295,8 +1295,8 @@ static void PostFx_UpdateScreenSpaceShadows() {
 // Bloom and FXAA post passes. Both are colour-only, so unlike the depth passes
 // they do not require the world/UI split and can run as ordinary end-of-frame
 // passes; they compose with each other and with the depth passes in the chain.
-static int sBloomPassId = -1;
-static int sFxaaPassId = -1;
+int sBloomPassId = -1;
+int sFxaaPassId = -1;
 
 static void PostFx_PushBloom() {
     const bool on = CVarGetInteger(POSTFX_BLOOM_CVAR, 0) != 0;
@@ -1356,7 +1356,7 @@ static void PostFx_UpdateFxaa() {
 
 // Universal specular pass. Depth-driven like sun shading, so it needs the
 // depth buffer (tile 1) and therefore participates in the world/UI split.
-static int sSpecularPassId = -1;
+int sSpecularPassId = -1;
 
 static void PostFx_PushSpecular() {
     const bool on = CVarGetInteger(POSTFX_SPECULAR_CVAR, 0) != 0;
@@ -1390,7 +1390,7 @@ static void PostFx_UpdateSpecular() {
 // ============ Modern Shader Suite ============
 
 // PBR
-static int sPbrPassId = -1;
+int sPbrPassId = -1;
 static void PostFx_PushPbr() {
     const bool on = CVarGetInteger(POSTFX_PBR_CVAR, 0) != 0;
     float params[4] = {
@@ -1419,7 +1419,7 @@ static void PostFx_UpdatePbr() {
 }
 
 // LUT Color Grading
-static int sLutPassId = -1;
+int sLutPassId = -1;
 static void PostFx_PushLut() {
     const bool on = CVarGetInteger(POSTFX_LUT_CVAR, 0) != 0;
     float params[4] = {
@@ -1448,7 +1448,7 @@ static void PostFx_UpdateLut() {
 }
 
 // HDR Tonemap
-static int sHdrPassId = -1;
+int sHdrPassId = -1;
 static void PostFx_PushHdr() {
     const bool on = CVarGetInteger(POSTFX_HDR_CVAR, 0) != 0;
     float params[4] = {
@@ -1482,7 +1482,7 @@ static void PostFx_UpdateHdr() {
 }
 
 // Volumetric Light Shafts
-static int sVolumetricPassId = -1;
+int sVolumetricPassId = -1;
 static void PostFx_PushVolumetric() {
     // Uses registers 30/31 from sun (CameraPatches) + 32 for config
     float cfg[4] = {
@@ -1506,7 +1506,7 @@ static void PostFx_UpdateVolumetric() {
 }
 
 // TAA
-static int sTaaPassId = -1;
+int sTaaPassId = -1;
 static void PostFx_PushTaa() {
     float params[4] = {
         CVarGetInteger(POSTFX_TAA_CVAR, 0) != 0 ? 1.0f : 0.0f,
@@ -1532,7 +1532,7 @@ static void PostFx_UpdateTaa() {
 }
 
 // Motion Blur
-static int sMotionBlurPassId = -1;
+int sMotionBlurPassId = -1;
 static void PostFx_PushMotionBlur() {
     float params[4] = {
         CVarGetInteger(POSTFX_MOTIONBLUR_CVAR, 0) != 0 ? 1.0f : 0.0f,
@@ -1565,7 +1565,7 @@ static void PostFx_UpdateMotionBlur() {
 }
 
 // Parallax Occlusion Mapping
-static int sParallaxPassId = -1;
+int sParallaxPassId = -1;
 static void PostFx_PushParallax() {
     float params[4] = {
         CVarGetInteger(POSTFX_PARALLAX_CVAR, 0) != 0 ? 1.0f : 0.0f,
@@ -1593,7 +1593,7 @@ static void PostFx_UpdateParallax() {
 }
 
 // VRS (Variable Rate Shading) - simulated via post-process
-static int sVrsPassId = -1;
+int sVrsPassId = -1;
 static void PostFx_PushVrs() {
     float params[4] = {
         CVarGetInteger(POSTFX_VRS_CVAR, 0) != 0 ? 1.0f : 0.0f,
