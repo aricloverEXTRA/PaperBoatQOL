@@ -1428,9 +1428,33 @@ Fast::Interpreter* GameEngine_GetInterpreter() {
     return wnd->GetInterpreterWeak().lock().get();
 }
 
-// Stores the camera view-projection matrix for depth-based post-processing shaders
-// (volumetric, god-rays, etc.). Called once per frame from CameraPatches.
+// The view-projection setter lives in libultraship (gfx_set_camera_view_projection),
+// which also publishes the inverse rows and camera position to the interpreter.
+// Read it back from the interpreter for post-processing passes that need the
+// plain matrix; only the getter and the world-position setter are owned here.
+extern "C" void gfx_get_camera_view_projection(float out[4][4]) {
+    auto interp = GameEngine_GetInterpreter();
+    if (interp != nullptr) {
+        for (int i = 0; i < 4; ++i) {
+            for (int j = 0; j < 4; ++j) {
+                out[i][j] = interp->mCameraViewProj[i][j];
+            }
+        }
+        return;
+    }
+    for (int i = 0; i < 4; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            out[i][j] = 0.0f;
+        }
+    }
+}
 
+extern "C" void gfx_set_camera_world_position(const float pos[3]) {
+    auto interp = GameEngine_GetInterpreter();
+    if (interp != nullptr) {
+        interp->SetCameraWorldPosition(pos);
+    }
+}
 
 extern "C" float GameEngine_GetAspectRatio(void) {
     auto interp = GameEngine_GetInterpreter();
