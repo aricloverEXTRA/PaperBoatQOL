@@ -311,6 +311,7 @@ enum AreaType {
     AREA_UNKNOWN = 3
 };
 static AreaType sCurrentAreaType = AREA_UNKNOWN;
+static bool sIsIndoor = false;  // Track indoor state internally (no CVar changes)
 static const char* sPrevAreaName = nullptr;
 
 // Preset handling --------------------------------------------------------------
@@ -1027,7 +1028,7 @@ static bool Mat4Inverse(const float m[4][4], float out[4][4]) {
 }
 
 static void PostFx_PushSunShade() {
-    const bool on = CVarGetInteger(POSTFX_SUNSHADE_CVAR, 0) != 0;
+    const bool on = CVarGetInteger(POSTFX_SUNSHADE_CVAR, 0) != 0 && !sIsIndoor;
     float params[4] = {
         on ? 1.0f : 0.0f,
         pbClampf(CVarGetFloat(POSTFX_SUNSHADE_STR_CVAR, 0.7f), 0.0f, 1.0f),
@@ -1129,7 +1130,7 @@ static void PostFx_UpdateSunShade() {
 static int sGodRaysPassId = -1;
 
 static void PostFx_PushGodRays() {
-    const bool on = CVarGetInteger(POSTFX_GODRAYS_CVAR, 0) != 0;
+    const bool on = CVarGetInteger(POSTFX_GODRAYS_CVAR, 0) != 0 && !sIsIndoor;
 
     float sunU = 0.5f;
     float sunV = 0.5f;
@@ -1802,9 +1803,8 @@ static void PostFx_FrameUpdate() {
 
     // Frame is stable now
     if (!sWasStable) {
-        // Stability just returned - re-register passes
         sWasStable = true;
-        SPDLOG_INFO("[PostFx] stability gained, registering passes");
+        SPDLOG_INFO("[PostFx] stability gained");
     }
 
     if (!pbMasterEnabled()) {
@@ -1812,20 +1812,9 @@ static void PostFx_FrameUpdate() {
         return;
     }
 
-    // Auto-detect area type and adjust sun/shadow settings for indoor/underground
+    // Auto-detect area type - track internally, DON'T modify CVars (avoids pass re-reg storm)
     UpdateAreaType();
-    bool autoIndoor = CVarGetInteger(POSTFX_AUTOINDOOR_PRESET_CVAR, 1) != 0;
-    if (autoIndoor && (sCurrentAreaType == AREA_INDOOR || sCurrentAreaType == AREA_UNDERGROUND)) {
-        // Disable sun-dependent effects indoors/underground
-        CVarSetInteger(POSTFX_GODRAYS_CVAR, 0);
-        CVarSetInteger(POSTFX_SUNSHADE_CVAR, 0);
-        CVarSetInteger(POSTFX_SSSHADOW_CVAR, 0);
-        CVarSetInteger(POSTFX_SPECULAR_CVAR, 0);
-        CVarSetInteger(POSTFX_CONTACT_CVAR, 0);
-        // Reduce SSAO for interiors
-        CVarSetFloat(POSTFX_SSAO_STR_CVAR, 0.5f);
-        CVarSetFloat(POSTFX_SSAO_RADIUS_CVAR, 6.0f);
-    }
+    sIsIndoor = (sCurrentAreaType == AREA_INDOOR || sCurrentAreaType == AREA_UNDERGROUND);
 
     // The engine lighting and modern grade simply need per-frame values latched in
     // the shader uniforms.
