@@ -77,6 +77,15 @@ void PaperboatMenu::AddMenuEnhancements() {
             )
         );
 
+    AddWidget(path, "Sequence Break Protection", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("SequenceBreakProtection"))
+        .Options(
+            CheckboxOptions().Tooltip(
+                "If Mario enters Goomba King's Fortress without an active partner, restore Goombario and the hammer "
+                "before the story scene. Off by default."
+            )
+        );
+
     AddWidget(path, "Sprint Button", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCEMENT("SprintButton"))
         .Options(CheckboxOptions().Tooltip("Hold R to move at double speed in the overworld."));
