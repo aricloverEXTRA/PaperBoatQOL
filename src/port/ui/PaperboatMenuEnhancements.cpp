@@ -77,6 +77,15 @@ void PaperboatMenu::AddMenuEnhancements() {
             )
         );
 
+    AddWidget(path, "Sequence Break Protection", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("SequenceBreakProtection"))
+        .Options(
+            CheckboxOptions().Tooltip(
+                "Enables safety measures and progression recovery for supported sequence breaks. More areas may be "
+                "added over time. Off by default."
+            )
+        );
+
     AddWidget(path, "Sprint Button", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCEMENT("SprintButton"))
         .Options(CheckboxOptions().Tooltip("Hold R to move at double speed in the overworld."));

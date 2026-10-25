@@ -1,5 +1,6 @@
 #include "kmr_11.h"
 #include "foliage.h"
+#include <libultraship/bridge/consolevariablebridge.h>
 
 API_CALLABLE(N(SetupFog)) {
     set_world_fog_dist(980, 1000);
@@ -10,6 +11,25 @@ API_CALLABLE(N(SetupFog)) {
 
 API_CALLABLE(N(UseSlowerFadeOnMapChange)) {
     set_map_change_fade_rate(10); // 20 is default
+    return ApiStatus_DONE2;
+}
+
+API_CALLABLE(N(PrepareSequenceBreakRescue)) {
+    s32 storyProgress = evt_get_variable(script, GB_StoryProgress);
+
+    if (CVarGetInteger(CVAR_ENHANCEMENT("SequenceBreakProtection"), 0)
+        && gPlayerData.curPartner == PARTNER_NONE
+        && storyProgress < STORY_CH0_DEFEATED_GOOMBA_KING) {
+        gPlayerData.partners[PARTNER_GOOMBARIO].enabled = true;
+        if (gPlayerData.hammerLevel < GEAR_RANK_NORMAL) {
+            gPlayerData.hammerLevel = GEAR_RANK_NORMAL;
+        }
+        if (storyProgress < STORY_CH0_GOOMBARIO_JOINED_PARTY) {
+            evt_set_variable(script, GB_StoryProgress, STORY_CH0_GOOMBARIO_JOINED_PARTY);
+        }
+        switch_to_partner(PARTNER_GOOMBARIO);
+    }
+
     return ApiStatus_DONE2;
 }
 
@@ -92,6 +112,9 @@ EvtScript N(EVS_Main) = {
     Set(GB_WorldLocation, LOCATION_GOOMBA_ROAD)
     Call(SetSpriteShading, SHADING_NONE)
     Call(N(UseSlowerFadeOnMapChange))
+    IfEq(GF_KMR11_GoombaBrosFledToCastle, false)
+        Call(N(PrepareSequenceBreakRescue))
+    EndIf
     EVT_SETUP_CAMERA_NO_LEAD(0, 0, 0)
     Call(MakeNpcs, false, Ref(N(DefaultNPCs)))
     Call(ClearDefeatedEnemies)
