@@ -81,8 +81,8 @@ void PaperboatMenu::AddMenuEnhancements() {
         .CVar(CVAR_ENHANCEMENT("SequenceBreakProtection"))
         .Options(
             CheckboxOptions().Tooltip(
-                "If Mario enters Goomba King's Fortress without an active partner, restore Goombario and the hammer "
-                "before the story scene. Off by default."
+                "Enables safety measures and progression recovery for supported sequence breaks. More areas may be "
+                "added over time. Off by default."
             )
         );
 

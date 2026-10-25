@@ -21,6 +21,9 @@ API_CALLABLE(N(PrepareSequenceBreakRescue)) {
         && gPlayerData.curPartner == PARTNER_NONE
         && storyProgress < STORY_CH0_DEFEATED_GOOMBA_KING) {
         gPlayerData.partners[PARTNER_GOOMBARIO].enabled = true;
+        if (gPlayerData.hammerLevel < GEAR_RANK_NORMAL) {
+            gPlayerData.hammerLevel = GEAR_RANK_NORMAL;
+        }
         if (storyProgress < STORY_CH0_GOOMBARIO_JOINED_PARTY) {
             evt_set_variable(script, GB_StoryProgress, STORY_CH0_GOOMBARIO_JOINED_PARTY);
         }
