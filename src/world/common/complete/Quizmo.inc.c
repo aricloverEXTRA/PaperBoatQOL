@@ -1197,12 +1197,7 @@ EvtScript N(EVS_Quizmo_NPC_Interact) = {
     UseArray(Ref(N(Quizmo_ScriptArray)))
     Call(N(Quizmo_HasPartners), LVar0)
     IfEq(LVar0, 0)
-#if VERSION_JP || VERSION_IQUE
         Return
-#else
-        Call(SpeakToPlayer, NPC_SELF, ANIM_ChuckQuizmo_Talk, ANIM_ChuckQuizmo_Idle, 0, MSG_PaperBoat_Quizmo_NoPartners)
-        Return
-#endif
     EndIf
     Set(GF_Quizmo_ChangedLocation, true)
     Call(DisablePlayerPhysics, true)

@@ -497,12 +497,7 @@ EvtScript N(SuperBlock_OnHit) = {
     EndIf
     Call(N(SuperBlock_HasPartners), LVar0)
     IfEq(LVar0, 0)
-#if VERSION_JP || VERSION_IQUE
         Return
-#else
-        Call(ShowMessageAtScreenPos, MSG_PaperBoat_SuperBlock_NoPartners, 160, 40)
-        Return
-#endif
     EndIf
     Call(ModifyGlobalOverrideFlags, 1, GLOBAL_OVERRIDES_CANT_PICK_UP_ITEMS)
     Call(N(SuperBlock_SetOverride40))
