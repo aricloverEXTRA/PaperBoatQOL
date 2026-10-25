@@ -4,6 +4,7 @@
 #include "model.h"
 #include "sprite/npc/ChuckQuizmo.h"
 #include "sprite/player.h"
+#include <libultraship/bridge/consolevariablebridge.h>
 
 #ifndef CHUCK_QUIZMO_NPC_ID
     #error CHUCK_QUIZMO_NPC_ID must be defined for Quizmo.inc.c
@@ -46,7 +47,16 @@ API_CALLABLE(N(Quizmo_HasPartners)) {
     PlayerData* playerData = &gPlayerData;
     s32 i;
 
+    if (!CVarGetInteger(CVAR_ENHANCEMENT("PartnerlessCrashProtection"), 1)) {
+        script->varTable[0] = true;
+        return ApiStatus_DONE2;
+    }
+
     script->varTable[0] = false;
+    if (playerData->curPartner == PARTNER_NONE || get_npc_safe(NPC_PARTNER) == nullptr) {
+        return ApiStatus_DONE2;
+    }
+
     for (i = 1; i < ARRAY_COUNT(playerData->partners); i++) {
         if (playerData->partners[i].enabled) {
             script->varTable[0] = true;

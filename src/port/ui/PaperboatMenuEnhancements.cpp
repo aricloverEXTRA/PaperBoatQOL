@@ -77,6 +77,17 @@ void PaperboatMenu::AddMenuEnhancements() {
             )
         );
 
+    AddWidget(path, "Partnerless Crash Protection", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("PartnerlessCrashProtection"))
+        .Options(
+            CheckboxOptions()
+                .DefaultValue(true)
+                .Tooltip(
+                    "Skips partner-dependent actions when Mario has no active partner to prevent crashes in "
+                    "supported areas. Enabled by default."
+                )
+        );
+
     AddWidget(path, "Sprint Button", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCEMENT("SprintButton"))
         .Options(CheckboxOptions().Tooltip("Hold R to move at double speed in the overworld."));
