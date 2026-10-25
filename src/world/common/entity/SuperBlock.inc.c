@@ -124,6 +124,10 @@ API_CALLABLE(N(SuperBlock_HasPartners)) {
     s32 i;
 
     script->varTable[0] = false;
+    if (playerData->curPartner == PARTNER_NONE || get_npc_safe(NPC_PARTNER) == nullptr) {
+        return ApiStatus_DONE2;
+    }
+
     for (i = 1; i < ARRAY_COUNT(playerData->partners); i++) {
         if (playerData->partners[i].enabled) {
             script->varTable[0] = true;

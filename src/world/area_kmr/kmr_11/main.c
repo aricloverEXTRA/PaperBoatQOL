@@ -20,11 +20,11 @@ API_CALLABLE(N(PrepareSequenceBreakRescue)) {
     if (CVarGetInteger(CVAR_ENHANCEMENT("SequenceBreakProtection"), 0)
         && gPlayerData.curPartner == PARTNER_NONE
         && storyProgress < STORY_CH0_DEFEATED_GOOMBA_KING) {
-        gPlayerData.curPartner = PARTNER_GOOMBARIO;
         gPlayerData.partners[PARTNER_GOOMBARIO].enabled = true;
         if (storyProgress < STORY_CH0_GOOMBARIO_JOINED_PARTY) {
             evt_set_variable(script, GB_StoryProgress, STORY_CH0_GOOMBARIO_JOINED_PARTY);
         }
+        switch_to_partner(PARTNER_GOOMBARIO);
     }
 
     return ApiStatus_DONE2;
