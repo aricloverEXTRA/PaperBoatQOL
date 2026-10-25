@@ -119,6 +119,21 @@ API_CALLABLE(N(SuperBlock_CountEligiblePartners)) {
     return ApiStatus_DONE2;
 }
 
+API_CALLABLE(N(SuperBlock_HasPartners)) {
+    PlayerData* playerData = &gPlayerData;
+    s32 i;
+
+    script->varTable[0] = false;
+    for (i = 1; i < ARRAY_COUNT(playerData->partners); i++) {
+        if (playerData->partners[i].enabled) {
+            script->varTable[0] = true;
+            break;
+        }
+    }
+
+    return ApiStatus_DONE2;
+}
+
 API_CALLABLE(N(SuperBlock_ShowSelectPartnerMenu)) {
     PlayerData* playerData = &gPlayerData;
     PopupMenu* popupMenu;
@@ -479,6 +494,15 @@ EvtScript N(SuperBlock_OnHit) = {
     Call(N(SuperBlock_WaitForPlayerToLand))
     IfEq(LVar0, 1)
         Return
+    EndIf
+    Call(N(SuperBlock_HasPartners), LVar0)
+    IfEq(LVar0, 0)
+#if VERSION_JP || VERSION_IQUE
+        Return
+#else
+        Call(ShowMessageAtScreenPos, MSG_PaperBoat_SuperBlock_NoPartners, 160, 40)
+        Return
+#endif
     EndIf
     Call(ModifyGlobalOverrideFlags, 1, GLOBAL_OVERRIDES_CANT_PICK_UP_ITEMS)
     Call(N(SuperBlock_SetOverride40))

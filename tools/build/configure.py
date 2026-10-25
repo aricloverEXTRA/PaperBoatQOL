@@ -929,6 +929,12 @@ class Configure:
                     msg_bins.append(bin_path)
                     build(bin_path, [msg_path], "msg")
 
+                if self.version in ("us", "pal"):
+                    custom_msg_path = Path("assets/mod/messages/partnerless.msg")
+                    custom_msg_bin = entry.object_path.with_suffix("") / f"{len(entry.src_paths):02X}.bin"
+                    build(custom_msg_bin, [custom_msg_path], "msg")
+                    msg_bins.append(custom_msg_bin)
+
                 build(
                     [
                         entry.object_path.with_suffix(".bin"),
