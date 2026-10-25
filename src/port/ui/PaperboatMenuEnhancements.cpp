@@ -77,14 +77,14 @@ void PaperboatMenu::AddMenuEnhancements() {
             )
         );
 
-    AddWidget(path, "Partnerless Crash Protection", WIDGET_CVAR_CHECKBOX)
+    AddWidget(path, "Prevent Partnerless Crashes", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCEMENT("PartnerlessCrashProtection"))
         .Options(
             CheckboxOptions()
                 .DefaultValue(true)
                 .Tooltip(
-                    "Skips partner-dependent actions when Mario has no active partner to prevent crashes in "
-                    "supported areas. Enabled by default."
+                    "Prevents crashes caused by partner-dependent actions when Mario has no active partner. "
+                    "Enabled by default; disable to restore the original behavior."
                 )
         );
 

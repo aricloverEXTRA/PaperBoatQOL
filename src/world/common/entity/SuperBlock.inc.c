@@ -2,7 +2,7 @@
 #include "npc.h"
 #include "effects.h"
 #include "hud_element.h"
-#include <libultraship/bridge/consolevariablebridge.h>
+#include "port/hooks/Events.h"
 
 // ----------------------------------------------------------------
 // Requirements
@@ -123,8 +123,10 @@ API_CALLABLE(N(SuperBlock_CountEligiblePartners)) {
 API_CALLABLE(N(SuperBlock_HasPartners)) {
     PlayerData* playerData = &gPlayerData;
     s32 i;
+    bool partnerlessCrashProtectionEnabled = true;
 
-    if (!CVarGetInteger(CVAR_ENHANCEMENT("PartnerlessCrashProtection"), 1)) {
+    CALL_EVENT(OnPartnerlessCrashProtectionCheck, &partnerlessCrashProtectionEnabled);
+    if (!partnerlessCrashProtectionEnabled) {
         script->varTable[0] = true;
         return ApiStatus_DONE2;
     }

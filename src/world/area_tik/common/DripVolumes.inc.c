@@ -1,7 +1,7 @@
 #include "common.h"
 #include "npc.h"
 #include "model.h"
-#include <libultraship/bridge/consolevariablebridge.h>
+#include "port/hooks/Events.h"
 
 #ifndef DROPLET_MODEL
 #error  DROPLET_MODEL must be defined for DripVolumes
@@ -12,9 +12,9 @@ API_CALLABLE(N(CheckDripCollisionWithNPC)) {
     PlayerStatus* playerStatus = &gPlayerStatus;
     Bytecode* args = script->ptrReadPos;
     s32 treeIndex = evt_get_variable(script, *args++);
-    Npc* partner = CVarGetInteger(CVAR_ENHANCEMENT("PartnerlessCrashProtection"), 1)
-                       ? get_npc_safe(NPC_PARTNER)
-                       : get_npc_unsafe(NPC_PARTNER);
+    bool partnerlessCrashProtectionEnabled = true;
+    CALL_EVENT(OnPartnerlessCrashProtectionCheck, &partnerlessCrashProtectionEnabled);
+    Npc* partner = partnerlessCrashProtectionEnabled ? get_npc_safe(NPC_PARTNER) : get_npc_unsafe(NPC_PARTNER);
     Model* model = get_model_from_list_index(get_model_list_index_from_tree_index(treeIndex));
     f32 xDiff, zDiff, yVal;
     f32 sqrtTemp;

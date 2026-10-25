@@ -1,7 +1,7 @@
 #include "common.h"
 #include "npc.h"
 #include "world/partners.h"
-#include <libultraship/bridge/consolevariablebridge.h>
+#include "port/hooks/Events.h"
 
 extern s32 wExtraPartnerID;
 extern s32 wExtraPartnerNpcID;
@@ -750,8 +750,9 @@ API_CALLABLE(GetPartnerPos) {
 API_CALLABLE(DisablePartnerAI) {
     Bytecode* ptrReadPos = script->ptrReadPos;
 
-    if (gPlayerData.curPartner == PARTNER_NONE
-        && CVarGetInteger(CVAR_ENHANCEMENT("PartnerlessCrashProtection"), 1)) {
+    bool partnerlessCrashProtectionEnabled = true;
+    CALL_EVENT(OnPartnerlessCrashProtectionCheck, &partnerlessCrashProtectionEnabled);
+    if (gPlayerData.curPartner == PARTNER_NONE && partnerlessCrashProtectionEnabled) {
         return ApiStatus_DONE2;
     }
 
@@ -957,8 +958,9 @@ API_CALLABLE(GetCurrentPartnerID) {
 }
 
 API_CALLABLE(IsPartnerlessCrashProtectionEnabled) {
-    evt_set_variable(script, *script->ptrReadPos,
-                     CVarGetInteger(CVAR_ENHANCEMENT("PartnerlessCrashProtection"), 1));
+    bool enabled = true;
+    CALL_EVENT(OnPartnerlessCrashProtectionCheck, &enabled);
+    evt_set_variable(script, *script->ptrReadPos, enabled);
     return ApiStatus_DONE2;
 }
 

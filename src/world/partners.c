@@ -5,8 +5,7 @@
 #include "ld_addrs.h"
 #include "npc.h"
 #include "hud_element.h"
-#include "port/ui/cvar_prefixes.h"
-#include <libultraship/bridge/consolevariablebridge.h>
+#include "port/hooks/Events.h"
 
 #include "partner/goombario.h"
 #include "sprite/npc/WorldGoombario.h"
@@ -2397,7 +2396,9 @@ void func_800EF314(void) {
 }
 
 void enable_partner_ai(void) {
-    if (CVarGetInteger(CVAR_ENHANCEMENT("PartnerlessCrashProtection"), 1)) {
+    bool partnerlessCrashProtectionEnabled = true;
+    CALL_EVENT(OnPartnerlessCrashProtectionCheck, &partnerlessCrashProtectionEnabled);
+    if (partnerlessCrashProtectionEnabled) {
         Npc* partnerNpc = get_npc_safe(NPC_PARTNER);
 
         if (gPlayerData.curPartner == PARTNER_NONE || wPartner == nullptr || wPartnerNpc == nullptr
