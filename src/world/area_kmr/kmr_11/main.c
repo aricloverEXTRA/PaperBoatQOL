@@ -15,13 +15,15 @@ API_CALLABLE(N(UseSlowerFadeOnMapChange)) {
 }
 
 API_CALLABLE(N(PrepareSequenceBreakRescue)) {
+    s32 storyProgress = evt_get_variable(script, GB_StoryProgress);
+
     if (CVarGetInteger(CVAR_ENHANCEMENT("SequenceBreakProtection"), 0)
         && gPlayerData.curPartner == PARTNER_NONE
-        && gGameStatusPtr->storyProgress < STORY_CH0_DEFEATED_GOOMBA_KING) {
+        && storyProgress < STORY_CH0_DEFEATED_GOOMBA_KING) {
         gPlayerData.curPartner = PARTNER_GOOMBARIO;
         gPlayerData.partners[PARTNER_GOOMBARIO].enabled = true;
-        if (gGameStatusPtr->storyProgress < STORY_CH0_GOOMBARIO_JOINED_PARTY) {
-            gGameStatusPtr->storyProgress = STORY_CH0_GOOMBARIO_JOINED_PARTY;
+        if (storyProgress < STORY_CH0_GOOMBARIO_JOINED_PARTY) {
+            evt_set_variable(script, GB_StoryProgress, STORY_CH0_GOOMBARIO_JOINED_PARTY);
         }
     }
 
