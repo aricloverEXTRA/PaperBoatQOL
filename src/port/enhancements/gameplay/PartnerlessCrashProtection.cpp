@@ -5,7 +5,7 @@
 void RegisterPartnerlessCrashProtection_Init() {
     REGISTER_LISTENER(OnPartnerlessCrashProtectionCheck, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnPartnerlessCrashProtectionCheck* ev = (OnPartnerlessCrashProtectionCheck*) event;
-        *ev->enabled = CVarGetInteger(CVAR_ENHANCEMENT("PartnerlessCrashProtection"), 1) != 0;
+        *ev->enabled = CVarGetInteger(CVAR_ENHANCEMENT("PartnerlessCrashProtection"), 0) != 0;
     });
 }
 
