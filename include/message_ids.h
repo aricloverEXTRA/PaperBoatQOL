@@ -8013,4 +8013,7 @@
 #define MSG_Credits_0086 MESSAGE_ID(0x2E, 0x086)
 #define MSG_Credits_0087 MESSAGE_ID(0x2E, 0x087)
 
+#define MSG_PaperBoat_Quizmo_NoPartners MESSAGE_ID(0x2F, 0x000)
+#define MSG_PaperBoat_SuperBlock_NoPartners MESSAGE_ID(0x2F, 0x001)
+
 #endif
