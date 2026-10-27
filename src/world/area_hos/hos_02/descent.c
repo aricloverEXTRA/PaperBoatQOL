@@ -5,31 +5,21 @@ EvtScript N(EVS_DescendStarBeam) = {
     Call(N(func_80240F68_A17188), MV_StarBeamEffect)
     Call(SetPlayerSpeed, Float(3.0))
     Call(PlayerMoveTo, -1105, 230, 0)
-    Set(LVarA, false)
-    Call(GetCurrentPartnerID, LVarB)
-    IfEq(LVarB, PARTNER_NONE)
-        Call(IsPartnerlessCrashProtectionEnabled, LVarC)
-        IfEq(LVarC, true)
-            Set(LVarA, true)
-        EndIf
-    EndIf
-    IfEq(LVarA, false)
-        Call(SetNpcFlagBits, NPC_PARTNER, NPC_FLAG_GRAVITY, false)
-        Call(SetNpcFlagBits, NPC_PARTNER, NPC_FLAG_IGNORE_WORLD_COLLISION, true)
-        Call(SetNpcJumpscale, NPC_PARTNER, Float(0.5))
-        Call(NpcJump0, NPC_PARTNER, -1105, -171, 220, 5)
-        Thread
-            Set(LVar0, 0)
-            Set(LVar1, 90)
-            Loop(0)
-                Add(LVar0, 2)
-                Add(LVar1, LVar0)
-                Call(InterpPlayerYaw, LVar1, 0)
-                Call(SetNpcRotation, NPC_PARTNER, 0, LVar1, 0)
-                Wait(1)
-            EndLoop
-        EndThread
-    EndIf
+    Call(SetNpcFlagBits, NPC_PARTNER, NPC_FLAG_GRAVITY, false)
+    Call(SetNpcFlagBits, NPC_PARTNER, NPC_FLAG_IGNORE_WORLD_COLLISION, true)
+    Call(SetNpcJumpscale, NPC_PARTNER, Float(0.5))
+    Call(NpcJump0, NPC_PARTNER, -1105, -171, 220, 5)
+    Thread
+        Set(LVar0, 0)
+        Set(LVar1, 90)
+        Loop(0)
+            Add(LVar0, 2)
+            Add(LVar1, LVar0)
+            Call(InterpPlayerYaw, LVar1, 0)
+            Call(SetNpcRotation, NPC_PARTNER, 0, LVar1, 0)
+            Wait(1)
+        EndLoop
+    EndThread
     Wait(60)
     Call(GetPlayerPos, LVar2, LVar3, LVar4)
     Set(LVar5, LVar4)
@@ -38,9 +28,7 @@ EvtScript N(EVS_DescendStarBeam) = {
     Loop(0)
         Call(UpdateLerp)
         Call(SetPlayerPos, LVar2, LVar0, LVar4)
-        IfEq(LVarA, false)
-            Call(SetNpcPos, NPC_PARTNER, LVar2, LVar0, LVar5)
-        EndIf
+        Call(SetNpcPos, NPC_PARTNER, LVar2, LVar0, LVar5)
         Wait(1)
         IfEq(LVar1, 0)
             BreakLoop

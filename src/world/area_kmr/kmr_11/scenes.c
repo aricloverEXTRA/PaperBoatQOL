@@ -175,6 +175,7 @@ EvtScript N(EVS_FortressCollapse_PlayFX) = {
 };
 
 EvtScript N(EVS_FortressCollapse_PlayerReactions) = {
+    Call(DisablePartnerAI, 0)
     Wait(37)
     Call(SetPlayerAnimation, ANIM_MarioW2_FlailArms)
     Wait(60)
@@ -185,33 +186,14 @@ EvtScript N(EVS_FortressCollapse_PlayerReactions) = {
     Wait(30)
     Call(SetPlayerAnimation, ANIM_Mario1_Run)
     Call(SetPlayerSpeed, Float(6.0))
-    Call(IsPartnerlessCrashProtectionEnabled, LVar1)
-    Call(GetCurrentPartnerID, LVar0)
-    IfEq(LVar0, PARTNER_NONE)
-        IfEq(LVar1, false)
-            Set(LVar0, PARTNER_GOOMBARIO)
-        EndIf
-    EndIf
-    IfNe(LVar0, PARTNER_NONE)
-        Call(DisablePartnerAI, 0)
-        Call(SetNpcSpeed, NPC_PARTNER, Float(6.0))
-        Thread
-            Call(NpcMoveTo, NPC_PARTNER, -573, 162, 0)
-        EndThread
-    EndIf
+    Call(SetNpcSpeed, NPC_PARTNER, Float(6.0))
+    Thread
+        Call(NpcMoveTo, NPC_PARTNER, -573, 162, 0)
+    EndThread
     Call(PlayerMoveTo, -547, 147, 0)
     Call(InterpPlayerYaw, 90, 0)
     Call(SetPlayerAnimation, ANIM_Mario1_Idle)
-    Call(IsPartnerlessCrashProtectionEnabled, LVar1)
-    Call(GetCurrentPartnerID, LVar0)
-    IfEq(LVar0, PARTNER_NONE)
-        IfEq(LVar1, false)
-            Set(LVar0, PARTNER_GOOMBARIO)
-        EndIf
-    EndIf
-    IfNe(LVar0, PARTNER_NONE)
-        Call(EnablePartnerAI)
-    EndIf
+    Call(EnablePartnerAI)
     Wait(100)
     Return
     End
@@ -239,17 +221,8 @@ EvtScript N(EVS_Scene_SelfDestruct) = {
     Wait(10 * DT)
     Call(SetPlayerPos, -497, 0, 130)
     Call(InterpPlayerYaw, 270, 0)
-    Call(IsPartnerlessCrashProtectionEnabled, LVar1)
-    Call(GetCurrentPartnerID, LVar0)
-    IfEq(LVar0, PARTNER_NONE)
-        IfEq(LVar1, false)
-            Set(LVar0, PARTNER_GOOMBARIO)
-        EndIf
-    EndIf
-    IfNe(LVar0, PARTNER_NONE)
-        Call(SetNpcPos, NPC_PARTNER, -534, 0, 127)
-        Call(InterpNpcYaw, NPC_PARTNER, 90, 0)
-    EndIf
+    Call(SetNpcPos, NPC_PARTNER, -534, 0, 127)
+    Call(InterpNpcYaw, NPC_PARTNER, 90, 0)
     Call(SpeakToPlayer, NPC_GoombaKing, ANIM_GoombaKing_Idle, ANIM_GoombaKing_Idle, 0, MSG_CH0_00D8)
     Set(GB_StoryProgress, STORY_CH0_HIT_GATEHOUSE_SWITCH)
     Call(EnableModel, MODEL_eye_mask, true)
@@ -308,37 +281,20 @@ EvtScript N(EVS_Scene_SelfDestruct) = {
     Call(PanToTarget, CAM_DEFAULT, 0, false)
     Call(WaitForCam, CAM_DEFAULT, Float(1.0))
     Exec(N(EVS_SetupMusic))
-    Call(IsPartnerlessCrashProtectionEnabled, LVar1)
-    Call(GetCurrentPartnerID, LVar0)
-    IfEq(LVar0, PARTNER_NONE)
-        IfEq(LVar1, false)
-            Set(LVar0, PARTNER_GOOMBARIO)
-        EndIf
-    EndIf
-    IfNe(LVar0, PARTNER_NONE)
-        Call(DisablePartnerAI, 0)
-        Call(SetNpcJumpscale, NPC_PARTNER, Float(0.8))
-        Loop(2)
-            Call(GetNpcPos, NPC_PARTNER, LVar1, LVar2, LVar3)
-            Call(NpcJump0, NPC_PARTNER, LVar1, LVar2, LVar3, 10)
-            Wait(3)
-        EndLoop
-        Call(SpeakToPlayer, NPC_PARTNER, ANIM_WorldGoombario_Talk, ANIM_WorldGoombario_Idle, 0, MSG_CH0_00DA)
-        Call(EnablePartnerAI)
-    EndIf
+    Call(DisablePartnerAI, 0)
+    Call(SetNpcJumpscale, NPC_PARTNER, Float(0.8))
+    Loop(2)
+        Call(GetNpcPos, NPC_PARTNER, LVar0, LVar1, LVar2)
+        Call(NpcJump0, NPC_PARTNER, LVar0, LVar1, LVar2, 10)
+        Wait(3)
+    EndLoop
+    Call(DisablePartnerAI, 0)
+    Call(SpeakToPlayer, NPC_PARTNER, ANIM_WorldGoombario_Talk, ANIM_WorldGoombario_Idle, 0, MSG_CH0_00DA)
+    Call(EnablePartnerAI)
     Call(ModifyColliderFlags, MODIFY_COLLIDER_FLAGS_SET_BITS, COLLIDER_tt, COLLIDER_FLAGS_UPPER_MASK)
     Set(GB_StoryProgress, STORY_CH0_OPENED_BRIDGE_TO_TOAD_TOWN)
     Call(DisablePlayerInput, false)
-    Call(IsPartnerlessCrashProtectionEnabled, LVar1)
-    Call(GetCurrentPartnerID, LVar0)
-    IfEq(LVar0, PARTNER_NONE)
-        IfEq(LVar1, false)
-            Set(LVar0, PARTNER_GOOMBARIO)
-        EndIf
-    EndIf
-    IfNe(LVar0, PARTNER_NONE)
-        Call(EnablePartnerAI)
-    EndIf
+    Call(EnablePartnerAI)
     Unbind
     Return
     End
@@ -350,13 +306,6 @@ EvtScript N(EVS_BouncePlayerAndPartner) = {
         Call(GetPlayerPos, LVar0, LVar1, LVar2)
         Call(PlayerJump1, LVar0, LVar1, LVar2, LVar3)
     EndThread
-    Call(GetCurrentPartnerID, LVar0)
-    IfEq(LVar0, PARTNER_NONE)
-        Call(IsPartnerlessCrashProtectionEnabled, LVar1)
-        IfEq(LVar1, true)
-            Return
-        EndIf
-    EndIf
     Call(SetNpcJumpscale, NPC_PARTNER, Float(2.0))
     Call(GetNpcPos, NPC_PARTNER, LVar0, LVar1, LVar2)
     Call(NpcJump1, NPC_PARTNER, LVar0, LVar1, LVar2, LVar3)
@@ -416,19 +365,10 @@ EvtScript N(EVS_Scene_MeetGoombaKing_Impl) = {
     Call(SetPlayerSpeed, Float(3.0 / DT))
     Call(PlayerMoveTo, -575, -60, 0)
     Wait(30 * DT)
-    Call(IsPartnerlessCrashProtectionEnabled, LVar1)
-    Call(GetCurrentPartnerID, LVar0)
-    IfEq(LVar0, PARTNER_NONE)
-        IfEq(LVar1, false)
-            Set(LVar0, PARTNER_GOOMBARIO)
-        EndIf
-    EndIf
-    IfNe(LVar0, PARTNER_NONE)
-        Call(DisablePartnerAI, 0)
-        Wait(10 * DT)
-        Call(PlayerFaceNpc, NPC_PARTNER, false)
-        Call(SpeakToPlayer, NPC_PARTNER, ANIM_WorldGoombario_Talk, ANIM_WorldGoombario_Idle, 0, MSG_CH0_00C5)
-    EndIf
+    Call(DisablePartnerAI, 0)
+    Wait(10 * DT)
+    Call(PlayerFaceNpc, NPC_PARTNER, false)
+    Call(SpeakToPlayer, NPC_PARTNER, ANIM_WorldGoombario_Talk, ANIM_WorldGoombario_Idle, 0, MSG_CH0_00C5)
     Call(InterpPlayerYaw, 90, 0)
     Wait(40 * DT)
     Call(PlaySoundAt, SOUND_HEAVY_NPC_STEP_A, SOUND_SPACE_DEFAULT, -330, 0, -130)
@@ -499,19 +439,10 @@ EvtScript N(EVS_Scene_MeetGoombaKing_Impl) = {
     ExecWait(N(EVS_FocusCam_BesidePlayer))
     Call(SetCamSpeed, CAM_DEFAULT, Float(90.0))
     Call(PanToTarget, CAM_DEFAULT, 0, true)
-    Call(IsPartnerlessCrashProtectionEnabled, LVar1)
-    Call(GetCurrentPartnerID, LVar0)
-    IfEq(LVar0, PARTNER_NONE)
-        IfEq(LVar1, false)
-            Set(LVar0, PARTNER_GOOMBARIO)
-        EndIf
-    EndIf
-    IfNe(LVar0, PARTNER_NONE)
-        Call(DisablePartnerAI, 0)
-        Wait(5 * DT)
-        Call(SpeakToPlayer, NPC_PARTNER, ANIM_WorldGoombario_Talk, ANIM_WorldGoombario_Idle, 0, MSG_CH0_00C9)
-        Call(EnablePartnerAI)
-    EndIf
+    Call(DisablePartnerAI, 0)
+    Wait(5 * DT)
+    Call(SpeakToPlayer, NPC_PARTNER, ANIM_WorldGoombario_Talk, ANIM_WorldGoombario_Idle, 0, MSG_CH0_00C9)
+    Call(DisablePartnerAI, 0)
     ExecWait(N(EVS_FocusCam_Battlement))
     Call(SetCamSpeed, CAM_DEFAULT, Float(90.0))
     Call(PanToTarget, CAM_DEFAULT, 0, true)

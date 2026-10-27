@@ -40,18 +40,8 @@ EvtScript N(EVS_BindExitTriggers) = {
 EvtScript N(EVS_EnterStarBeam) = {
     Call(DisablePlayerInput, true)
     Call(DisablePlayerPhysics, true)
-    Set(LVarA, false)
-    Call(GetCurrentPartnerID, LVarB)
-    IfEq(LVarB, PARTNER_NONE)
-        Call(IsPartnerlessCrashProtectionEnabled, LVarC)
-        IfEq(LVarC, true)
-            Set(LVarA, true)
-        EndIf
-    EndIf
-    IfEq(LVarA, false)
-        Call(DisablePartnerAI, 0)
-        Call(SetNpcFlagBits, NPC_PARTNER, NPC_FLAG_GRAVITY, false)
-    EndIf
+    Call(DisablePartnerAI, 0)
+    Call(SetNpcFlagBits, NPC_PARTNER, NPC_FLAG_GRAVITY, false)
     Call(UseSettingsFrom, CAM_DEFAULT, -1105, -171, 225)
     Call(SetPanTarget, CAM_DEFAULT, -1105, -171, 225)
     Call(SetCamDistance, CAM_DEFAULT, Float(300.0))
@@ -63,14 +53,10 @@ EvtScript N(EVS_EnterStarBeam) = {
     Loop(0)
         Call(UpdateLerp)
         Call(SetPlayerPos, -1105, LVar0, 225)
-        IfEq(LVarA, false)
-            Call(SetNpcPos, NPC_PARTNER, -1105, LVar0, 215)
-        EndIf
+        Call(SetNpcPos, NPC_PARTNER, -1105, LVar0, 215)
         Add(LVar2, 40)
         Call(InterpPlayerYaw, LVar2, 0)
-        IfEq(LVarA, false)
-            Call(SetNpcRotation, NPC_PARTNER, 0, LVar2, 0)
-        EndIf
+        Call(SetNpcRotation, NPC_PARTNER, 0, LVar2, 0)
         Wait(1)
         IfEq(LVar1, 0)
             BreakLoop
@@ -83,9 +69,7 @@ EvtScript N(EVS_EnterStarBeam) = {
     Label(10)
         IfLt(LVar2, 450)
             Call(InterpPlayerYaw, LVar2, 0)
-            IfEq(LVarA, false)
-                Call(SetNpcRotation, NPC_PARTNER, 0, LVar2, 0)
-            EndIf
+            Call(SetNpcRotation, NPC_PARTNER, 0, LVar2, 0)
             Add(LVar2, LVar0)
             Wait(1)
             Goto(10)
@@ -95,14 +79,10 @@ EvtScript N(EVS_EnterStarBeam) = {
         IfGt(LVar0, 20)
             Goto(10)
         EndIf
-    IfEq(LVarA, false)
-        Call(SetNpcRotation, NPC_PARTNER, 0, 0, 0)
-    EndIf
+    Call(SetNpcRotation, NPC_PARTNER, 0, 0, 0)
     Call(N(func_80240EF4_A17114), MV_StarBeamEffect)
-    IfEq(LVarA, false)
-        Call(SetNpcFlagBits, NPC_PARTNER, NPC_FLAG_GRAVITY, true)
-        Call(EnablePartnerAI)
-    EndIf
+    Call(SetNpcFlagBits, NPC_PARTNER, NPC_FLAG_GRAVITY, true)
+    Call(EnablePartnerAI)
     Call(DisablePlayerPhysics, false)
     Call(PanToTarget, CAM_DEFAULT, 0, false)
     Call(SetMusic, 0, SONG_STAR_WAY_OPENS, BGM_VARIATION_3, VOL_LEVEL_FULL)

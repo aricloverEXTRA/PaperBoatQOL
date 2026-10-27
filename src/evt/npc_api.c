@@ -957,13 +957,6 @@ API_CALLABLE(GetCurrentPartnerID) {
     return ApiStatus_DONE2;
 }
 
-API_CALLABLE(IsPartnerlessCrashProtectionEnabled) {
-    bool enabled = true;
-    CALL_EVENT(OnPartnerlessCrashProtectionCheck, &enabled);
-    evt_set_variable(script, *script->ptrReadPos, enabled);
-    return ApiStatus_DONE2;
-}
-
 API_CALLABLE(PartnerCanUseAbility) {
     Bytecode outVar = *script->ptrReadPos;
 
