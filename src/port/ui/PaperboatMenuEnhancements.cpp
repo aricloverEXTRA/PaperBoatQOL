@@ -159,7 +159,8 @@ void PaperboatMenu::AddMenuEnhancements() {
     AddWidget(path, "DX11 Stylized Fill Lighting", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCEMENT("Graphics.StylizedLighting"))
         .Options(CheckboxOptions().DefaultValue(false).Tooltip(
-            "Adds adjustable ambient and directional fill on top of Paper Mario 64's scene lighting. "
+            "Adds adjustable ambient and directional fill to lit surfaces and legacy vertex-colored geometry. "
+            "Legacy geometry uses per-triangle flat normals as an approximation. "
             "Only applies on DirectX 11; this does not add shadows, bloom, or ray tracing."
         ));
 
