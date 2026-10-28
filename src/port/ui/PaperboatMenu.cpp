@@ -4,7 +4,6 @@
 #include "ShipInit.hpp"
 #include "port/ui/cvar_prefixes.h"
 
-#include <fast/interpreter.h>
 #include <ship/utils/StringHelper.h>
 #include <ship/window/gui/GuiElement.h>
 #include <ship/window/gui/GuiMenuBar.h>
@@ -148,14 +147,6 @@ void PaperboatMenu::InitElement() {
            },
             "Vertical Resolution Toggle is Off" } },
     };
-}
-
-void PaperboatMenu::UpdateElement() {
-    Ship::Menu::UpdateElement();
-    const float strength = CVarGetInteger(CVAR_ENHANCEMENT("Graphics.StylizedLighting"), 0)
-            ? CVarGetFloat(CVAR_ENHANCEMENT("Graphics.StylizedLightingStrength"), 0.5f)
-            : 0.0f;
-    Fast::gfx_set_stylized_lighting_strength(strength);
 }
 
 void PaperboatMenu::Draw() {

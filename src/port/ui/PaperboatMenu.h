@@ -14,7 +14,6 @@ class PaperboatMenu : public Ship::Menu {
 
     void InitElement() override;
     void DrawElement() override;
-    void UpdateElement() override;
     void Draw() override;
 
     void AddSidebarEntry(std::string sectionName, std::string sidbarName, uint32_t columnCount);

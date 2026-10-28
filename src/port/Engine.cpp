@@ -1085,6 +1085,11 @@ void GameEngine::RunCommands(Gfx* Commands, const std::vector<std::unordered_map
     // Process window events for resize, mouse, keyboard events
     wnd->HandleEvents();
 
+    const float stylizedLightingStrength = CVarGetInteger(CVAR_ENHANCEMENT("Graphics.StylizedLighting"), 0)
+                                              ? CVarGetFloat(CVAR_ENHANCEMENT("Graphics.StylizedLightingStrength"), 0.5f)
+                                              : 0.0f;
+    Fast::gfx_set_stylized_lighting_strength(stylizedLightingStrength);
+
     interpreter->mInterpolationIndex = 0;
 
     for (size_t i = 0; i < mtx_replacements.size(); i++) {

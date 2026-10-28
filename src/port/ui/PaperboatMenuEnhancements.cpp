@@ -156,10 +156,10 @@ void PaperboatMenu::AddMenuEnhancements() {
         .CVar(CVAR_ENHANCEMENT("Graphics.DisableMipmaps"))
         .Options(CheckboxOptions().Tooltip("Just like emulator!"));
 
-    AddWidget(path, "DX11 Stylized Lighting", WIDGET_CVAR_CHECKBOX)
+    AddWidget(path, "DX11 Stylized Fill Lighting", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCEMENT("Graphics.StylizedLighting"))
         .Options(CheckboxOptions().DefaultValue(false).Tooltip(
-            "Adds subtle sky-colored diffuse light and ambient fill to surfaces using the game's vertex lighting. "
+            "Experimental sky-colored fill for lit surfaces. This does not add shadows, bloom, or ray tracing. "
             "Only applies on DirectX 11; other backends and unlit surfaces are unchanged."
         ));
 
