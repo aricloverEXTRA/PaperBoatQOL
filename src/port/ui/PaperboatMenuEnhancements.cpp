@@ -156,6 +156,24 @@ void PaperboatMenu::AddMenuEnhancements() {
         .CVar(CVAR_ENHANCEMENT("Graphics.DisableMipmaps"))
         .Options(CheckboxOptions().Tooltip("Just like emulator!"));
 
+    AddWidget(path, "DX11 Stylized Lighting", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Graphics.StylizedLighting"))
+        .Options(CheckboxOptions().DefaultValue(false).Tooltip(
+            "Adds subtle sky-colored diffuse light and ambient fill to surfaces using the game's vertex lighting. "
+            "Only applies on DirectX 11; other backends and unlit surfaces are unchanged."
+        ));
+
+    AddWidget(path, "Stylized Lighting Strength", WIDGET_CVAR_SLIDER_FLOAT)
+        .CVar(CVAR_ENHANCEMENT("Graphics.StylizedLightingStrength"))
+        .Options(
+            FloatSliderOptions()
+                .DefaultValue(0.5f)
+                .Min(0.0f)
+                .Max(1.0f)
+                .ShowButtons(true)
+                .Tooltip("Scales the added ambient fill and upward diffuse light.")
+        );
+
     // Enhancements > Status Bar
     path = { "Enhancements", "Status Bar", SECTION_COLUMN_1 };
     AddSidebarEntry("Enhancements", path.sidebarName, 2);
