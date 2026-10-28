@@ -159,20 +159,62 @@ void PaperboatMenu::AddMenuEnhancements() {
     AddWidget(path, "DX11 Stylized Fill Lighting", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCEMENT("Graphics.StylizedLighting"))
         .Options(CheckboxOptions().DefaultValue(false).Tooltip(
-            "Experimental sky-colored fill for lit surfaces. This does not add shadows, bloom, or ray tracing. "
-            "Only applies on DirectX 11; other backends and unlit surfaces are unchanged."
+            "Adds adjustable ambient and directional fill on top of Paper Mario 64's scene lighting. "
+            "Only applies on DirectX 11; this does not add shadows, bloom, or ray tracing."
         ));
 
     AddWidget(path, "Stylized Lighting Strength", WIDGET_CVAR_SLIDER_FLOAT)
         .CVar(CVAR_ENHANCEMENT("Graphics.StylizedLightingStrength"))
         .Options(
             FloatSliderOptions()
-                .DefaultValue(0.5f)
+                .DefaultValue(1.0f)
                 .Min(0.0f)
                 .Max(1.0f)
                 .ShowButtons(true)
-                .Tooltip("Scales the added ambient fill and upward diffuse light.")
+                .Tooltip("Master scale for the added ambient and directional fill.")
         );
+
+    AddWidget(path, "Stylized Ambient Fill", WIDGET_CVAR_SLIDER_FLOAT)
+        .CVar(CVAR_ENHANCEMENT("Graphics.StylizedLightingAmbientFill"))
+        .Options(
+            FloatSliderOptions()
+                .DefaultValue(0.2f)
+                .Min(0.0f)
+                .Max(1.0f)
+                .ShowButtons(true)
+                .Tooltip("Adds soft colored fill to the ambient light already supplied by each game area.")
+        );
+
+    AddWidget(path, "Stylized Sky Light Strength", WIDGET_CVAR_SLIDER_FLOAT)
+        .CVar(CVAR_ENHANCEMENT("Graphics.StylizedLightingSkyStrength"))
+        .Options(
+            FloatSliderOptions()
+                .DefaultValue(1.2f)
+                .Min(0.0f)
+                .Max(2.0f)
+                .ShowButtons(true)
+                .Tooltip("Strength of the added directional sky light.")
+        );
+
+    AddWidget(path, "Stylized Sky Red", WIDGET_CVAR_SLIDER_FLOAT)
+        .CVar(CVAR_ENHANCEMENT("Graphics.StylizedLightingSkyRed"))
+        .Options(FloatSliderOptions().DefaultValue(0.35f).Min(0.0f).Max(1.0f).ShowButtons(true));
+    AddWidget(path, "Stylized Sky Green", WIDGET_CVAR_SLIDER_FLOAT)
+        .CVar(CVAR_ENHANCEMENT("Graphics.StylizedLightingSkyGreen"))
+        .Options(FloatSliderOptions().DefaultValue(0.6f).Min(0.0f).Max(1.0f).ShowButtons(true));
+    AddWidget(path, "Stylized Sky Blue", WIDGET_CVAR_SLIDER_FLOAT)
+        .CVar(CVAR_ENHANCEMENT("Graphics.StylizedLightingSkyBlue"))
+        .Options(FloatSliderOptions().DefaultValue(1.0f).Min(0.0f).Max(1.0f).ShowButtons(true));
+
+    AddWidget(path, "Stylized Light Direction X", WIDGET_CVAR_SLIDER_FLOAT)
+        .CVar(CVAR_ENHANCEMENT("Graphics.StylizedLightingDirectionX"))
+        .Options(FloatSliderOptions().DefaultValue(0.25f).Min(-1.0f).Max(1.0f).ShowButtons(true));
+    AddWidget(path, "Stylized Light Direction Y", WIDGET_CVAR_SLIDER_FLOAT)
+        .CVar(CVAR_ENHANCEMENT("Graphics.StylizedLightingDirectionY"))
+        .Options(FloatSliderOptions().DefaultValue(0.85f).Min(-1.0f).Max(1.0f).ShowButtons(true));
+    AddWidget(path, "Stylized Light Direction Z", WIDGET_CVAR_SLIDER_FLOAT)
+        .CVar(CVAR_ENHANCEMENT("Graphics.StylizedLightingDirectionZ"))
+        .Options(FloatSliderOptions().DefaultValue(0.45f).Min(-1.0f).Max(1.0f).ShowButtons(true));
 
     // Enhancements > Status Bar
     path = { "Enhancements", "Status Bar", SECTION_COLUMN_1 };

@@ -1085,10 +1085,17 @@ void GameEngine::RunCommands(Gfx* Commands, const std::vector<std::unordered_map
     // Process window events for resize, mouse, keyboard events
     wnd->HandleEvents();
 
-    const float stylizedLightingStrength = CVarGetInteger(CVAR_ENHANCEMENT("Graphics.StylizedLighting"), 0)
-                                              ? CVarGetFloat(CVAR_ENHANCEMENT("Graphics.StylizedLightingStrength"), 0.5f)
-                                              : 0.0f;
-    Fast::gfx_set_stylized_lighting_strength(stylizedLightingStrength);
+    const bool stylizedLightingEnabled = CVarGetInteger(CVAR_ENHANCEMENT("Graphics.StylizedLighting"), 0) != 0;
+    Fast::gfx_set_stylized_lighting(
+        stylizedLightingEnabled ? CVarGetFloat(CVAR_ENHANCEMENT("Graphics.StylizedLightingStrength"), 1.0f) : 0.0f,
+        CVarGetFloat(CVAR_ENHANCEMENT("Graphics.StylizedLightingAmbientFill"), 0.2f),
+        CVarGetFloat(CVAR_ENHANCEMENT("Graphics.StylizedLightingSkyStrength"), 1.2f),
+        CVarGetFloat(CVAR_ENHANCEMENT("Graphics.StylizedLightingSkyRed"), 0.35f),
+        CVarGetFloat(CVAR_ENHANCEMENT("Graphics.StylizedLightingSkyGreen"), 0.6f),
+        CVarGetFloat(CVAR_ENHANCEMENT("Graphics.StylizedLightingSkyBlue"), 1.0f),
+        CVarGetFloat(CVAR_ENHANCEMENT("Graphics.StylizedLightingDirectionX"), 0.25f),
+        CVarGetFloat(CVAR_ENHANCEMENT("Graphics.StylizedLightingDirectionY"), 0.85f),
+        CVarGetFloat(CVAR_ENHANCEMENT("Graphics.StylizedLightingDirectionZ"), 0.45f));
 
     interpreter->mInterpolationIndex = 0;
 
