@@ -217,6 +217,10 @@ void PaperboatMenu::AddMenuEnhancements() {
         .CVar(CVAR_ENHANCEMENT("Graphics.StylizedLightingDirectionZ"))
         .Options(FloatSliderOptions().DefaultValue(0.45f).Min(-1.0f).Max(1.0f).ShowButtons(true));
 
+    AddWidget(path, "Sunlight Shadows", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Graphics.SunlightShadows"))
+        .Options(CheckboxOptions().DefaultValue(false));
+
     // Enhancements > Status Bar
     path = { "Enhancements", "Status Bar", SECTION_COLUMN_1 };
     AddSidebarEntry("Enhancements", path.sidebarName, 2);

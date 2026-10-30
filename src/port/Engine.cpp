@@ -1086,6 +1086,7 @@ void GameEngine::RunCommands(Gfx* Commands, const std::vector<std::unordered_map
     wnd->HandleEvents();
 
     const bool stylizedLightingEnabled = CVarGetInteger(CVAR_ENHANCEMENT("Graphics.StylizedLighting"), 0) != 0;
+    const bool sunlightShadowsEnabled = CVarGetInteger(CVAR_ENHANCEMENT("Graphics.SunlightShadows"), 0) != 0;
     Fast::gfx_set_stylized_lighting(
         stylizedLightingEnabled ? CVarGetFloat(CVAR_ENHANCEMENT("Graphics.StylizedLightingStrength"), 1.0f) : 0.0f,
         CVarGetFloat(CVAR_ENHANCEMENT("Graphics.StylizedLightingAmbientFill"), 0.2f),
