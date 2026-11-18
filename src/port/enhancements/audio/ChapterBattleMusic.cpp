@@ -115,9 +115,10 @@ bool ConvertBgmToNative(uint8_t* data, size_t dataSize, uint32_t* outName) {
 
     uint32_t name = 0;
     std::memcpy(&name, data + 0x08, sizeof(name));
-    // bgm_control.c treats <= 0xFFFF as an AuResult error code, and stores
-    // song names in an s32.
-    if (name <= 0xFFFFu || name > 0x7FFFFFFFu) {
+    // bgm_control.c treats <= 0xFFFF as an AuResult error code. Packed 4CC
+    // names may have the high bit set (e.g. "New " == 0x4E657720), so this
+    // must stay an unsigned comparison, matching bgm_control.c's 0xFFFFU.
+    if (name <= 0xFFFFu) {
         return false;
     }
 
@@ -226,22 +227,27 @@ extern "C" int32_t Port_LoadChapterBattleMusicForArea(int32_t areaID, void* dst,
     }
     auto archiveManager = resourceManager->GetArchiveManager();
     if (archiveManager == nullptr || !archiveManager->HasFile(path)) {
+        SPDLOG_DEBUG("Chapter battle music: {} not found in mounted archives", path);
         return 0;
     }
 
     auto file = archiveManager->LoadFile(path);
     if (file == nullptr || file->Buffer == nullptr || file->Buffer->size() <= file->BufferOffset) {
+        SPDLOG_DEBUG("Chapter battle music: {} could not be read", path);
         return 0;
     }
 
     const uint8_t* raw = reinterpret_cast<const uint8_t*>(file->Buffer->data()) + file->BufferOffset;
     size_t rawSize = file->Buffer->size() - file->BufferOffset;
     if (rawSize < kBgmHeaderSize) {
+        SPDLOG_DEBUG("Chapter battle music: {} is too small", path);
         return 0;
     }
 
     uint32_t declaredSize = ReadU32BE(raw + 4);
     if (declaredSize < kBgmHeaderSize || declaredSize > rawSize || declaredSize > dstSize) {
+        SPDLOG_DEBUG("Chapter battle music: {} has invalid size {} (file {}, buffer {})", path, declaredSize,
+                     rawSize, dstSize);
         return 0;
     }
 
@@ -255,6 +261,6 @@ extern "C" int32_t Port_LoadChapterBattleMusicForArea(int32_t areaID, void* dst,
     }
 
     std::memcpy(dst, bgm.data(), bgm.size());
-    SPDLOG_DEBUG("Chapter battle music: loaded {} (name 0x{:08X})", path, name);
+    SPDLOG_INFO("Chapter battle music: loaded {} (name 0x{:08X})", path, name);
     return static_cast<int32_t>(name);
 }

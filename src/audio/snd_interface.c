@@ -508,7 +508,9 @@ AuResult snd_song_load(s32 songID, s32 playerIndex) {
             customSongName = Port_LoadChapterBattleMusicForArea(
                 gGameStatusPtr->areaID, bgmFile, gBgmMainBufferSize
             );
-            if (customSongName > 0xFFFF) {
+            // Packed 4CC names can have the high bit set ("New " does), so
+            // compare as unsigned just like bgm_control.c does.
+            if ((u32) customSongName > 0xFFFFU) {
                 // au_load_song_files already set player->bgmFile to bgmFile.
                 status = (AuResult) customSongName;
             }
