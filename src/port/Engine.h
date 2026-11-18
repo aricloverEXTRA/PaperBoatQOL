@@ -160,7 +160,7 @@ const char* Port_FeatureDisabledBy(const char* id);
 void Port_MarkChapterBattleMusicRequest(void);
 void Port_ClearChapterBattleMusicRequest(void);
 int32_t Port_TakeChapterBattleMusicRequest(void);
-void Port_LogChapterBattleMusicAttempt(int32_t songID, int32_t marked);
+void Port_LogChapterBattleMusicAttempt(int32_t songID, int32_t marked, uint32_t loadedSongName);
 int32_t Port_LoadChapterBattleMusicForArea(int32_t areaID, void* dst, size_t dstSize);
 
 // Invalidate GPU texture cache entry for a specific RAM address.

@@ -503,13 +503,15 @@ AuResult snd_song_load(s32 songID, s32 playerIndex) {
 
     if (bgmFile != nullptr) {
         status = au_load_song_files(songID, bgmFile, player);
+        // au_load_song_files returns the packed 4CC song name on success, not
+        // AU_RESULT_OK. bgm_control.c likewise treats <= 0xFFFF as an error.
         // TTYD64 remaps SONG_NORMAL_BATTLE (0x2) to 0xA0 in OnBgmSong. The
         // encounter marker is useful diagnostics, but requiring it would make
         // the override fragile if any other player-0 song load consumes it
         // first. The song ID itself is the authoritative battle signal.
-        if (status == AU_RESULT_OK && playerIndex == 0 && player != nullptr &&
+        if ((u32) status > 0xFFFFU && playerIndex == 0 && player != nullptr &&
             (songID == SONG_NORMAL_BATTLE || songID == 0xA0)) { // 0xA0 = TTYD64 default enemy battle song
-            Port_LogChapterBattleMusicAttempt(songID, chapterBattleRequest);
+            Port_LogChapterBattleMusicAttempt(songID, chapterBattleRequest, (u32) status);
             customSongName = Port_LoadChapterBattleMusicForArea(
                 gGameStatusPtr->areaID, bgmFile, gBgmMainBufferSize
             );

@@ -200,9 +200,9 @@ extern "C" int32_t Port_TakeChapterBattleMusicRequest(void) {
     return sChapterBattleMusicRequested.exchange(false, std::memory_order_acquire) ? 1 : 0;
 }
 
-extern "C" void Port_LogChapterBattleMusicAttempt(int32_t songID, int32_t marked) {
-    SPDLOG_INFO("Chapter battle music: battle song request 0x{:X} (encounter mark {})", songID,
-                marked != 0 ? "set" : "not set");
+extern "C" void Port_LogChapterBattleMusicAttempt(int32_t songID, int32_t marked, uint32_t loadedSongName) {
+    SPDLOG_INFO("Chapter battle music: battle song request 0x{:X}, loaded 0x{:08X} (encounter mark {})", songID,
+                loadedSongName, marked != 0 ? "set" : "not set");
 }
 
 extern "C" int32_t Port_LoadChapterBattleMusicForArea(int32_t areaID, void* dst, size_t dstSize) {
