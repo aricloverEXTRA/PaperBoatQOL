@@ -1,5 +1,6 @@
 #include "port/ShipInit.hpp"
 #include "port/Engine.h"
+#include "port/enhancements/graphics/DayNightCycle.h"
 #include "port/hooks/Events.h"
 
 // Port reimplementation of load_map_bg / appendGfx_background_texture (src/background.c).
@@ -49,6 +50,15 @@ static char* bg_intern_path(const char* path) {
 static char* sBgRasterPath = NULL;
 char* gBgPalettePath = NULL;
 
+static u32 DayNightStarHash(u32 value) {
+    value ^= value >> 16;
+    value *= 0x7FEB352D;
+    value ^= value >> 15;
+    value *= 0x846CA68B;
+    value ^= value >> 16;
+    return value;
+}
+
 void port_load_map_bg(char* optAssetName) {
     if (optAssetName == NULL) {
         return;
@@ -90,8 +100,10 @@ void port_appendGfx_background_texture(void) {
     Camera* cam = &gCameras[gCurrentCameraID];
     u16 flags = 0;
     s32 fogR, fogG, fogB, fogA;
-    u8 r1, g1, b1, a1;
-    u8 r2, g2, b2;
+    u8 r1 = 0, g1 = 0, b1 = 0, a1 = 0;
+    u8 r2 = 0, g2 = 0, b2 = 0;
+    DayNightTint dayNightTint = {};
+    s32 drawStars = 0;
     u16 blendedR, blendedG, blendedB;
     s32 i;
 
@@ -137,6 +149,18 @@ void port_appendGfx_background_texture(void) {
                 flags |= BG_BLEND_SHOULD_BLEND;
             }
             break;
+    }
+
+    if ((*gBackgroundTintModePtr == ENV_TINT_NONE || *gBackgroundTintModePtr == ENV_TINT_SHROUD) && a1 == 0 &&
+        Port_GetDayNightTint(&dayNightTint)) {
+        r1 = dayNightTint.r;
+        g1 = dayNightTint.g;
+        b1 = dayNightTint.b;
+        a1 = dayNightTint.alpha;
+        if (a1 != 0) {
+            flags |= BG_BLEND_SHOULD_LERP;
+        }
+        drawStars = dayNightTint.stars;
     }
 
     switch (flags) {
@@ -386,6 +410,44 @@ void port_appendGfx_background_texture(void) {
                 gMainGfxPos++, bgXOffset * 2 + bgMinX * 4, stripTop * 4, (bgMaxX + bgMinX - 1) * 4 + bgEdge,
                 (bgBotY - 1) * 4 + bgEdge, G_TX_RENDERTILE, 0, (lineHeight * i) * 32, bgDsdx, bgDtdy
             );
+        }
+    }
+
+    if (drawStars != 0 && bgBotY > bgTopY) {
+        s32 frameLeft;
+        s32 frameRight;
+        s32 width;
+        s32 height = (bgBotY - bgTopY) * 55 / 100;
+        s32 scroll = gGameStatusPtr->backgroundXOffset;
+
+        get_cam_frame_x(gCurrentCameraID, &frameLeft, &frameRight);
+        width = frameRight - frameLeft;
+
+        if (width > 0 && height > 0) {
+            gDPPipeSync(gMainGfxPos++);
+            gDPSetCycleType(gMainGfxPos++, G_CYC_FILL);
+            gDPSetRenderMode(gMainGfxPos++, G_RM_NOOP, G_RM_NOOP2);
+
+            for (i = 0; i < 56; i++) {
+                u32 hash = DayNightStarHash((u32) i);
+                s32 x = frameLeft + (s32) (((hash & 0xFFFF) + (u32) (width - 1) - (u32) (scroll / 2)) % (u32) width);
+                s32 y = bgTopY + (s32) (((hash >> 16) & 0xFFFF) % (u32) height);
+                s32 size = ((hash >> 8) & 7) == 0 ? 2 : 1;
+                s32 bright = (120 + (s32) ((hash >> 24) & 0x7F)) * drawStars / 255;
+                s32 blue = bright + 24;
+
+                if (bright < 12) {
+                    continue;
+                }
+                if (blue > 255) {
+                    blue = 255;
+                }
+
+                gDPSetFillColor(gMainGfxPos++, PACK_FILL_COLOR(bright, bright, blue, 1));
+                gDPFillRectangle(gMainGfxPos++, x, y, x + size - 1, y + size - 1);
+            }
+
+            gDPPipeSync(gMainGfxPos++);
         }
     }
 }

@@ -182,12 +182,12 @@ void PaperboatMenu::AddMenuEnhancements() {
     AddWidget(path, "Day/Night Cycle", WIDGET_SEPARATOR_TEXT);
 
     AddWidget(path, "Enable Day/Night Cycle", WIDGET_CVAR_CHECKBOX)
-        .CVar(CVAR_ENHANCEMENT("Graphics.DayNightCycle"))
+        .CVar(CVAR_ENHANCEMENT("Graphics.DayNightCycle.Enabled"))
         .Options(
             CheckboxOptions().Tooltip(
-                "Tints supported outdoor areas through sunrise, day, sunset and night. Cosmetic only: no dialogue, "
-                "quests, enemies or music change. Special areas such as Star Haven, Toad Town Tunnels and Shy Guy's "
-                "Toy Box are left alone."
+                "Tints the sky and background of supported outdoor areas through sunrise, day, sunset and night, with "
+                "stars after dark. Cosmetic only: no dialogue, quests, enemies, music or model colors change. Special "
+                "areas such as Star Haven, Toad Town Tunnels and Shy Guy's Toy Box are left alone."
             )
         );
 
@@ -224,7 +224,7 @@ void PaperboatMenu::AddMenuEnhancements() {
         .PreFunc(hideUnlessDayNightCycle)
         .Options(
             IntSliderOptions().Min(0).Max(100).Step(5).DefaultValue(70).Format("%d%%").Tooltip(
-                "How strongly the day/night colors are applied. 0 leaves the original colors untouched."
+                "How strongly the day/night colors and stars are applied. 0 leaves the original look untouched."
             )
         );
 

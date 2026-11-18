@@ -77,7 +77,7 @@ static const Def sDefs[] = {
     FEATURE_TOGGLE("graphics.hd_mipmaps", CVAR_ENHANCEMENT("Mods.AutoMipmaps"), 0),
     FEATURE_TOGGLE("graphics.sprite_filter", CVAR_2D_TEXTURE_FILTER, 0),
     FEATURE_TOGGLE("graphics.dialogue_filter", CVAR_DIALOGUE_TEXT_FILTER, 0),
-    FEATURE_TOGGLE("graphics.day_night_cycle", CVAR_ENHANCEMENT("Graphics.DayNightCycle"), 0),
+    FEATURE_TOGGLE("graphics.day_night_cycle", CVAR_ENHANCEMENT("Graphics.DayNightCycle.Enabled"), 0),
     FEATURE_INT("graphics.day_night_cycle.time_source", CVAR_ENHANCEMENT("Graphics.DayNightCycle.TimeSource"), 0),
     FEATURE_INT("graphics.day_night_cycle.day_length", CVAR_ENHANCEMENT("Graphics.DayNightCycle.DayLength"), 24),
     FEATURE_INT("graphics.day_night_cycle.start_time", CVAR_ENHANCEMENT("Graphics.DayNightCycle.StartTime"), 6),

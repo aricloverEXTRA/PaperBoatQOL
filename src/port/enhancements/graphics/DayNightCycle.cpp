@@ -1,15 +1,17 @@
 #include "port/ShipInit.hpp"
 #include "port/Engine.h"
+#include "port/enhancements/graphics/DayNightCycle.h"
 #include "port/hooks/Events.h"
 #include "port/ui/cvar_prefixes.h"
 
 #include "common.h"
-#include "model.h"
+
+#include <ship/Context.h>
 
 #include <chrono>
 #include <cmath>
 #include <ctime>
-#include <vector>
+#include <string>
 
 namespace {
 
@@ -25,38 +27,21 @@ struct TintKeyframe {
 };
 
 constexpr TintKeyframe sTintKeyframes[] = {
-    { 0.0f, 28, 38, 86, 180 },
-    { 4.5f, 28, 38, 86, 180 },
-    { 6.0f, 255, 160, 96, 100 },
+    { 0.0f, 20, 30, 76, 170 },
+    { 4.5f, 20, 30, 76, 170 },
+    { 5.5f, 116, 82, 120, 115 },
+    { 6.5f, 255, 166, 98, 90 },
     { 8.0f, 255, 255, 255, 0 },
-    { 16.0f, 255, 255, 255, 0 },
-    { 18.0f, 255, 145, 85, 100 },
-    { 20.0f, 28, 38, 86, 180 },
-    { 24.0f, 28, 38, 86, 180 },
-};
-
-struct TintState {
-    u8 r;
-    u8 g;
-    u8 b;
-    u8 alpha;
+    { 16.5f, 255, 255, 255, 0 },
+    { 18.0f, 255, 142, 80, 95 },
+    { 19.5f, 112, 72, 116, 135 },
+    { 21.0f, 24, 38, 94, 170 },
+    { 24.0f, 24, 38, 94, 170 },
 };
 
 ListenerID sUpdateListener = -1;
-ListenerID sDrawListener = -1;
-
 std::chrono::steady_clock::time_point sLastTick;
 float sCycleMinutes = DEFAULT_START_MINUTES;
-
-bool sApplied = false;
-s32 sAppliedArea = -1;
-s32 sAppliedMap = -1;
-u8 sSavedBackgroundTintMode = 0;
-u8 sSavedShroudR = 255;
-u8 sSavedShroudG = 255;
-u8 sSavedShroudB = 255;
-u8 sSavedShroudAlpha = 0;
-std::vector<u8> sSavedModelTints;
 
 bool IsOutdoorArea(s32 areaID) {
     switch (areaID) {
@@ -94,11 +79,38 @@ float CurrentHour() {
     return sCycleMinutes / 60.0f;
 }
 
+int Strength() {
+    int strength = Port_FeatureInt("graphics.day_night_cycle.strength", 70);
+    if (strength < 0) {
+        return 0;
+    }
+    if (strength > 100) {
+        return 100;
+    }
+    return strength;
+}
+
 u8 LerpChannel(u8 from, u8 to, float t) {
     return static_cast<u8>(static_cast<int>(from) + (static_cast<int>(to) - static_cast<int>(from)) * t);
 }
 
-TintState TintForHour(float hour) {
+float NightAmount(float hour) {
+    if (hour < 4.5f) {
+        return 1.0f;
+    }
+    if (hour < 6.5f) {
+        return 1.0f - (hour - 4.5f) / 2.0f;
+    }
+    if (hour < 17.5f) {
+        return 0.0f;
+    }
+    if (hour < 20.5f) {
+        return (hour - 17.5f) / 3.0f;
+    }
+    return 1.0f;
+}
+
+DayNightTint TintForHour(float hour) {
     if (hour < 0.0f) {
         hour += 24.0f;
     } else if (hour >= 24.0f) {
@@ -125,82 +137,18 @@ TintState TintForHour(float hour) {
         }
     }
 
-    int strength = Port_FeatureInt("graphics.day_night_cycle.strength", 70);
-    if (strength < 0) {
-        strength = 0;
-    } else if (strength > 100) {
-        strength = 100;
-    }
+    int strength = Strength();
+    float scale = static_cast<float>(strength) / 100.0f;
+    float alpha = static_cast<float>(LerpChannel(from->alpha, to->alpha, t)) * scale;
+    float stars = NightAmount(hour) * 255.0f * scale;
 
     return {
         LerpChannel(from->r, to->r, t),
         LerpChannel(from->g, to->g, t),
         LerpChannel(from->b, to->b, t),
-        static_cast<u8>(LerpChannel(from->alpha, to->alpha, t) * strength / 100),
+        static_cast<u8>(alpha),
+        static_cast<u8>(stars),
     };
-}
-
-void SaveState() {
-    if (sApplied) {
-        return;
-    }
-
-    sAppliedArea = gGameStatusPtr != nullptr ? gGameStatusPtr->areaID : -1;
-    sAppliedMap = gGameStatusPtr != nullptr ? gGameStatusPtr->mapID : -1;
-
-    if (gBackgroundTintModePtr != nullptr) {
-        sSavedBackgroundTintMode = *gBackgroundTintModePtr;
-    }
-    mdl_get_shroud_tint_params(&sSavedShroudR, &sSavedShroudG, &sSavedShroudB, &sSavedShroudAlpha);
-
-    sSavedModelTints.clear();
-    if (gCurrentModels != nullptr) {
-        const ModelList& models = *gCurrentModels;
-        sSavedModelTints.reserve(ARRAY_COUNT(models));
-        for (size_t i = 0; i < ARRAY_COUNT(models); ++i) {
-            Model* model = models[i];
-            sSavedModelTints.push_back(model != nullptr ? model->customGfxIndex : 0);
-        }
-    }
-
-    sApplied = true;
-}
-
-bool SavedMapMatches() {
-    return gGameStatusPtr != nullptr && gGameStatusPtr->areaID == sAppliedArea &&
-           gGameStatusPtr->mapID == sAppliedMap;
-}
-
-void RestoreState() {
-    if (!sApplied) {
-        return;
-    }
-
-    if (SavedMapMatches()) {
-        if (gBackgroundTintModePtr != nullptr) {
-            *gBackgroundTintModePtr = sSavedBackgroundTintMode;
-        }
-        mdl_set_shroud_tint_params(sSavedShroudR, sSavedShroudG, sSavedShroudB, sSavedShroudAlpha);
-
-        if (gCurrentModels != nullptr) {
-            const ModelList& models = *gCurrentModels;
-            size_t count = ARRAY_COUNT(models);
-            if (count > sSavedModelTints.size()) {
-                count = sSavedModelTints.size();
-            }
-            for (size_t i = 0; i < count; ++i) {
-                Model* model = models[i];
-                if (model != nullptr) {
-                    model->customGfxIndex = sSavedModelTints[i];
-                }
-            }
-        }
-    }
-
-    sSavedModelTints.clear();
-    sApplied = false;
-    sAppliedArea = -1;
-    sAppliedMap = -1;
 }
 
 void TickCycle() {
@@ -223,25 +171,6 @@ void TickCycle() {
     }
 }
 
-void ApplyCycle() {
-    if (gGameStatusPtr == nullptr || gBackgroundTintModePtr == nullptr || gCurrentModels == nullptr ||
-        !IsOutdoorArea(gGameStatusPtr->areaID)) {
-        RestoreState();
-        return;
-    }
-
-    if (sApplied && !SavedMapMatches()) {
-        RestoreState();
-    }
-
-    SaveState();
-
-    TintState tint = TintForHour(CurrentHour());
-    mdl_set_shroud_tint_params(tint.r, tint.g, tint.b, tint.alpha);
-    *gBackgroundTintModePtr = ENV_TINT_SHROUD;
-    mdl_set_all_tint_type(ENV_TINT_SHROUD);
-}
-
 void ResetCycle() {
     sLastTick = std::chrono::steady_clock::now();
     int startHour = Port_FeatureInt("graphics.day_night_cycle.start_time", 6);
@@ -253,15 +182,59 @@ void ResetCycle() {
     sCycleMinutes = static_cast<float>(startHour * 60);
 }
 
+void MigrateLegacyCVar() {
+    static bool migrated = false;
+    if (migrated) {
+        return;
+    }
+
+    auto context = Ship::Context::GetRawInstance();
+    if (context == nullptr) {
+        return;
+    }
+
+    auto conf = context->GetConfig();
+    if (conf == nullptr) {
+        return;
+    }
+    migrated = true;
+
+    const std::string legacyKey = CVAR_ENHANCEMENT("Graphics.DayNightCycle");
+    int32_t legacyValue = conf->GetInt(legacyKey, -1);
+    if (legacyValue < 0) {
+        return;
+    }
+
+    conf->Erase(legacyKey);
+    conf->SetInt(CVAR_ENHANCEMENT("Graphics.DayNightCycle.Enabled"), legacyValue);
+    conf->Save();
+
+    auto cvars = context->GetConsoleVariables();
+    if (cvars != nullptr) {
+        cvars->SetInteger(CVAR_ENHANCEMENT("Graphics.DayNightCycle.Enabled"), legacyValue);
+    }
+}
+
 } // namespace
 
+extern "C" s32 Port_GetDayNightTint(DayNightTint* out) {
+    if (out == nullptr || !Port_FeatureInt("graphics.day_night_cycle", 0)) {
+        return 0;
+    }
+    if (gGameStatusPtr == nullptr || gGameStatusPtr->context != CONTEXT_WORLD ||
+        !IsOutdoorArea(gGameStatusPtr->areaID)) {
+        return 0;
+    }
+
+    *out = TintForHour(CurrentHour());
+    return 1;
+}
+
 void RegisterDayNightCycle_Init() {
-    RestoreState();
+    MigrateLegacyCVar();
 
     UNREGISTER_LISTENER(GameFrameUpdate, sUpdateListener);
-    UNREGISTER_LISTENER(BackgroundPreDraw, sDrawListener);
     sUpdateListener = -1;
-    sDrawListener = -1;
 
     if (!Port_FeatureInt("graphics.day_night_cycle", 0)) {
         return;
@@ -271,15 +244,12 @@ void RegisterDayNightCycle_Init() {
     sUpdateListener = REGISTER_LISTENER(GameFrameUpdate, EVENT_PRIORITY_NORMAL, [](IEvent*) {
         TickCycle();
     });
-    sDrawListener = REGISTER_LISTENER(BackgroundPreDraw, EVENT_PRIORITY_NORMAL, [](IEvent*) {
-        ApplyCycle();
-    });
 }
 
 static RegisterShipInitFunc initDayNightCycleFunc(
     RegisterDayNightCycle_Init,
     {
-        CVAR_ENHANCEMENT("Graphics.DayNightCycle"),
+        CVAR_ENHANCEMENT("Graphics.DayNightCycle.Enabled"),
         CVAR_ENHANCEMENT("Graphics.DayNightCycle.TimeSource"),
         CVAR_ENHANCEMENT("Graphics.DayNightCycle.DayLength"),
         CVAR_ENHANCEMENT("Graphics.DayNightCycle.StartTime"),

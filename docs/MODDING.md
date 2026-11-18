@@ -90,7 +90,7 @@ The menu greys a locked widget in `Menu::MenuDrawItem` (a third disable source a
 | `graphics.hd_mipmaps` | `gEnhancements.Mods.AutoMipmaps` | 0 |
 | `graphics.sprite_filter` | `gSettings.2DTextureFilter` | 0 |
 | `graphics.dialogue_filter` | `gSettings.DialogueTextFilter` | 0 |
-| `graphics.day_night_cycle` | `gEnhancements.Graphics.DayNightCycle` | 0 |
+| `graphics.day_night_cycle` | `gEnhancements.Graphics.DayNightCycle.Enabled` | 0 |
 | `graphics.day_night_cycle.time_source` | `gEnhancements.Graphics.DayNightCycle.TimeSource` | 0 (game cycle) |
 | `graphics.day_night_cycle.day_length` | `gEnhancements.Graphics.DayNightCycle.DayLength` | 24 |
 | `graphics.day_night_cycle.start_time` | `gEnhancements.Graphics.DayNightCycle.StartTime` | 6 |
