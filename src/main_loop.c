@@ -9,6 +9,7 @@
 #include "audio/public.h"
 #include "dx/profiling.h"
 #include "port/interpolation/FrameInterpolation.h"
+#include "port/enhancements/graphics/DayNightCycle.h"
 
 s32 gOverrideFlags;
 s32 gTimeFreezeMode;
@@ -223,6 +224,7 @@ void gfx_draw_frame(void) {
     FrameInterpolation_RecordOpenChild("gfx_world", 0);
     if (!(gOverrideFlags & GLOBAL_OVERRIDES_DISABLE_RENDER_WORLD)) {
         render_frame(false);
+        Port_DayNightDrawWorldOverlay();
     }
     FrameInterpolation_RecordCloseChild();
 

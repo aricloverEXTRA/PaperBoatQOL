@@ -28,16 +28,16 @@ struct TintKeyframe {
 };
 
 constexpr TintKeyframe sTintKeyframes[] = {
-    { 0.0f, 20, 30, 76, 170 },
-    { 4.5f, 20, 30, 76, 170 },
-    { 5.5f, 116, 82, 120, 115 },
+    { 0.0f, 8, 14, 44, 215 },
+    { 4.5f, 8, 14, 44, 215 },
+    { 5.5f, 76, 48, 92, 155 },
     { 6.5f, 255, 166, 98, 90 },
     { 8.0f, 255, 255, 255, 0 },
     { 16.5f, 255, 255, 255, 0 },
     { 18.0f, 255, 142, 80, 95 },
-    { 19.5f, 112, 72, 116, 135 },
-    { 21.0f, 24, 38, 94, 170 },
-    { 24.0f, 24, 38, 94, 170 },
+    { 19.5f, 70, 42, 88, 175 },
+    { 21.0f, 8, 14, 44, 215 },
+    { 24.0f, 8, 14, 44, 215 },
 };
 
 ListenerID sUpdateListener = -1;
@@ -233,6 +233,47 @@ extern "C" s32 Port_GetDayNightTint(DayNightTint* out) {
 
     *out = TintForHour(CurrentHour());
     return 1;
+}
+
+extern "C" void Port_DayNightDrawWorldOverlay(void) {
+    DayNightTint tint;
+    Camera* cam;
+    s32 left;
+    s32 right;
+    s32 alpha;
+
+    if (!Port_GetDayNightTint(&tint) || tint.alpha == 0) {
+        return;
+    }
+
+    cam = &gCameras[gCurrentCameraID];
+    get_cam_frame_x(gCurrentCameraID, &left, &right);
+    if (cam->viewportH <= 0 || left >= right) {
+        return;
+    }
+
+    // The background already receives the full tint; ease the world pass so the
+    // combined image stays readable.
+    alpha = tint.alpha * 3 / 4;
+    if (alpha == 0) {
+        return;
+    }
+
+    gDPPipeSync(gMainGfxPos++);
+    gDPSetColorDither(gMainGfxPos++, G_CD_MAGICSQ);
+    gDPSetAlphaDither(gMainGfxPos++, G_AD_PATTERN);
+    gDPSetCycleType(gMainGfxPos++, G_CYC_1CYCLE);
+    gDPSetRenderMode(gMainGfxPos++, G_RM_CLD_SURF, G_RM_CLD_SURF2);
+    gDPSetCombineMode(gMainGfxPos++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
+    gDPSetPrimColor(gMainGfxPos++, 0, 0, tint.r, tint.g, tint.b, (u8) alpha);
+    gDPSetScissor(gMainGfxPos++, G_SC_NON_INTERLACE, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+    gDPFillWideRectangle(
+        gMainGfxPos++, left, cam->viewportStartY, right - 1,
+        cam->viewportStartY + cam->viewportH - 1
+    );
+
+    gDPSetColorDither(gMainGfxPos++, G_CD_DISABLE);
+    gDPPipeSync(gMainGfxPos++);
 }
 
 void RegisterDayNightCycle_Init() {

@@ -7,6 +7,7 @@
 
 #include "common.h"
 #include "model.h"
+#include "assets/effects.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -48,6 +49,7 @@ static char* bg_intern_path(const char* path) {
 }
 
 static char* sBgRasterPath = NULL;
+static s32 sDayNightStarTexturePrefetched = false;
 char* gBgPalettePath = NULL;
 
 static u32 DayNightStarHash(u32 value) {
@@ -418,38 +420,57 @@ void port_appendGfx_background_texture(void) {
         s32 frameRight;
         s32 width;
         s32 height = (bgBotY - bgTopY) * 55 / 100;
-        s32 scroll = gGameStatusPtr->backgroundXOffset;
+        s32 scroll = gGameStatusPtr->backgroundXOffset / 8;
 
         get_cam_frame_x(gCurrentCameraID, &frameLeft, &frameRight);
         width = frameRight - frameLeft;
 
         if (width > 0 && height > 0) {
+            if (!sDayNightStarTexturePrefetched) {
+                GameEngine_PrefetchTexture(D_09000000_3326A0);
+                sDayNightStarTexturePrefetched = true;
+            }
+
             gDPPipeSync(gMainGfxPos++);
-            gDPSetCycleType(gMainGfxPos++, G_CYC_FILL);
-            gDPSetRenderMode(gMainGfxPos++, G_RM_NOOP, G_RM_NOOP2);
+            gDPSetCycleType(gMainGfxPos++, G_CYC_1CYCLE);
+            gDPSetTexturePersp(gMainGfxPos++, G_TP_NONE);
+            gDPSetTextureFilter(gMainGfxPos++, G_TF_POINT);
+            gDPSetTextureLUT(gMainGfxPos++, G_TT_NONE);
+            gDPSetTextureDetail(gMainGfxPos++, G_TD_CLAMP);
+            gDPSetTextureLOD(gMainGfxPos++, G_TL_TILE);
+            gDPSetColorDither(gMainGfxPos++, G_CD_DISABLE);
+            gDPSetAlphaDither(gMainGfxPos++, G_AD_NOISE);
+            gDPSetRenderMode(gMainGfxPos++, G_RM_CLD_SURF, G_RM_CLD_SURF2);
+            gSPTexture(gMainGfxPos++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON);
+            gDPSetCombineMode(gMainGfxPos++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
+            gDPSetPrimColor(gMainGfxPos++, 0, 0, 255, 246, 214, drawStars);
+            gDPLoadTextureTile(
+                gMainGfxPos++, D_09000000_3326A0, G_IM_FMT_IA, G_IM_SIZ_8b, 64, 64, 0, 0, 63, 63, 0,
+                G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD,
+                G_TX_NOLOD
+            );
 
             for (i = 0; i < 56; i++) {
                 u32 hash = DayNightStarHash((u32) i);
-                s32 xOffset = (s32) (hash & 0xFFFF) - scroll / 2;
+                s32 xOffset = (s32) (hash & 0xFFFF) - scroll;
+                s32 x;
+                s32 y;
+                s32 size;
+                s32 step;
+
                 xOffset %= width;
                 if (xOffset < 0) {
                     xOffset += width;
                 }
-                s32 x = frameLeft + xOffset;
-                s32 y = bgTopY + (s32) (((hash >> 16) & 0xFFFF) % (u32) height);
-                s32 size = ((hash >> 8) & 7) == 0 ? 2 : 1;
-                s32 bright = (120 + (s32) ((hash >> 24) & 0x7F)) * drawStars / 255;
-                s32 blue = bright + 24;
+                x = frameLeft + xOffset;
+                y = bgTopY + (s32) (((hash >> 16) & 0xFFFF) % (u32) height);
+                size = 5 + ((hash >> 8) & 3);
+                step = 1024 * 64 / size;
 
-                if (bright < 12) {
-                    continue;
-                }
-                if (blue > 255) {
-                    blue = 255;
-                }
-
-                gDPSetFillColor(gMainGfxPos++, PACK_FILL_COLOR(bright, bright, blue, 1));
-                gDPFillRectangle(gMainGfxPos++, x, y, x + size - 1, y + size - 1);
+                gSPWideTextureRectangle(
+                    gMainGfxPos++, x * 4, y * 4, (x + size) * 4, (y + size) * 4, G_TX_RENDERTILE, 0, 0,
+                    step, step
+                );
             }
 
             gDPPipeSync(gMainGfxPos++);

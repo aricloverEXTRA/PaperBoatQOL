@@ -16,6 +16,7 @@ typedef struct DayNightTint {
 } DayNightTint;
 
 s32 Port_GetDayNightTint(DayNightTint* out);
+void Port_DayNightDrawWorldOverlay(void);
 
 #ifdef __cplusplus
 }
