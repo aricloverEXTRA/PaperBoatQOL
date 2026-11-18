@@ -200,20 +200,29 @@ extern "C" int32_t Port_TakeChapterBattleMusicRequest(void) {
     return sChapterBattleMusicRequested.exchange(false, std::memory_order_acquire) ? 1 : 0;
 }
 
+extern "C" void Port_LogChapterBattleMusicAttempt(int32_t songID, int32_t marked) {
+    SPDLOG_INFO("Chapter battle music: battle song request 0x{:X} (encounter mark {})", songID,
+                marked != 0 ? "set" : "not set");
+}
+
 extern "C" int32_t Port_LoadChapterBattleMusicForArea(int32_t areaID, void* dst, size_t dstSize) {
     if (dst == nullptr || dstSize == 0) {
         return 0;
     }
     const char* romhackId = Romhack_GetId();
     if (romhackId == nullptr || std::strcmp(romhackId, "TTYD64") != 0) {
+        SPDLOG_INFO("Chapter battle music: not active for romhack '{}'",
+                    romhackId != nullptr ? romhackId : "(none)");
         return 0;
     }
     if (!Port_FeatureInt("enhancements.audio.chapter_battle_music", 0)) {
+        SPDLOG_INFO("Chapter battle music: enhancement is disabled");
         return 0;
     }
 
     const char* path = BgmPathForArea(areaID);
     if (path == nullptr) {
+        SPDLOG_INFO("Chapter battle music: no track mapped for area {}", areaID);
         return 0;
     }
 
@@ -227,26 +236,26 @@ extern "C" int32_t Port_LoadChapterBattleMusicForArea(int32_t areaID, void* dst,
     }
     auto archiveManager = resourceManager->GetArchiveManager();
     if (archiveManager == nullptr || !archiveManager->HasFile(path)) {
-        SPDLOG_DEBUG("Chapter battle music: {} not found in mounted archives", path);
+        SPDLOG_INFO("Chapter battle music: {} not found in mounted archives", path);
         return 0;
     }
 
     auto file = archiveManager->LoadFile(path);
     if (file == nullptr || file->Buffer == nullptr || file->Buffer->size() <= file->BufferOffset) {
-        SPDLOG_DEBUG("Chapter battle music: {} could not be read", path);
+        SPDLOG_INFO("Chapter battle music: {} could not be read", path);
         return 0;
     }
 
     const uint8_t* raw = reinterpret_cast<const uint8_t*>(file->Buffer->data()) + file->BufferOffset;
     size_t rawSize = file->Buffer->size() - file->BufferOffset;
     if (rawSize < kBgmHeaderSize) {
-        SPDLOG_DEBUG("Chapter battle music: {} is too small", path);
+        SPDLOG_INFO("Chapter battle music: {} is too small", path);
         return 0;
     }
 
     uint32_t declaredSize = ReadU32BE(raw + 4);
     if (declaredSize < kBgmHeaderSize || declaredSize > rawSize || declaredSize > dstSize) {
-        SPDLOG_DEBUG("Chapter battle music: {} has invalid size {} (file {}, buffer {})", path, declaredSize,
+        SPDLOG_INFO("Chapter battle music: {} has invalid size {} (file {}, buffer {})", path, declaredSize,
                      rawSize, dstSize);
         return 0;
     }
@@ -256,7 +265,7 @@ extern "C" int32_t Port_LoadChapterBattleMusicForArea(int32_t areaID, void* dst,
     std::vector<uint8_t> bgm(raw, raw + declaredSize);
     uint32_t name = 0;
     if (!ConvertBgmToNative(bgm.data(), bgm.size(), &name)) {
-        SPDLOG_DEBUG("Chapter battle music: invalid BGM in {}", path);
+        SPDLOG_INFO("Chapter battle music: invalid BGM in {}", path);
         return 0;
     }
 
