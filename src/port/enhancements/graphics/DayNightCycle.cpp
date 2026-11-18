@@ -5,6 +5,7 @@
 #include "port/ui/cvar_prefixes.h"
 
 #include "common.h"
+#include "game_modes.h"
 
 #include <ship/Context.h>
 #include <ship/config/ConsoleVariable.h>
@@ -220,6 +221,15 @@ void MigrateLegacyCVar() {
     cvars->SetInteger(CVAR_ENHANCEMENT("Graphics.DayNightCycle.Enabled"), legacyValue);
 }
 
+// The 2-D title keeps stale area/map values; map 12 is kmr_21, the in-world title.
+bool IsTitleScene() {
+    if (gGameStatusPtr == nullptr) {
+        return false;
+    }
+    return get_game_mode() == GAME_MODE_TITLE_SCREEN ||
+           (gGameStatusPtr->areaID == AREA_KMR && gGameStatusPtr->mapID == 12);
+}
+
 } // namespace
 
 extern "C" s32 Port_GetDayNightTint(DayNightTint* out) {
@@ -227,7 +237,7 @@ extern "C" s32 Port_GetDayNightTint(DayNightTint* out) {
         return 0;
     }
     if (gGameStatusPtr == nullptr || gGameStatusPtr->context != CONTEXT_WORLD ||
-        !IsOutdoorArea(gGameStatusPtr->areaID)) {
+        !IsOutdoorArea(gGameStatusPtr->areaID) || IsTitleScene()) {
         return 0;
     }
 
