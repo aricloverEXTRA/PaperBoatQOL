@@ -624,10 +624,9 @@ HitID player_test_move_with_slipping(PlayerStatus* playerStatus, f32* x, f32* y,
 void update_player(void) {
     PlayerStatus* playerStatus = &gPlayerStatus;
     CollisionStatus* collisionStatus = &gCollisionStatus;
-    //added to prevent crash and build failure with missing variable for sprint enhancement
-    f32 lakiSpeed = 0;
+
     // Sprint enhancement
-    CALL_EVENT(OnPlayerSpeedUpdate, &playerStatus->walkSpeed, &playerStatus->runSpeed,&lakiSpeed);
+    CALL_EVENT(OnPlayerSpeedUpdate, &playerStatus->walkSpeed, &playerStatus->runSpeed);
 
     #if DX_DEBUG_MENU
     if (dx_debug_is_cheat_enabled(DEBUG_CHEAT_SPEED_MODE)) {
@@ -1005,6 +1004,7 @@ s32 enable_player_input(void) {
     if (playerStatus->inputDisabledCount == 0) {
         playerStatus->flags &= ~PS_FLAG_INPUT_DISABLED;
     }
+    CALL_EVENT(OnPlayerInputEnabled);
     return playerStatus->inputDisabledCount;
 }
 
@@ -1429,6 +1429,7 @@ void player_update_sprite(void) {
             playerStatus->curYaw = playerStatus->targetYaw;
         }
     }
+    CALL_EVENT(OnPlayerSpriteAnim, &trueAnim);
     playerStatus->trueAnimation = trueAnim;
 
     timescale = 1.0f;
