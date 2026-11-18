@@ -7,6 +7,7 @@
 #include "common.h"
 
 #include <ship/Context.h>
+#include <ship/config/ConsoleVariable.h>
 
 #include <chrono>
 #include <cmath>
@@ -197,22 +198,26 @@ void MigrateLegacyCVar() {
     if (conf == nullptr) {
         return;
     }
-    migrated = true;
-
-    const std::string legacyKey = CVAR_ENHANCEMENT("Graphics.DayNightCycle");
-    int32_t legacyValue = conf->GetInt(legacyKey, -1);
-    if (legacyValue < 0) {
+    auto cvars = context->GetConsoleVariables();
+    if (cvars == nullptr) {
         return;
     }
 
-    conf->Erase(legacyKey);
+    const std::string legacyKey = CVAR_ENHANCEMENT("Graphics.DayNightCycle");
+    auto legacyVar = cvars->Get(legacyKey.c_str());
+    if (legacyVar == nullptr || legacyVar->Type != Ship::ConsoleVariableType::Integer) {
+        return;
+    }
+
+    int32_t legacyValue = legacyVar->Integer;
+    migrated = true;
+
+    // ClearVariable removes both the runtime CVar and the persisted key, so a later
+    // save cannot recreate the scalar/parent collision that caused the crash.
+    cvars->ClearVariable(legacyKey.c_str());
     conf->SetInt(CVAR_ENHANCEMENT("Graphics.DayNightCycle.Enabled"), legacyValue);
     conf->Save();
-
-    auto cvars = context->GetConsoleVariables();
-    if (cvars != nullptr) {
-        cvars->SetInteger(CVAR_ENHANCEMENT("Graphics.DayNightCycle.Enabled"), legacyValue);
-    }
+    cvars->SetInteger(CVAR_ENHANCEMENT("Graphics.DayNightCycle.Enabled"), legacyValue);
 }
 
 } // namespace
@@ -253,6 +258,5 @@ static RegisterShipInitFunc initDayNightCycleFunc(
         CVAR_ENHANCEMENT("Graphics.DayNightCycle.TimeSource"),
         CVAR_ENHANCEMENT("Graphics.DayNightCycle.DayLength"),
         CVAR_ENHANCEMENT("Graphics.DayNightCycle.StartTime"),
-        CVAR_ENHANCEMENT("Graphics.DayNightCycle.Strength"),
     }
 );

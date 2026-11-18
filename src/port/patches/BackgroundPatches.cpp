@@ -430,7 +430,12 @@ void port_appendGfx_background_texture(void) {
 
             for (i = 0; i < 56; i++) {
                 u32 hash = DayNightStarHash((u32) i);
-                s32 x = frameLeft + (s32) (((hash & 0xFFFF) + (u32) (width - 1) - (u32) (scroll / 2)) % (u32) width);
+                s32 xOffset = (s32) (hash & 0xFFFF) - scroll / 2;
+                xOffset %= width;
+                if (xOffset < 0) {
+                    xOffset += width;
+                }
+                s32 x = frameLeft + xOffset;
                 s32 y = bgTopY + (s32) (((hash >> 16) & 0xFFFF) % (u32) height);
                 s32 size = ((hash >> 8) & 7) == 0 ? 2 : 1;
                 s32 bright = (120 + (s32) ((hash >> 24) & 0x7F)) * drawStars / 255;
