@@ -1,6 +1,7 @@
 #include "common.h"
 #include "audio/audio.h"
 #include "audio/core.h"
+#include "port/Engine.h"
 #include "port/os/OS.h"
 
 static u8* snd_song_get_track_volumes_set(MusicTrackVols arg0);
@@ -486,12 +487,32 @@ AuResult snd_song_load(s32 songID, s32 playerIndex) {
     AuResult status;
     BGMHeader* bgmFile;
     BGMPlayer* player;
+    s32 chapterBattleRequest = false;
+    s32 customSongName = 0;
 
     port_auBgmLock();
+    // Encounter code marks only the standard songID < 0 battle branch, so
+    // boss/scripted themes never set this. Consume it on player 0's next load;
+    // after the normal song load we can replace just the BGM buffer while
+    // keeping the banks and the normal BGM player path (including Think-mode
+    // track attenuation).
+    if (playerIndex == 0) {
+        chapterBattleRequest = Port_TakeChapterBattleMusicRequest();
+    }
     au_get_bgm_player_and_file(playerIndex, &bgmFile, &player);
 
     if (bgmFile != nullptr) {
         status = au_load_song_files(songID, bgmFile, player);
+        if (status == AU_RESULT_OK && chapterBattleRequest && player != nullptr &&
+            (songID == SONG_NORMAL_BATTLE || songID == 0xA0)) { // 0xA0 = TTYD64 default enemy battle song
+            customSongName = Port_LoadChapterBattleMusicForArea(
+                gGameStatusPtr->areaID, bgmFile, gBgmMainBufferSize
+            );
+            if (customSongName > 0xFFFF) {
+                // au_load_song_files already set player->bgmFile to bgmFile.
+                status = (AuResult) customSongName;
+            }
+        }
     } else {
         status = AU_ERROR_NULL_SONG_NAME;
     }

@@ -17,6 +17,7 @@ intptr_t nuAuDmaCallBack(intptr_t addr, s32 len, void *state, u8 useDma);
 // ----------------------------------------------------------------------------------
 //core/engine.c
 // ----------------------------------------------------------------------------------
+extern u32 gBgmMainBufferSize;
 void au_release_voice(u8 index);
 void au_engine_init(s32 outputRate);
 /// this is called once per video frame update (50 or 60 times per second)

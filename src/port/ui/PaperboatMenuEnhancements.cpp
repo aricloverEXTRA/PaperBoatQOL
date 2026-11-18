@@ -131,6 +131,20 @@ void PaperboatMenu::AddMenuEnhancements() {
                 "Makes Chuck Quizmo Show up in the current map you are in if option is turned on. "
             )
         );
+
+    // Enhancements > Audio
+    path = { "Enhancements", "Audio", SECTION_COLUMN_1 };
+    AddSidebarEntry("Enhancements", path.sidebarName, 1);
+
+    AddWidget(path, "Chapter-Based Battle Music", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Audio.ChapterBattleMusic"))
+        .Options(
+            CheckboxOptions().Tooltip(
+                "Plays custom chapter battle music in Chapters 2–8 and Star Haven when "
+                "ChapterBattleMusicMod.o2r is present in mods/. Falls back to default TTYD64 battle music otherwise."
+            )
+        );
+
     // Enhancements > Graphics
     path = { "Enhancements", "Graphics", SECTION_COLUMN_1 };
     AddSidebarEntry("Enhancements", "Graphics", 1);

@@ -1,6 +1,7 @@
 #include "common.h"
 #include "npc.h"
 #include "audio/audio.h"
+#include "port/Engine.h"
 
 void bgm_update_volume(void);
 void bgm_set_target_volume(s32 volume);
@@ -213,6 +214,12 @@ s32 _bgm_set_song(s32 playerIndex, s32 songID, s32 variation, s32 fadeOutTime, s
         variation = mapSongVariation;
     }
     CALL_EVENT(OnBgmSong, playerIndex, &songID);
+
+    // A pending chapter-battle request is only valid for the battle song that
+    // the encounter code just pushed. Any other player-0 request supersedes it.
+    if (playerIndex == 0 && songID != SONG_NORMAL_BATTLE && songID != 0xA0) {
+        Port_ClearChapterBattleMusicRequest();
+    }
 
     if (music->requestedSongID == songID && music->variation == variation) {
         bgm_set_target_volume(volume);

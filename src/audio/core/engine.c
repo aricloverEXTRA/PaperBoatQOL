@@ -8,6 +8,9 @@
 #include <stddef.h>
 
 u8* gSbnData = NULL;
+// Size of each of dataBGM[0] and dataBGM[1], computed from the SBN at init.
+// Exposed so the chapter battle music loader can reject oversized BGM files.
+u32 gBgmMainBufferSize = 0;
 
 AuCallback BeginSoundUpdateCallback;
 BGMPlayer* gBGMPlayerA;
@@ -84,6 +87,7 @@ void au_engine_init(s32 outputRate) {
     gSbnData = (u8*)LOAD_ASSET(AUDIO_SBN);
     au_get_largest_SBN_files(gSbnData, &maxBGMSize, &maxMSEQSize);
     bgmMainSize = maxBGMSize > 0x5000 ? maxBGMSize : 0x5000;
+    gBgmMainBufferSize = bgmMainSize;
     bgmAuxSize = maxBGMSize > 0x5000 ? maxBGMSize : 0x2000;
     mseqSize = maxMSEQSize > 0x1000 ? maxMSEQSize : 0x1000;
     dummyTrackData = alHeapAlloc(alHeap, 1, bgmMainSize + bgmAuxSize + mseqSize);
