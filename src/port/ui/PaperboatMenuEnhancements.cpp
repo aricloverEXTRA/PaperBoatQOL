@@ -24,6 +24,11 @@ static const std::unordered_map<int32_t, const char*> HiddenBlockOptions = {
     { 0, "Original" }, { 1, "When Watt Current Partner" }, { 2, "When Watt Unlocked" }, { 3, "Always" }
 };
 
+static const std::unordered_map<int32_t, const char*> dayNightTimeSourceOptions = {
+    { 0, "Game Cycle" },
+    { 1, "System Time" },
+};
+
 void PaperboatMenu::AddMenuEnhancements() {
     // Add Enhancements Menu
     AddMenuEntry("Enhancements", CVAR_SETTING("Menu.EnhancementsSidebarSection"));
@@ -165,6 +170,63 @@ void PaperboatMenu::AddMenuEnhancements() {
     AddWidget(path, "Disable Mipmaps", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCEMENT("Graphics.DisableMipmaps"))
         .Options(CheckboxOptions().Tooltip("Just like emulator!"));
+
+    auto hideUnlessDayNightCycle = [](WidgetInfo& info) {
+        info.isHidden = !Port_FeatureInt("graphics.day_night_cycle", 0);
+    };
+    auto hideUnlessGameCycle = [](WidgetInfo& info) {
+        info.isHidden = !Port_FeatureInt("graphics.day_night_cycle", 0)
+            || Port_FeatureInt("graphics.day_night_cycle.time_source", 0) != 0;
+    };
+
+    AddWidget(path, "Day/Night Cycle", WIDGET_SEPARATOR_TEXT);
+
+    AddWidget(path, "Enable Day/Night Cycle", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Graphics.DayNightCycle"))
+        .Options(
+            CheckboxOptions().Tooltip(
+                "Tints supported outdoor areas through sunrise, day, sunset and night. Cosmetic only: no dialogue, "
+                "quests, enemies or music change. Special areas such as Star Haven, Toad Town Tunnels and Shy Guy's "
+                "Toy Box are left alone."
+            )
+        );
+
+    AddWidget(path, "Time Source", WIDGET_CVAR_COMBOBOX)
+        .CVar(CVAR_ENHANCEMENT("Graphics.DayNightCycle.TimeSource"))
+        .PreFunc(hideUnlessDayNightCycle)
+        .Options(
+            ComboboxOptions()
+                .Tooltip("Game Cycle advances at the chosen pace. System Time follows this computer's local clock.")
+                .ComboMap(dayNightTimeSourceOptions)
+        );
+
+    AddWidget(path, "Day Length", WIDGET_CVAR_SLIDER_INT)
+        .CVar(CVAR_ENHANCEMENT("Graphics.DayNightCycle.DayLength"))
+        .PreFunc(hideUnlessGameCycle)
+        .Options(
+            IntSliderOptions().Min(1).Max(240).Step(1).DefaultValue(24).Format("%d min").Tooltip(
+                "How many real minutes one full in-game day takes in Game Cycle mode. Changing this restarts the cycle "
+                "at the start hour."
+            )
+        );
+
+    AddWidget(path, "Start Hour", WIDGET_CVAR_SLIDER_INT)
+        .CVar(CVAR_ENHANCEMENT("Graphics.DayNightCycle.StartTime"))
+        .PreFunc(hideUnlessGameCycle)
+        .Options(
+            IntSliderOptions().Min(0).Max(23).Step(1).DefaultValue(6).Format("%02d:00").Tooltip(
+                "The hour the Game Cycle begins at when it is enabled or restarted. 0 is midnight, 12 is noon."
+            )
+        );
+
+    AddWidget(path, "Tint Strength", WIDGET_CVAR_SLIDER_INT)
+        .CVar(CVAR_ENHANCEMENT("Graphics.DayNightCycle.Strength"))
+        .PreFunc(hideUnlessDayNightCycle)
+        .Options(
+            IntSliderOptions().Min(0).Max(100).Step(5).DefaultValue(70).Format("%d%%").Tooltip(
+                "How strongly the day/night colors are applied. 0 leaves the original colors untouched."
+            )
+        );
 
     // Enhancements > Status Bar
     path = { "Enhancements", "Status Bar", SECTION_COLUMN_1 };
