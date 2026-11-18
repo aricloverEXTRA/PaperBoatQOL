@@ -279,7 +279,8 @@ void GameEngine::FinishInit() {
     spdlog::flush_on(spdlog::level::trace);
 #else
     spdlog::set_level(spdlog::level::info);
-    spdlog::flush_on(spdlog::level::warn);
+    // Make opt-in feature diagnostics visible while the game is still running.
+    spdlog::flush_on(spdlog::level::info);
 #endif
 
     Ship::Context::GetRawInstance()->InitAudio({ .SampleRate = 32000, .SampleLength = 1024, .DesiredBuffered = 1680 });
