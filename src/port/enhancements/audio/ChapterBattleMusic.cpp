@@ -6,7 +6,11 @@
 #include <ship/resource/ResourceManager.h>
 #include <spdlog/spdlog.h>
 
-#include <atomic>
+extern "C" {
+#include "common_structs.h"
+#include "enums.h"
+}
+
 #include <cstdint>
 #include <cstring>
 #include <set>
@@ -21,8 +25,6 @@ constexpr size_t kDrumInfoSize = 0x0C;
 constexpr size_t kInstrumentInfoSize = 0x08;
 constexpr size_t kPhraseTrackCount = 16;
 constexpr size_t kPhraseTrackSize = sizeof(uint32_t);
-
-std::atomic<bool> sChapterBattleMusicRequested { false };
 
 uint32_t ReadU32BE(const uint8_t* p) {
     return (static_cast<uint32_t>(p[0]) << 24) | (static_cast<uint32_t>(p[1]) << 16) |
@@ -46,43 +48,38 @@ bool InRange(uint64_t offset, uint64_t size, size_t total) {
     return offset <= total && size <= static_cast<uint64_t>(total) - offset;
 }
 
-// Values are the verified enum Areas indices from include/enums.h. `hos` is
-// checked first in the switch so Star Haven wins before Chapter 8's `kpa`.
 const char* BgmPathForArea(int32_t areaID) {
     switch (areaID) {
-        case 5: // AREA_HOS - Shooting Star Summit / Star Haven
+        case AREA_HOS:
             return "audio/PM64_StarHaven_Battle.bgm";
-        case 8: // AREA_IWA
-        case 9: // AREA_DRO
-        case 10: // AREA_SBK
-        case 11: // AREA_ISK
+        case AREA_IWA:
+        case AREA_DRO:
+        case AREA_SBK:
+        case AREA_ISK:
             return "audio/PM64_Ch2_Battle.bgm";
-        case 12: // AREA_MIM
-        case 13: // AREA_OBK
-        case 14: // AREA_ARN
-        case 15: // AREA_DGB
+        case AREA_MIM:
+        case AREA_OBK:
+        case AREA_ARN:
+        case AREA_DGB:
             return "audio/PM64_Ch3_Battle.bgm";
-        case 16: // AREA_OMO
+        case AREA_OMO:
             return "audio/PM64_Ch4_Battle.bgm";
-        case 17: // AREA_JAN
-        case 18: // AREA_KZN
+        case AREA_JAN:
+        case AREA_KZN:
             return "audio/PM64_Ch5_Battle.bgm";
-        case 19: // AREA_FLO
+        case AREA_FLO:
             return "audio/PM64_Ch6_Battle.bgm";
-        case 20: // AREA_SAM
-        case 21: // AREA_PRA
+        case AREA_SAM:
+        case AREA_PRA:
             return "audio/PM64_Ch7_Battle.bgm";
-        case 22: // AREA_KPA
+        case AREA_KPA:
             return "audio/PM64_Ch8_Battle.bgm";
         default:
-            // kmr, mac, tik, kkj, nok, trd, osr, mgm, tst, area_pit, etc.
             return nullptr;
     }
 }
 
-// Loose .bgm files are big-endian N64 data. Mirror the BGM half of Torch's
-// PM64:AUDIO factory so the bytes in dataBGM are native-endian before the
-// normal BGM player touches them.
+// Loose .bgm files are big-endian; the BGM player expects native-endian data.
 bool ConvertBgmToNative(uint8_t* data, size_t dataSize, uint32_t* outName) {
     if (data == nullptr || dataSize < kBgmHeaderSize) {
         return false;
@@ -106,18 +103,16 @@ bool ConvertBgmToNative(uint8_t* data, size_t dataSize, uint32_t* outName) {
     uint16_t instrumentsOffset = ReadU16BE(data + 0x20);
     uint16_t instrumentCount = ReadU16BE(data + 0x22);
 
-    Swap32(data + 0x00); // signature
-    Swap32(data + 0x04); // size
-    Swap32(data + 0x08); // name
+    Swap32(data + 0x00);
+    Swap32(data + 0x04);
+    Swap32(data + 0x08);
     for (size_t off = 0x14; off < 0x24; off += 2) {
-        Swap16(data + off); // BGMFileInfo u16 fields
+        Swap16(data + off);
     }
 
     uint32_t name = 0;
     std::memcpy(&name, data + 0x08, sizeof(name));
-    // bgm_control.c treats <= 0xFFFF as an AuResult error code. Packed 4CC
-    // names may have the high bit set (e.g. "New " == 0x4E657720), so this
-    // must stay an unsigned comparison, matching bgm_control.c's 0xFFFFU.
+    // The SBN loader treats <= 0xFFFF as an error code, not a song name.
     if (name <= 0xFFFFu) {
         return false;
     }
@@ -188,41 +183,20 @@ bool ConvertBgmToNative(uint8_t* data, size_t dataSize, uint32_t* outName) {
 
 } // namespace
 
-extern "C" void Port_MarkChapterBattleMusicRequest(void) {
-    sChapterBattleMusicRequested.store(true, std::memory_order_release);
-}
-
-extern "C" void Port_ClearChapterBattleMusicRequest(void) {
-    sChapterBattleMusicRequested.store(false, std::memory_order_relaxed);
-}
-
-extern "C" int32_t Port_TakeChapterBattleMusicRequest(void) {
-    return sChapterBattleMusicRequested.exchange(false, std::memory_order_acquire) ? 1 : 0;
-}
-
-extern "C" void Port_LogChapterBattleMusicAttempt(int32_t songID, int32_t marked, uint32_t loadedSongName) {
-    SPDLOG_INFO("Chapter battle music: battle song request 0x{:X}, loaded 0x{:08X} (encounter mark {})", songID,
-                loadedSongName, marked != 0 ? "set" : "not set");
-}
-
 extern "C" int32_t Port_LoadChapterBattleMusicForArea(int32_t areaID, void* dst, size_t dstSize) {
     if (dst == nullptr || dstSize == 0) {
         return 0;
     }
     const char* romhackId = Romhack_GetId();
     if (romhackId == nullptr || std::strcmp(romhackId, "TTYD64") != 0) {
-        SPDLOG_INFO("Chapter battle music: not active for romhack '{}'",
-                    romhackId != nullptr ? romhackId : "(none)");
         return 0;
     }
     if (!Port_FeatureInt("enhancements.audio.chapter_battle_music", 0)) {
-        SPDLOG_INFO("Chapter battle music: enhancement is disabled");
         return 0;
     }
 
     const char* path = BgmPathForArea(areaID);
     if (path == nullptr) {
-        SPDLOG_INFO("Chapter battle music: no track mapped for area {}", areaID);
         return 0;
     }
 
@@ -236,36 +210,30 @@ extern "C" int32_t Port_LoadChapterBattleMusicForArea(int32_t areaID, void* dst,
     }
     auto archiveManager = resourceManager->GetArchiveManager();
     if (archiveManager == nullptr || !archiveManager->HasFile(path)) {
-        SPDLOG_INFO("Chapter battle music: {} not found in mounted archives", path);
+        SPDLOG_DEBUG("Chapter battle music: {} not found in mounted archives", path);
         return 0;
     }
 
     auto file = archiveManager->LoadFile(path);
     if (file == nullptr || file->Buffer == nullptr || file->Buffer->size() <= file->BufferOffset) {
-        SPDLOG_INFO("Chapter battle music: {} could not be read", path);
         return 0;
     }
 
     const uint8_t* raw = reinterpret_cast<const uint8_t*>(file->Buffer->data()) + file->BufferOffset;
     size_t rawSize = file->Buffer->size() - file->BufferOffset;
     if (rawSize < kBgmHeaderSize) {
-        SPDLOG_INFO("Chapter battle music: {} is too small", path);
         return 0;
     }
 
     uint32_t declaredSize = ReadU32BE(raw + 4);
     if (declaredSize < kBgmHeaderSize || declaredSize > rawSize || declaredSize > dstSize) {
-        SPDLOG_INFO("Chapter battle music: {} has invalid size {} (file {}, buffer {})", path, declaredSize,
-                     rawSize, dstSize);
         return 0;
     }
 
-    // Never point the audio engine at the LUS-owned File buffer; convert a
-    // private copy and copy that into the preallocated dataBGM slot.
+    // LUS owns the File buffer, so convert a private copy before handing it to the audio engine.
     std::vector<uint8_t> bgm(raw, raw + declaredSize);
     uint32_t name = 0;
     if (!ConvertBgmToNative(bgm.data(), bgm.size(), &name)) {
-        SPDLOG_INFO("Chapter battle music: invalid BGM in {}", path);
         return 0;
     }
 

@@ -1363,9 +1363,6 @@ void update_encounters_pre_battle(void) {
 
             // start battle music
             if (currentEncounter->songID < 0) {
-                // Standard enemy battle only: bosses/scripted battles supply a
-                // real songID and take the else branch below.
-                Port_MarkChapterBattleMusicRequest();
                 switch (currentEncounter->firstStrikeType) {
                     case FIRST_STRIKE_NONE:
                         bgm_set_battle_song(SONG_NORMAL_BATTLE, FIRST_STRIKE_NONE);

@@ -8,8 +8,7 @@
 #include <stddef.h>
 
 u8* gSbnData = NULL;
-// Size of each of dataBGM[0] and dataBGM[1], computed from the SBN at init.
-// Exposed so the chapter battle music loader can reject oversized BGM files.
+// Size of each dataBGM buffer, from the SBN; bounds custom BGM loads.
 u32 gBgmMainBufferSize = 0;
 
 AuCallback BeginSoundUpdateCallback;

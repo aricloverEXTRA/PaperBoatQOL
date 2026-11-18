@@ -151,16 +151,7 @@ int32_t Port_FeatureInt(const char* id, int32_t fallback);
 float Port_FeatureFloat(const char* id, float fallback);
 const char* Port_FeatureDisabledBy(const char* id);
 
-// Chapter-Based Battle Music: the encounter code marks a standard normal-battle
-// request, and snd_song_load consumes the mark after the normal SBN song (and
-// its banks) has loaded. The override itself keys off the battle song ID so it
-// still works if another player-0 load consumes the mark first. The loader
-// returns 0 on any failure so callers can fall straight through to eldexterr's
-// default TTYD64 battle music.
-void Port_MarkChapterBattleMusicRequest(void);
-void Port_ClearChapterBattleMusicRequest(void);
-int32_t Port_TakeChapterBattleMusicRequest(void);
-void Port_LogChapterBattleMusicAttempt(int32_t songID, int32_t marked, uint32_t loadedSongName);
+// Returns 0 if no custom track is available, so the caller keeps the default.
 int32_t Port_LoadChapterBattleMusicForArea(int32_t areaID, void* dst, size_t dstSize);
 
 // Invalidate GPU texture cache entry for a specific RAM address.

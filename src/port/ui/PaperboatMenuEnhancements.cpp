@@ -141,7 +141,8 @@ void PaperboatMenu::AddMenuEnhancements() {
         .Options(
             CheckboxOptions().Tooltip(
                 "Plays custom chapter battle music in Chapters 2–8 and Star Haven when "
-                "ChapterBattleMusicMod.o2r is present in mods/. Falls back to default TTYD64 battle music otherwise."
+                "ChapterBattleMusicMod.o2r is enabled in the Mods menu. Falls back to the default TTYD64 battle "
+                "music otherwise. Mod changes require a restart; this toggle does not."
             )
         );
 

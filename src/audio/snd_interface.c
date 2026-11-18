@@ -487,38 +487,21 @@ AuResult snd_song_load(s32 songID, s32 playerIndex) {
     AuResult status;
     BGMHeader* bgmFile;
     BGMPlayer* player;
-    s32 chapterBattleRequest = false;
     s32 customSongName = 0;
 
     port_auBgmLock();
-    // Encounter code marks only the standard songID < 0 battle branch, so
-    // boss/scripted themes never set this. Consume it on player 0's next load;
-    // after the normal song load we can replace just the BGM buffer while
-    // keeping the banks and the normal BGM player path (including Think-mode
-    // track attenuation).
-    if (playerIndex == 0) {
-        chapterBattleRequest = Port_TakeChapterBattleMusicRequest();
-    }
     au_get_bgm_player_and_file(playerIndex, &bgmFile, &player);
 
     if (bgmFile != nullptr) {
         status = au_load_song_files(songID, bgmFile, player);
-        // au_load_song_files returns the packed 4CC song name on success, not
-        // AU_RESULT_OK. bgm_control.c likewise treats <= 0xFFFF as an error.
-        // TTYD64 remaps SONG_NORMAL_BATTLE (0x2) to 0xA0 in OnBgmSong. The
-        // encounter marker is useful diagnostics, but requiring it would make
-        // the override fragile if any other player-0 song load consumes it
-        // first. The song ID itself is the authoritative battle signal.
+        // TTYD64 remaps SONG_NORMAL_BATTLE to 0xA0. A successful load returns a
+        // packed 4CC song name (> 0xFFFF), not AU_RESULT_OK.
         if ((u32) status > 0xFFFFU && playerIndex == 0 && player != nullptr &&
-            (songID == SONG_NORMAL_BATTLE || songID == 0xA0)) { // 0xA0 = TTYD64 default enemy battle song
-            Port_LogChapterBattleMusicAttempt(songID, chapterBattleRequest, (u32) status);
+            (songID == SONG_NORMAL_BATTLE || songID == 0xA0)) {
             customSongName = Port_LoadChapterBattleMusicForArea(
                 gGameStatusPtr->areaID, bgmFile, gBgmMainBufferSize
             );
-            // Packed 4CC names can have the high bit set ("New " does), so
-            // compare as unsigned just like bgm_control.c does.
             if ((u32) customSongName > 0xFFFFU) {
-                // au_load_song_files already set player->bgmFile to bgmFile.
                 status = (AuResult) customSongName;
             }
         }
