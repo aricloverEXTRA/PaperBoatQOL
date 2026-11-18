@@ -65,6 +65,13 @@ bool IsOutdoorArea(s32 areaID) {
     }
 }
 
+bool IsTintableContext() {
+    if (gGameStatusPtr == nullptr || (gGameStatusPtr->demoBattleFlags & DEMO_BTL_FLAG_ENABLED)) {
+        return false;
+    }
+    return gGameStatusPtr->context == CONTEXT_WORLD || gGameStatusPtr->context == CONTEXT_BATTLE;
+}
+
 float CurrentHour() {
     if (Port_FeatureInt("graphics.day_night_cycle.time_source", 0) == 1) {
         std::time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
@@ -236,8 +243,7 @@ extern "C" s32 Port_GetDayNightTint(DayNightTint* out) {
     if (out == nullptr || !Port_FeatureInt("graphics.day_night_cycle", 0)) {
         return 0;
     }
-    if (gGameStatusPtr == nullptr || gGameStatusPtr->context != CONTEXT_WORLD ||
-        !IsOutdoorArea(gGameStatusPtr->areaID) || IsTitleScene()) {
+    if (!IsTintableContext() || !IsOutdoorArea(gGameStatusPtr->areaID) || IsTitleScene()) {
         return 0;
     }
 

@@ -185,9 +185,10 @@ void PaperboatMenu::AddMenuEnhancements() {
         .CVar(CVAR_ENHANCEMENT("Graphics.DayNightCycle.Enabled"))
         .Options(
             CheckboxOptions().Tooltip(
-                "Tints the whole scene in supported outdoor areas through sunrise, day, sunset and night, with "
-                "Paper Mario 64 star textures after dark. Cosmetic only: no dialogue, quests, enemies or music change. "
-                "Special areas such as Star Haven, Toad Town Tunnels and Shy Guy's Toy Box are left alone."
+                "Tints the whole scene in supported outdoor areas, including battles, through sunrise, day, sunset "
+                "and night, with Paper Mario 64 star textures after dark. Cosmetic only: no dialogue, quests, enemies "
+                "or music change. Indoor/special areas such as Star Haven, Toad Town Tunnels, Shy Guy's Toy Box and "
+                "Bowser's Castle are left alone."
             )
         );
 
