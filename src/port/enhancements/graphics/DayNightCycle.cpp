@@ -228,13 +228,26 @@ void MigrateLegacyCVar() {
     cvars->SetInteger(CVAR_ENHANCEMENT("Graphics.DayNightCycle.Enabled"), legacyValue);
 }
 
-// The 2-D title keeps stale area/map values; map 12 is kmr_21, the in-world title.
-bool IsTitleScene() {
-    if (gGameStatusPtr == nullptr) {
-        return false;
+bool IsGameplayMode() {
+    switch (get_game_mode()) {
+        case GAME_MODE_ENTER_DEMO_WORLD:
+        case GAME_MODE_ENTER_WORLD:
+        case GAME_MODE_WORLD:
+        case GAME_MODE_CHANGE_MAP:
+        case GAME_MODE_GAME_OVER:
+        case GAME_MODE_BATTLE:
+        case GAME_MODE_END_BATTLE:
+        case GAME_MODE_PAUSE:
+        case GAME_MODE_UNPAUSE:
+            return true;
+        default:
+            return false;
     }
-    return get_game_mode() == GAME_MODE_TITLE_SCREEN ||
-           (gGameStatusPtr->areaID == AREA_KMR && gGameStatusPtr->mapID == 12);
+}
+
+// Map 12 is kmr_21, the in-world title screen.
+bool IsInWorldTitleMap() {
+    return gGameStatusPtr->areaID == AREA_KMR && gGameStatusPtr->mapID == 12;
 }
 
 } // namespace
@@ -243,7 +256,8 @@ extern "C" s32 Port_GetDayNightTint(DayNightTint* out) {
     if (out == nullptr || !Port_FeatureInt("graphics.day_night_cycle", 0)) {
         return 0;
     }
-    if (!IsTintableContext() || !IsOutdoorArea(gGameStatusPtr->areaID) || IsTitleScene()) {
+    if (!IsTintableContext() || !IsOutdoorArea(gGameStatusPtr->areaID) || !IsGameplayMode() ||
+        IsInWorldTitleMap()) {
         return 0;
     }
 
