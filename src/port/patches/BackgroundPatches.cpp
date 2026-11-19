@@ -415,15 +415,11 @@ void port_appendGfx_background_texture(void) {
         }
     }
 
-    if (drawStars != 0 && bgBotY > bgTopY) {
-        s32 frameLeft;
-        s32 frameRight;
-        s32 width;
-        s32 height = (bgBotY - bgTopY) * 55 / 100;
-        s32 scroll = gGameStatusPtr->backgroundXOffset / 8;
-
-        get_cam_frame_x(gCurrentCameraID, &frameLeft, &frameRight);
-        width = frameRight - frameLeft;
+    if (drawStars != 0) {
+        s32 visLeft = OTRGetRectDimensionFromLeftEdge(0);
+        s32 visRight = OTRGetRectDimensionFromRightEdge(0);
+        s32 width = visRight - visLeft;
+        s32 height = (SCREEN_HEIGHT - 2 * SCREEN_INSET_Y) * 55 / 100;
 
         if (width > 0 && height > 0) {
             if (!sDayNightStarTexturePrefetched) {
@@ -452,18 +448,13 @@ void port_appendGfx_background_texture(void) {
 
             for (i = 0; i < 56; i++) {
                 u32 hash = DayNightStarHash((u32) i);
-                s32 xOffset = (s32) (hash & 0xFFFF) - scroll;
                 s32 x;
                 s32 y;
                 s32 size;
                 s32 step;
 
-                xOffset %= width;
-                if (xOffset < 0) {
-                    xOffset += width;
-                }
-                x = frameLeft + xOffset;
-                y = bgTopY + (s32) (((hash >> 16) & 0xFFFF) % (u32) height);
+                x = visLeft + (s32) (((hash & 0xFFFF) % SCREEN_WIDTH) * (width - 1) / (SCREEN_WIDTH - 1));
+                y = SCREEN_INSET_Y + (s32) (((hash >> 16) & 0xFFFF) % (u32) height);
                 size = 5 + ((hash >> 8) & 3);
                 step = 1024 * 64 / size;
 

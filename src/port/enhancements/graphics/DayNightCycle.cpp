@@ -267,18 +267,17 @@ extern "C" s32 Port_GetDayNightTint(DayNightTint* out) {
 
 extern "C" void Port_DayNightDrawWorldOverlay(void) {
     DayNightTint tint;
-    Camera* cam;
-    s32 left;
-    s32 right;
+    s32 visLeft;
+    s32 visRight;
     s32 alpha;
 
     if (!Port_GetDayNightTint(&tint) || tint.alpha == 0) {
         return;
     }
 
-    cam = &gCameras[gCurrentCameraID];
-    get_cam_frame_x(gCurrentCameraID, &left, &right);
-    if (cam->viewportH <= 0 || left >= right) {
+    visLeft = OTRGetRectDimensionFromLeftEdge(0);
+    visRight = OTRGetRectDimensionFromRightEdge(0);
+    if (visLeft >= visRight) {
         return;
     }
 
@@ -297,10 +296,7 @@ extern "C" void Port_DayNightDrawWorldOverlay(void) {
     gDPSetCombineMode(gMainGfxPos++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
     gDPSetPrimColor(gMainGfxPos++, 0, 0, tint.r, tint.g, tint.b, (u8) alpha);
     gDPSetScissor(gMainGfxPos++, G_SC_NON_INTERLACE, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-    gDPFillWideRectangle(
-        gMainGfxPos++, left, cam->viewportStartY, right - 1,
-        cam->viewportStartY + cam->viewportH - 1
-    );
+    gDPFillWideRectangle(gMainGfxPos++, visLeft, 0, visRight, SCREEN_HEIGHT);
 
     gDPSetColorDither(gMainGfxPos++, G_CD_DISABLE);
     gDPPipeSync(gMainGfxPos++);
