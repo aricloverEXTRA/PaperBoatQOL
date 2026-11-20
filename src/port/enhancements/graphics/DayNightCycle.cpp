@@ -85,7 +85,7 @@ float CurrentHour() {
                      static_cast<float>(localTime.tm_sec) / 3600.0f;
 
         // Shift the cycle, not the clock: DST gets earlier sunrises and later sunsets;
-        // standard time gets the reverse, which lengthens winter nights.
+        // standard time gets the reverse, which lengthens nights after DST ends.
         if (Port_FeatureInt("graphics.day_night_cycle.daylight_saving", 0)) {
             constexpr float SEASONAL_SHIFT = 2.0f;
             float shift = localTime.tm_isdst > 0 ? SEASONAL_SHIFT : -SEASONAL_SHIFT;

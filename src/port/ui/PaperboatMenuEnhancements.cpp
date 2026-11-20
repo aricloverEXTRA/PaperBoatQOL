@@ -210,8 +210,9 @@ void PaperboatMenu::AddMenuEnhancements() {
         .PreFunc(hideUnlessSystemTime)
         .Options(
             CheckboxOptions().Tooltip(
-                "System Time only. Uses the OS daylight-saving flag to move sunrise and sunset about two hours: "
-                "longer days during daylight saving, longer nights during standard time."
+                "System Time only. Follows the OS DST flag (northern-hemisphere schedule: starts around March, ends "
+                "around November). DST shifts sunrise earlier and sunset later for longer days; after it ends, both "
+                "shift the other way for longer nights."
             )
         );
 
