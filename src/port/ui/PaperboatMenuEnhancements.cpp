@@ -210,9 +210,8 @@ void PaperboatMenu::AddMenuEnhancements() {
         .PreFunc(hideUnlessSystemTime)
         .Options(
             CheckboxOptions().Tooltip(
-                "System Time only. Follows the OS DST flag (northern-hemisphere schedule: starts around March, ends "
-                "around November). DST shifts sunrise earlier and sunset later for longer days; after it ends, both "
-                "shift the other way for longer nights."
+                "System Time only. Follows the computer's daylight-saving flag for longer days while DST is active "
+                "and longer nights when it isn't, without changing the clock."
             )
         );
 
