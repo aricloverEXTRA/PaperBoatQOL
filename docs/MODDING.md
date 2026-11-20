@@ -95,6 +95,7 @@ The menu greys a locked widget in `Menu::MenuDrawItem` (a third disable source a
 | `graphics.day_night_cycle.daylight_saving` | `gEnhancements.Graphics.DayNightCycle.DaylightSaving` | 0 |
 | `graphics.day_night_cycle.day_length` | `gEnhancements.Graphics.DayNightCycle.DayLength` | 24 |
 | `graphics.day_night_cycle.start_time` | `gEnhancements.Graphics.DayNightCycle.StartTime` | 6 |
+| `graphics.day_night_cycle.freeze_time` | `gEnhancements.Graphics.DayNightCycle.FreezeTime` | 0 |
 | `graphics.day_night_cycle.strength` | `gEnhancements.Graphics.DayNightCycle.Strength` | 70 |
 | `graphics.interpolation_fps` | `gSettings.InterpolationFPS` | 30 |
 | `graphics.match_refresh_rate` | `gSettings.MatchRefreshRate` | 0 |

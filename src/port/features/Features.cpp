@@ -83,6 +83,7 @@ static const Def sDefs[] = {
                    CVAR_ENHANCEMENT("Graphics.DayNightCycle.DaylightSaving"), 0),
     FEATURE_INT("graphics.day_night_cycle.day_length", CVAR_ENHANCEMENT("Graphics.DayNightCycle.DayLength"), 24),
     FEATURE_INT("graphics.day_night_cycle.start_time", CVAR_ENHANCEMENT("Graphics.DayNightCycle.StartTime"), 6),
+    FEATURE_TOGGLE("graphics.day_night_cycle.freeze_time", CVAR_ENHANCEMENT("Graphics.DayNightCycle.FreezeTime"), 0),
     FEATURE_INT("graphics.day_night_cycle.strength", CVAR_ENHANCEMENT("Graphics.DayNightCycle.Strength"), 70),
     FEATURE_INT("graphics.interpolation_fps", CVAR_SETTING("InterpolationFPS"), 30),
     FEATURE_TOGGLE("graphics.match_refresh_rate", CVAR_SETTING("MatchRefreshRate"), 0),

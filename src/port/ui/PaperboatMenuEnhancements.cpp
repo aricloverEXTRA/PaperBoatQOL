@@ -235,6 +235,16 @@ void PaperboatMenu::AddMenuEnhancements() {
             )
         );
 
+    AddWidget(path, "Freeze Time", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Graphics.DayNightCycle.FreezeTime"))
+        .PreFunc(hideUnlessGameCycle)
+        .Options(
+            CheckboxOptions().Tooltip(
+                "Game Cycle only. Holds the cycle at the current hour so you can keep a chosen look, such as night. "
+                "Use Start Hour to pick an exact time before enabling. Turn this off to resume."
+            )
+        );
+
     AddWidget(path, "Tint Strength", WIDGET_CVAR_SLIDER_INT)
         .CVar(CVAR_ENHANCEMENT("Graphics.DayNightCycle.Strength"))
         .PreFunc(hideUnlessDayNightCycle)

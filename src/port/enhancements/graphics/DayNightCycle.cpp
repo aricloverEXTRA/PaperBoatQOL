@@ -44,6 +44,10 @@ constexpr TintKeyframe sTintKeyframes[] = {
 ListenerID sUpdateListener = -1;
 std::chrono::steady_clock::time_point sLastTick;
 float sCycleMinutes = DEFAULT_START_MINUTES;
+bool sCycleInitialized = false;
+int sLastTimeSource = -1;
+int sLastStartHour = -1;
+int sLastDayLength = -1;
 
 bool IsOutdoorArea(s32 areaID) {
     switch (areaID) {
@@ -177,6 +181,10 @@ void TickCycle() {
 
     if (deltaSeconds < 0.0f || deltaSeconds > 1.0f) {
         deltaSeconds = 0.0f;
+    }
+
+    if (Port_FeatureInt("graphics.day_night_cycle.freeze_time", 0)) {
+        return;
     }
 
     int dayLength = Port_FeatureInt("graphics.day_night_cycle.day_length", 24);
@@ -319,10 +327,22 @@ void RegisterDayNightCycle_Init() {
     sUpdateListener = -1;
 
     if (!Port_FeatureInt("graphics.day_night_cycle", 0)) {
+        sCycleInitialized = false;
         return;
     }
 
-    ResetCycle();
+    int timeSource = Port_FeatureInt("graphics.day_night_cycle.time_source", 0);
+    int startHour = Port_FeatureInt("graphics.day_night_cycle.start_time", 6);
+    int dayLength = Port_FeatureInt("graphics.day_night_cycle.day_length", 24);
+    if (!sCycleInitialized || timeSource != sLastTimeSource || startHour != sLastStartHour ||
+        dayLength != sLastDayLength) {
+        ResetCycle();
+        sLastTimeSource = timeSource;
+        sLastStartHour = startHour;
+        sLastDayLength = dayLength;
+        sCycleInitialized = true;
+    }
+
     sUpdateListener = REGISTER_LISTENER(GameFrameUpdate, EVENT_PRIORITY_NORMAL, [](IEvent*) {
         TickCycle();
     });
@@ -336,5 +356,6 @@ static RegisterShipInitFunc initDayNightCycleFunc(
         CVAR_ENHANCEMENT("Graphics.DayNightCycle.DaylightSaving"),
         CVAR_ENHANCEMENT("Graphics.DayNightCycle.DayLength"),
         CVAR_ENHANCEMENT("Graphics.DayNightCycle.StartTime"),
+        CVAR_ENHANCEMENT("Graphics.DayNightCycle.FreezeTime"),
     }
 );
