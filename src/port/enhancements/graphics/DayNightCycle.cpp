@@ -81,8 +81,18 @@ float CurrentHour() {
 #else
         localtime_r(&now, &localTime);
 #endif
-        return static_cast<float>(localTime.tm_hour) + static_cast<float>(localTime.tm_min) / 60.0f +
-               static_cast<float>(localTime.tm_sec) / 3600.0f;
+        float hour = static_cast<float>(localTime.tm_hour) + static_cast<float>(localTime.tm_min) / 60.0f +
+                     static_cast<float>(localTime.tm_sec) / 3600.0f;
+
+        // Shift the cycle, not the clock: DST gets earlier sunrises and later sunsets;
+        // standard time gets the reverse, which lengthens winter nights.
+        if (Port_FeatureInt("graphics.day_night_cycle.daylight_saving", 0)) {
+            constexpr float SEASONAL_SHIFT = 2.0f;
+            float shift = localTime.tm_isdst > 0 ? SEASONAL_SHIFT : -SEASONAL_SHIFT;
+            hour += hour < 12.0f ? shift : -shift;
+        }
+
+        return hour;
     }
 
     return sCycleMinutes / 60.0f;
@@ -323,6 +333,7 @@ static RegisterShipInitFunc initDayNightCycleFunc(
     {
         CVAR_ENHANCEMENT("Graphics.DayNightCycle.Enabled"),
         CVAR_ENHANCEMENT("Graphics.DayNightCycle.TimeSource"),
+        CVAR_ENHANCEMENT("Graphics.DayNightCycle.DaylightSaving"),
         CVAR_ENHANCEMENT("Graphics.DayNightCycle.DayLength"),
         CVAR_ENHANCEMENT("Graphics.DayNightCycle.StartTime"),
     }

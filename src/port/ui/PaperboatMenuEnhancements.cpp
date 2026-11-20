@@ -178,6 +178,10 @@ void PaperboatMenu::AddMenuEnhancements() {
         info.isHidden = !Port_FeatureInt("graphics.day_night_cycle", 0)
             || Port_FeatureInt("graphics.day_night_cycle.time_source", 0) != 0;
     };
+    auto hideUnlessSystemTime = [](WidgetInfo& info) {
+        info.isHidden = !Port_FeatureInt("graphics.day_night_cycle", 0)
+            || Port_FeatureInt("graphics.day_night_cycle.time_source", 0) != 1;
+    };
 
     AddWidget(path, "Day/Night Cycle", WIDGET_SEPARATOR_TEXT);
 
@@ -199,6 +203,16 @@ void PaperboatMenu::AddMenuEnhancements() {
             ComboboxOptions()
                 .Tooltip("Game Cycle advances at the chosen pace. System Time follows this computer's local clock.")
                 .ComboMap(dayNightTimeSourceOptions)
+        );
+
+    AddWidget(path, "Daylight Saving Time", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Graphics.DayNightCycle.DaylightSaving"))
+        .PreFunc(hideUnlessSystemTime)
+        .Options(
+            CheckboxOptions().Tooltip(
+                "System Time only. Uses the OS daylight-saving flag to move sunrise and sunset about two hours: "
+                "longer days during daylight saving, longer nights during standard time."
+            )
         );
 
     AddWidget(path, "Day Length", WIDGET_CVAR_SLIDER_INT)
