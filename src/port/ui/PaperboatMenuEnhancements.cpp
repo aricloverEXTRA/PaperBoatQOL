@@ -29,6 +29,18 @@ static const std::unordered_map<int32_t, const char*> dayNightTimeSourceOptions 
     { 1, "System Time" },
 };
 
+static const std::unordered_map<int32_t, const char*> weatherSeedSourceOptions = {
+    { 0, "Game Session" },
+    { 1, "Daily Seed" },
+};
+
+static const std::unordered_map<int32_t, const char*> weatherForceOptions = {
+    { 0, "Automatic" },
+    { 1, "Rain" },
+    { 2, "Thunderstorm" },
+    { 3, "Snow" },
+};
+
 void PaperboatMenu::AddMenuEnhancements() {
     // Add Enhancements Menu
     AddMenuEntry("Enhancements", CVAR_SETTING("Menu.EnhancementsSidebarSection"));
@@ -182,6 +194,9 @@ void PaperboatMenu::AddMenuEnhancements() {
         info.isHidden = !Port_FeatureInt("graphics.day_night_cycle", 0)
             || Port_FeatureInt("graphics.day_night_cycle.time_source", 0) != 1;
     };
+    auto hideUnlessWeatherCycle = [](WidgetInfo& info) {
+        info.isHidden = !Port_FeatureInt("graphics.weather_cycle", 0);
+    };
 
     AddWidget(path, "Day/Night Cycle", WIDGET_SEPARATOR_TEXT);
 
@@ -251,6 +266,68 @@ void PaperboatMenu::AddMenuEnhancements() {
             IntSliderOptions().Min(0).Max(100).Step(5).DefaultValue(70).Format("%d%%").Tooltip(
                 "How strongly the day/night colors and stars are applied. 0 leaves the original look untouched."
             )
+        );
+
+    AddWidget(path, "Weather Cycle", WIDGET_SEPARATOR_TEXT);
+
+    AddWidget(path, "Enable Weather Cycle", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Graphics.WeatherCycle.Enabled"))
+        .Options(
+            CheckboxOptions().Tooltip(
+                "Adds cosmetic Rain, Thunderstorms and Snow in supported outdoor areas, including battles, using "
+                "existing game visuals. Dialogues, enemies, quests, music and story are unchanged. Dry Dry Desert, "
+                "indoor/special areas, title screens and finale scenes are left alone."
+            )
+        );
+
+    AddWidget(path, "Event Duration", WIDGET_CVAR_SLIDER_INT)
+        .CVar(CVAR_ENHANCEMENT("Graphics.WeatherCycle.Duration"))
+        .PreFunc(hideUnlessWeatherCycle)
+        .Options(
+            IntSliderOptions().Min(5).Max(120).Step(5).DefaultValue(20).Format("%d min").Tooltip(
+                "How long each weather event lasts in real minutes. Changing this restarts the pattern."
+            )
+        );
+
+    AddWidget(path, "Randomness", WIDGET_CVAR_SLIDER_INT)
+        .CVar(CVAR_ENHANCEMENT("Graphics.WeatherCycle.Randomness"))
+        .PreFunc(hideUnlessWeatherCycle)
+        .Options(
+            IntSliderOptions().Min(0).Max(100).Step(5).DefaultValue(50).Format("%d%%").Tooltip(
+                "0 repeats a fixed sequence of clear weather, rain, thunderstorms and snow. 100 picks each event "
+                "from the seeded random pool. Changing this restarts the pattern."
+            )
+        );
+
+    AddWidget(path, "Seed Source", WIDGET_CVAR_COMBOBOX)
+        .CVar(CVAR_ENHANCEMENT("Graphics.WeatherCycle.SeedSource"))
+        .PreFunc(hideUnlessWeatherCycle)
+        .Options(
+            ComboboxOptions()
+                .Tooltip(
+                    "Daily Seed uses this computer's date for a repeatable pattern. Game Session reshuffles on each "
+                    "restart. Nothing is downloaded and real weather is never checked."
+                )
+                .ComboMap(weatherSeedSourceOptions)
+        );
+
+    AddWidget(path, "Force Weather", WIDGET_CVAR_COMBOBOX)
+        .CVar(CVAR_ENHANCEMENT("Graphics.WeatherCycle.ForceWeather"))
+        .PreFunc(hideUnlessWeatherCycle)
+        .Options(
+            ComboboxOptions()
+                .Tooltip(
+                    "Locks supported areas to one weather type for testing. Automatic follows the chosen pattern. "
+                    "Rain and thunderstorms become snow in Chapter 7, and Dry Dry Desert stays clear."
+                )
+                .ComboMap(weatherForceOptions)
+        );
+
+    AddWidget(path, "Thunder Sound", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Graphics.WeatherCycle.ThunderSound"))
+        .PreFunc(hideUnlessWeatherCycle)
+        .Options(
+            CheckboxOptions().Tooltip("Plays the game's existing thunder sound on lightning flashes. Off by default.")
         );
 
     // Enhancements > Status Bar

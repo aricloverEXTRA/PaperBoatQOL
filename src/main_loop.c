@@ -10,6 +10,7 @@
 #include "dx/profiling.h"
 #include "port/interpolation/FrameInterpolation.h"
 #include "port/enhancements/graphics/DayNightCycle.h"
+#include "port/enhancements/graphics/WeatherCycle.h"
 
 s32 gOverrideFlags;
 s32 gTimeFreezeMode;
@@ -225,6 +226,7 @@ void gfx_draw_frame(void) {
     if (!(gOverrideFlags & GLOBAL_OVERRIDES_DISABLE_RENDER_WORLD)) {
         render_frame(false);
         Port_DayNightDrawWorldOverlay();
+        Port_WeatherDrawWorldOverlay();
     }
     FrameInterpolation_RecordCloseChild();
 

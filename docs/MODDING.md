@@ -97,6 +97,12 @@ The menu greys a locked widget in `Menu::MenuDrawItem` (a third disable source a
 | `graphics.day_night_cycle.start_time` | `gEnhancements.Graphics.DayNightCycle.StartTime` | 6 |
 | `graphics.day_night_cycle.freeze_time` | `gEnhancements.Graphics.DayNightCycle.FreezeTime` | 0 |
 | `graphics.day_night_cycle.strength` | `gEnhancements.Graphics.DayNightCycle.Strength` | 70 |
+| `graphics.weather_cycle` | `gEnhancements.Graphics.WeatherCycle.Enabled` | 0 |
+| `graphics.weather_cycle.duration` | `gEnhancements.Graphics.WeatherCycle.Duration` | 20 |
+| `graphics.weather_cycle.randomness` | `gEnhancements.Graphics.WeatherCycle.Randomness` | 50 |
+| `graphics.weather_cycle.seed_source` | `gEnhancements.Graphics.WeatherCycle.SeedSource` | 1 (daily seed) |
+| `graphics.weather_cycle.force_weather` | `gEnhancements.Graphics.WeatherCycle.ForceWeather` | 0 (automatic) |
+| `graphics.weather_cycle.thunder_sound` | `gEnhancements.Graphics.WeatherCycle.ThunderSound` | 0 |
 | `graphics.interpolation_fps` | `gSettings.InterpolationFPS` | 30 |
 | `graphics.match_refresh_rate` | `gSettings.MatchRefreshRate` | 0 |
 | `graphics.texture_cache` | `gGraphics.TextureCache` | 0 (auto) |
