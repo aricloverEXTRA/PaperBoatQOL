@@ -268,6 +268,12 @@ bool IsInWorldTitleMap() {
     return gGameStatusPtr->areaID == AREA_KMR && gGameStatusPtr->mapID == 12;
 }
 
+// osr_03 is the castle destruction scene; kmr_30 is the post-credits "The End" scene.
+bool IsFinaleScene() {
+    return (gGameStatusPtr->areaID == AREA_OSR && gGameStatusPtr->mapID == 3) ||
+           (gGameStatusPtr->areaID == AREA_KMR && gGameStatusPtr->mapID == 16);
+}
+
 } // namespace
 
 extern "C" s32 Port_GetDayNightTint(DayNightTint* out) {
@@ -275,7 +281,7 @@ extern "C" s32 Port_GetDayNightTint(DayNightTint* out) {
         return 0;
     }
     if (!IsTintableContext() || !IsOutdoorArea(gGameStatusPtr->areaID) || !IsGameplayMode() ||
-        IsInWorldTitleMap()) {
+        IsInWorldTitleMap() || IsFinaleScene()) {
         return 0;
     }
 
