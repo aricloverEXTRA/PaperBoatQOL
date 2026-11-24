@@ -15,7 +15,7 @@ enum WeatherType {
 };
 
 s32 Port_GetCurrentWeather(void);
-void Port_WeatherDrawWorldOverlay(void);
+void Port_WeatherDrawSkyOverlay(void);
 
 #ifdef __cplusplus
 }

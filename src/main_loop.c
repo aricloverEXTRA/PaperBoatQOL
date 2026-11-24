@@ -226,7 +226,6 @@ void gfx_draw_frame(void) {
     if (!(gOverrideFlags & GLOBAL_OVERRIDES_DISABLE_RENDER_WORLD)) {
         render_frame(false);
         Port_DayNightDrawWorldOverlay();
-        Port_WeatherDrawWorldOverlay();
     }
     FrameInterpolation_RecordCloseChild();
 

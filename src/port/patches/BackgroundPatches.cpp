@@ -1,6 +1,7 @@
 #include "port/ShipInit.hpp"
 #include "port/Engine.h"
 #include "port/enhancements/graphics/DayNightCycle.h"
+#include "port/enhancements/graphics/WeatherCycle.h"
 #include "port/hooks/Events.h"
 
 // Port reimplementation of load_map_bg / appendGfx_background_texture (src/background.c).
@@ -467,5 +468,7 @@ void port_appendGfx_background_texture(void) {
             gDPPipeSync(gMainGfxPos++);
         }
     }
+
+    Port_WeatherDrawSkyOverlay();
 }
 }

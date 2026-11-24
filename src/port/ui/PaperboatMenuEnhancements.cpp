@@ -274,9 +274,10 @@ void PaperboatMenu::AddMenuEnhancements() {
         .CVar(CVAR_ENHANCEMENT("Graphics.WeatherCycle.Enabled"))
         .Options(
             CheckboxOptions().Tooltip(
-                "Adds cosmetic Rain, Thunderstorms and Snow in supported outdoor areas, including battles, using "
-                "existing game visuals. Dialogues, enemies, quests, music and story are unchanged. Dry Dry Desert, "
-                "indoor/special areas, title screens and finale scenes are left alone."
+                "Adds world-space Rain, Thunderstorms and Snow around the player in supported outdoor areas, "
+                "including battles, using existing game effects and visuals. Dialogues, enemies, quests, music and "
+                "story are unchanged. Dry Dry Desert, the Flower Fields, indoor/special areas, title screens and "
+                "finale scenes are left alone."
             )
         );
 
@@ -318,7 +319,8 @@ void PaperboatMenu::AddMenuEnhancements() {
             ComboboxOptions()
                 .Tooltip(
                     "Locks supported areas to one weather type for testing. Automatic follows the chosen pattern. "
-                    "Rain and thunderstorms become snow in Chapter 7, and Dry Dry Desert stays clear."
+                    "Rain and thunderstorms become snow in Chapter 7, and Dry Dry Desert and the Flower Fields "
+                    "stay clear."
                 )
                 .ComboMap(weatherForceOptions)
         );
@@ -327,7 +329,9 @@ void PaperboatMenu::AddMenuEnhancements() {
         .CVar(CVAR_ENHANCEMENT("Graphics.WeatherCycle.ThunderSound"))
         .PreFunc(hideUnlessWeatherCycle)
         .Options(
-            CheckboxOptions().Tooltip("Plays the game's existing thunder sound on lightning flashes. Off by default.")
+            CheckboxOptions().Tooltip(
+                "Plays the game's existing thunder sound when lightning flashes across the sky. Off by default."
+            )
         );
 
     // Enhancements > Status Bar

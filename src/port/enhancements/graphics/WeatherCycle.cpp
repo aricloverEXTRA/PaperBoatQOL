@@ -6,13 +6,17 @@
 #include "port/ui/cvar_prefixes.h"
 
 #include "common.h"
-#include "assets/effects.h"
+#include "assets/map_textures.h"
 
 #include <chrono>
 #include <cmath>
 #include <ctime>
 
 extern "C" void sfx_play_sound(s32 soundID);
+extern "C" EffectInstance* gEffectInstances[96];
+extern "C" EffectInstance* port_spawn_weather_snowfall(s32 variant, s32 count);
+extern "C" void port_remove_weather_effect(EffectInstance* effect);
+extern "C" void port_configure_weather_effect(EffectInstance* effect);
 
 namespace {
 
@@ -25,6 +29,11 @@ constexpr int FIXED_CYCLE[] = {
     WEATHER_TYPE_SNOW,
 };
 
+constexpr int SNOWFALL_VARIANT_SNOW = 0;
+constexpr int SNOWFALL_VARIANT_RAIN = 1;
+constexpr int SNOWFALL_VARIANT_STORM = 2;
+constexpr s32 EFFECT_INSTANCE_COUNT = 96;
+
 ListenerID sUpdateListener = -1;
 std::chrono::steady_clock::time_point sLastTick;
 uint32_t sSessionSeed = 0;
@@ -34,8 +43,12 @@ float sEventSeconds = 0.0f;
 int sEventIndex = 0;
 int sCurrentWeather = WEATHER_TYPE_CLEAR;
 int sLastThunderSlot = -1;
-uint32_t sFrame = 0;
-bool sSnowTexturePrefetched = false;
+EffectInstance* sWeatherEffect = nullptr;
+int sEffectWeather = -1;
+int sEffectContext = -1;
+s32 sEffectArea = -1;
+s32 sEffectMap = -1;
+bool sRainTexturePrefetched = false;
 
 uint32_t Hash(uint32_t value) {
     value ^= value >> 16;
@@ -125,7 +138,7 @@ int SelectWeather(int index) {
 }
 
 int SanitizeWeather(int weather, s32 areaID) {
-    if (areaID == AREA_DRO) {
+    if (areaID == AREA_DRO || areaID == AREA_FLO) {
         return WEATHER_TYPE_CLEAR;
     }
     if (areaID == AREA_SAM && (weather == WEATHER_TYPE_RAIN || weather == WEATHER_TYPE_THUNDERSTORM)) {
@@ -143,12 +156,12 @@ float ThunderInterval() {
     return 5.0f + static_cast<float>(Hash(sSeed ^ static_cast<uint32_t>(sEventIndex) * 0xC2B2AE35u) % 6);
 }
 
-int LightningAlpha() {
-    if (CurrentWeather() != WEATHER_TYPE_THUNDERSTORM) {
-        return 0;
-    }
+float LightningPhase() {
+    return std::fmodf(sEventSeconds, ThunderInterval());
+}
 
-    float phase = std::fmodf(sEventSeconds, ThunderInterval());
+int LightningFlashAlpha() {
+    float phase = LightningPhase();
     if (phase < 0.08f) {
         return 190;
     }
@@ -158,7 +171,86 @@ int LightningAlpha() {
     return 0;
 }
 
+bool LightningBoltVisible() {
+    return LightningPhase() < 0.10f;
+}
+
+bool EffectAlive(EffectInstance* effect) {
+    if (effect == nullptr) {
+        return false;
+    }
+    for (s32 i = 0; i < EFFECT_INSTANCE_COUNT; i++) {
+        if (gEffectInstances[i] == effect) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void RemoveWeatherEffect() {
+    if (EffectAlive(sWeatherEffect)) {
+        port_remove_weather_effect(sWeatherEffect);
+    }
+    sWeatherEffect = nullptr;
+    sEffectWeather = -1;
+    sEffectContext = -1;
+    sEffectArea = -1;
+    sEffectMap = -1;
+}
+
+int SnowfallMode(int weather) {
+    if (weather == WEATHER_TYPE_RAIN) {
+        return SNOWFALL_VARIANT_RAIN;
+    }
+    if (weather == WEATHER_TYPE_THUNDERSTORM) {
+        return SNOWFALL_VARIANT_STORM;
+    }
+    return SNOWFALL_VARIANT_SNOW;
+}
+
+int SnowfallCount(int weather) {
+    if (weather == WEATHER_TYPE_THUNDERSTORM) {
+        return 110;
+    }
+    if (weather == WEATHER_TYPE_RAIN) {
+        return 80;
+    }
+    return 48;
+}
+
+void UpdateWeatherEffect() {
+    int weather = CurrentWeather();
+    int context = gGameStatusPtr != nullptr ? gGameStatusPtr->context : -1;
+    s32 areaID = gGameStatusPtr != nullptr ? gGameStatusPtr->areaID : -1;
+    s32 mapID = gGameStatusPtr != nullptr ? gGameStatusPtr->mapID : -1;
+
+    if (!Port_FeatureInt("graphics.weather_cycle", 0) || !Port_IsCycleGameplayActive() ||
+        weather == WEATHER_TYPE_CLEAR) {
+        RemoveWeatherEffect();
+        return;
+    }
+
+    if (EffectAlive(sWeatherEffect) && sEffectWeather == weather && sEffectContext == context &&
+        sEffectArea == areaID && sEffectMap == mapID) {
+        return;
+    }
+
+    RemoveWeatherEffect();
+    if (!sRainTexturePrefetched) {
+        GameEngine_PrefetchTexture(iwa_dropwater_btif);
+        sRainTexturePrefetched = true;
+    }
+
+    sWeatherEffect = port_spawn_weather_snowfall(SnowfallMode(weather), SnowfallCount(weather));
+    port_configure_weather_effect(sWeatherEffect);
+    sEffectWeather = weather;
+    sEffectContext = context;
+    sEffectArea = areaID;
+    sEffectMap = mapID;
+}
+
 void ResetWeather() {
+    RemoveWeatherEffect();
     sLastTick = std::chrono::steady_clock::now();
     sSeed = CurrentSeed();
     sEventSeconds = 0.0f;
@@ -171,7 +263,6 @@ void TickWeather() {
     std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
     float deltaSeconds = std::chrono::duration<float>(now - sLastTick).count();
     sLastTick = now;
-    sFrame++;
 
     if (deltaSeconds < 0.0f || deltaSeconds > 1.0f) {
         deltaSeconds = 0.0f;
@@ -186,6 +277,8 @@ void TickWeather() {
         sLastThunderSlot = -1;
     }
 
+    UpdateWeatherEffect();
+
     if (CurrentWeather() != WEATHER_TYPE_THUNDERSTORM || !Port_IsCycleGameplayActive() ||
         !Port_FeatureInt("graphics.weather_cycle.thunder_sound", 0)) {
         return;
@@ -198,94 +291,68 @@ void TickWeather() {
     }
 }
 
-void DrawRain(s32 left, s32 right, s32 top, s32 bottom, bool storm) {
+void DrawSkyLightning(s32 left, s32 right, s32 top, s32 bottom, int alpha) {
     s32 width = right - left;
     s32 height = bottom - top;
+    s32 skyBottom;
+    uint32_t hash;
+    s32 x;
+    s32 y;
+    s32 segHeight;
+    s32 i;
+
     if (width <= 0 || height <= 0) {
         return;
     }
 
+    gDPSetScissor(gMainGfxPos++, G_SC_NON_INTERLACE, left, top, right, bottom);
     gDPPipeSync(gMainGfxPos++);
-    gDPSetColorDither(gMainGfxPos++, G_CD_MAGICSQ);
-    gDPSetAlphaDither(gMainGfxPos++, G_AD_PATTERN);
     gDPSetCycleType(gMainGfxPos++, G_CYC_1CYCLE);
     gDPSetRenderMode(gMainGfxPos++, G_RM_CLD_SURF, G_RM_CLD_SURF2);
     gDPSetCombineMode(gMainGfxPos++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
-    gDPSetPrimColor(gMainGfxPos++, 0, 0, storm ? 165 : 175, storm ? 185 : 195, 235, storm ? 165 : 120);
 
-    for (s32 i = 0; i < (storm ? 110 : 80); i++) {
-        uint32_t hash = Hash(static_cast<uint32_t>(i) * 0x9E3779B9u);
-        s32 speed = 16 + static_cast<s32>((hash >> 8) & 7);
-        s32 x = left + static_cast<s32>((hash & 0xFFFF) % static_cast<uint32_t>(width));
-        s32 y = top + static_cast<s32>(
-            ((hash >> 16) + sFrame * static_cast<uint32_t>(speed)) % static_cast<uint32_t>(height + 24)
-        ) - 12;
-        s32 slant = storm ? 3 : 1;
+    skyBottom = top + height * 55 / 100;
+    gDPSetPrimColor(gMainGfxPos++, 0, 0, 190, 215, 255, alpha / 6);
+    gDPFillWideRectangle(gMainGfxPos++, left, top, right, skyBottom);
 
-        gDPFillWideRectangle(gMainGfxPos++, x, y, x + slant, y + (storm ? 15 : 11));
+    if (LightningBoltVisible()) {
+        int slot = static_cast<int>(sEventSeconds / ThunderInterval());
+        hash = Hash(sSeed ^ static_cast<uint32_t>(slot) * 0x9E3779B9u);
+        x = left + static_cast<s32>(hash & 0xFFFF) % width;
+        y = top + static_cast<s32>((hash >> 16) & 0xFFFF) % (height / 3 + 1);
+        segHeight = height / 12;
+        if (segHeight < 6) {
+            segHeight = 6;
+        }
+
+        for (i = 0; i < 9; i++) {
+            uint32_t stepHash = Hash(hash ^ (static_cast<uint32_t>(i) * 0x85EBCA6Bu));
+            s32 drift = static_cast<s32>(stepHash & 7) - 3;
+            s32 step = width / 100 + 1;
+            s32 nextX = x + drift * step;
+            s32 nextY = y + segHeight;
+            s32 minX = x < nextX ? x : nextX;
+            s32 maxX = x > nextX ? x : nextX;
+
+            if (nextY > bottom) {
+                nextY = bottom;
+            }
+
+            gDPSetPrimColor(gMainGfxPos++, 0, 0, 190, 220, 255, alpha / 3);
+            gDPFillWideRectangle(gMainGfxPos++, minX - 4, y, maxX + 4, nextY);
+            gDPSetPrimColor(gMainGfxPos++, 0, 0, 255, 255, 255, alpha);
+            gDPFillWideRectangle(gMainGfxPos++, minX - 1, y, maxX + 1, nextY);
+
+            x = nextX;
+            y = nextY;
+            if (y >= bottom) {
+                break;
+            }
+        }
     }
 
     gDPPipeSync(gMainGfxPos++);
-}
-
-void DrawSnow(s32 left, s32 right, s32 top, s32 bottom) {
-    s32 width = right - left;
-    s32 height = bottom - top;
-    if (width <= 0 || height <= 0) {
-        return;
-    }
-
-    if (!sSnowTexturePrefetched) {
-        GameEngine_PrefetchTexture(D_09000000_38D070);
-        sSnowTexturePrefetched = true;
-    }
-
-    gDPPipeSync(gMainGfxPos++);
-    gDPSetCycleType(gMainGfxPos++, G_CYC_1CYCLE);
-    gDPSetTexturePersp(gMainGfxPos++, G_TP_NONE);
-    gDPSetTextureFilter(gMainGfxPos++, G_TF_POINT);
-    gDPSetTextureLUT(gMainGfxPos++, G_TT_NONE);
-    gDPSetTextureDetail(gMainGfxPos++, G_TD_CLAMP);
-    gDPSetTextureLOD(gMainGfxPos++, G_TL_TILE);
-    gDPSetColorDither(gMainGfxPos++, G_CD_DISABLE);
-    gDPSetAlphaDither(gMainGfxPos++, G_AD_NOISE);
-    gDPSetRenderMode(gMainGfxPos++, G_RM_CLD_SURF, G_RM_CLD_SURF2);
-    gSPTexture(gMainGfxPos++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON);
-    gDPSetCombineMode(gMainGfxPos++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
-    gDPSetPrimColor(gMainGfxPos++, 0, 0, 255, 255, 255, 210);
-    gDPLoadTextureTile(
-        gMainGfxPos++, D_09000000_38D070, G_IM_FMT_I, G_IM_SIZ_4b, 16, 16, 0, 0, 15, 15, 0,
-        G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD,
-        G_TX_NOLOD
-    );
-
-    for (s32 i = 0; i < 56; i++) {
-        uint32_t hash = Hash(static_cast<uint32_t>(i) * 0x85EBCA6Bu);
-        s32 speed = 2 + static_cast<s32>((hash >> 8) & 3);
-        s32 size = 4 + static_cast<s32>((hash >> 12) & 3);
-        s32 x = left + static_cast<s32>((hash & 0xFFFF) % static_cast<uint32_t>(width));
-        s32 y = top + static_cast<s32>(
-            ((hash >> 16) + sFrame * static_cast<uint32_t>(speed)) % static_cast<uint32_t>(height + 32)
-        ) - 16;
-        s32 step = 1024 * 16 / size;
-
-        gSPWideTextureRectangle(
-            gMainGfxPos++, x * 4, y * 4, (x + size) * 4, (y + size) * 4, G_TX_RENDERTILE, 0, 0, step, step
-        );
-    }
-
-    gDPPipeSync(gMainGfxPos++);
-}
-
-void DrawLightning(s32 left, s32 right, s32 top, s32 bottom, int alpha) {
-    gDPPipeSync(gMainGfxPos++);
-    gDPSetColorDither(gMainGfxPos++, G_CD_DISABLE);
-    gDPSetAlphaDither(gMainGfxPos++, G_AD_PATTERN);
-    gDPSetCycleType(gMainGfxPos++, G_CYC_1CYCLE);
-    gDPSetRenderMode(gMainGfxPos++, G_RM_CLD_SURF, G_RM_CLD_SURF2);
-    gDPSetCombineMode(gMainGfxPos++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
-    gDPSetPrimColor(gMainGfxPos++, 0, 0, 255, 250, 230, static_cast<u8>(alpha));
-    gDPFillWideRectangle(gMainGfxPos++, left, top, right, bottom);
+    gDPSetScissor(gMainGfxPos++, G_SC_NON_INTERLACE, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
     gDPPipeSync(gMainGfxPos++);
 }
 
@@ -298,16 +365,20 @@ extern "C" s32 Port_GetCurrentWeather(void) {
     return CurrentWeather();
 }
 
-extern "C" void Port_WeatherDrawWorldOverlay(void) {
+extern "C" void Port_WeatherDrawSkyOverlay(void) {
     Camera* cam;
     s32 left;
     s32 right;
     s32 top;
     s32 bottom;
-    int weather;
-    int flash;
+    int alpha;
 
-    if (Port_GetCurrentWeather() == WEATHER_TYPE_CLEAR) {
+    if (Port_GetCurrentWeather() != WEATHER_TYPE_THUNDERSTORM) {
+        return;
+    }
+
+    alpha = LightningFlashAlpha();
+    if (alpha == 0) {
         return;
     }
 
@@ -315,31 +386,13 @@ extern "C" void Port_WeatherDrawWorldOverlay(void) {
     get_cam_frame_x(gCurrentCameraID, &left, &right);
     top = cam->viewportStartY;
     bottom = top + cam->viewportH;
-    if (cam->viewportH <= 0 || left >= right) {
-        return;
-    }
-
-    weather = CurrentWeather();
-    gDPSetScissor(gMainGfxPos++, G_SC_NON_INTERLACE, left, top, right, bottom);
-
-    if (weather == WEATHER_TYPE_SNOW) {
-        DrawSnow(left, right, top, bottom);
-    } else {
-        DrawRain(left, right, top, bottom, weather == WEATHER_TYPE_THUNDERSTORM);
-    }
-
-    flash = LightningAlpha();
-    if (flash != 0) {
-        DrawLightning(left, right, top, bottom, flash);
-    }
-
-    gDPSetScissor(gMainGfxPos++, G_SC_NON_INTERLACE, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-    gDPPipeSync(gMainGfxPos++);
+    DrawSkyLightning(left, right, top, bottom, alpha);
 }
 
 void RegisterWeatherCycle_Init() {
     UNREGISTER_LISTENER(GameFrameUpdate, sUpdateListener);
     sUpdateListener = -1;
+    RemoveWeatherEffect();
 
     if (!Port_FeatureInt("graphics.weather_cycle", 0)) {
         sSettingsKey = -1;
