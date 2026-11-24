@@ -334,6 +334,16 @@ void PaperboatMenu::AddMenuEnhancements() {
             )
         );
 
+    AddWidget(path, "Cloudy Ambience", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Graphics.WeatherCycle.AmbientTint"))
+        .PreFunc(hideUnlessWeatherCycle)
+        .Options(
+            CheckboxOptions().Tooltip(
+                "Adds a subtle overcast color to supported weather. It blends with the Day/Night Cycle instead of "
+                "stacking a second filter, and storms hide the stars. Off by default."
+            )
+        );
+
     // Enhancements > Status Bar
     path = { "Enhancements", "Status Bar", SECTION_COLUMN_1 };
     AddSidebarEntry("Enhancements", path.sidebarName, 2);

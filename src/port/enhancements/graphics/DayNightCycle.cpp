@@ -2,6 +2,7 @@
 #include "port/Engine.h"
 #include "port/enhancements/graphics/DayNightCycle.h"
 #include "port/enhancements/graphics/EnvironmentCycleGate.h"
+#include "port/enhancements/graphics/WeatherCycle.h"
 #include "port/hooks/Events.h"
 #include "port/ui/cvar_prefixes.h"
 
@@ -222,14 +223,45 @@ void MigrateLegacyCVar() {
 } // namespace
 
 extern "C" s32 Port_GetDayNightTint(DayNightTint* out) {
-    if (out == nullptr || !Port_FeatureInt("graphics.day_night_cycle", 0)) {
-        return 0;
-    }
-    if (!Port_IsCycleGameplayActive()) {
+    if (out == nullptr || !Port_IsCycleGameplayActive()) {
         return 0;
     }
 
-    *out = TintForHour(CurrentHour());
+    bool hasDayNight = Port_FeatureInt("graphics.day_night_cycle", 0) != 0;
+    float hour = hasDayNight ? CurrentHour() : 0.0f;
+    DayNightTint tint = hasDayNight ? TintForHour(hour) : DayNightTint{ 255, 255, 255, 0, 0 };
+    WeatherAmbient ambient = {};
+    bool hasAmbient = Port_GetWeatherAmbient(&ambient) != 0;
+
+    if (!hasDayNight && !hasAmbient) {
+        return 0;
+    }
+
+    if (hasAmbient && ambient.alpha != 0) {
+        // Clouds matter most in daylight; at night the day/night tint stays dominant.
+        float night = hasDayNight ? NightAmount(hour) : 0.0f;
+        int alpha = ambient.alpha * (100 - static_cast<int>(night * 55.0f)) / 100;
+
+        if (alpha > 0) {
+            if (tint.alpha == 0) {
+                tint.r = ambient.r;
+                tint.g = ambient.g;
+                tint.b = ambient.b;
+                tint.alpha = static_cast<u8>(alpha);
+            } else {
+                float t = static_cast<float>(alpha) / 255.0f;
+                tint.r = LerpChannel(tint.r, ambient.r, t);
+                tint.g = LerpChannel(tint.g, ambient.g, t);
+                tint.b = LerpChannel(tint.b, ambient.b, t);
+                // Add only half of the remaining headroom so the two cycles
+                // never stack into a much darker image than either alone.
+                tint.alpha = static_cast<u8>(tint.alpha + (alpha * (255 - tint.alpha) / 255) / 2);
+            }
+            tint.stars = static_cast<u8>(tint.stars * (255 - ambient.starDim) / 255);
+        }
+    }
+
+    *out = tint;
     return 1;
 }
 

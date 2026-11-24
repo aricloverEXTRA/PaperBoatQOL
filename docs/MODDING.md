@@ -103,6 +103,7 @@ The menu greys a locked widget in `Menu::MenuDrawItem` (a third disable source a
 | `graphics.weather_cycle.seed_source` | `gEnhancements.Graphics.WeatherCycle.SeedSource` | 1 (daily seed) |
 | `graphics.weather_cycle.force_weather` | `gEnhancements.Graphics.WeatherCycle.ForceWeather` | 0 (automatic) |
 | `graphics.weather_cycle.thunder_sound` | `gEnhancements.Graphics.WeatherCycle.ThunderSound` | 0 |
+| `graphics.weather_cycle.ambient_tint` | `gEnhancements.Graphics.WeatherCycle.AmbientTint` | 0 |
 | `graphics.interpolation_fps` | `gSettings.InterpolationFPS` | 30 |
 | `graphics.match_refresh_rate` | `gSettings.MatchRefreshRate` | 0 |
 | `graphics.texture_cache` | `gGraphics.TextureCache` | 0 (auto) |

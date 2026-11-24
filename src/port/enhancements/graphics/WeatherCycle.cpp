@@ -210,10 +210,10 @@ int SnowfallMode(int weather) {
 
 int SnowfallCount(int weather) {
     if (weather == WEATHER_TYPE_THUNDERSTORM) {
-        return 110;
+        return 70;
     }
     if (weather == WEATHER_TYPE_RAIN) {
-        return 80;
+        return 50;
     }
     return 48;
 }
@@ -237,7 +237,7 @@ void UpdateWeatherEffect() {
 
     RemoveWeatherEffect();
     if (!sRainTexturePrefetched) {
-        GameEngine_PrefetchTexture(iwa_dropwater_btif);
+        GameEngine_PrefetchTexture(tik_t_taki1tif);
         sRainTexturePrefetched = true;
     }
 
@@ -363,6 +363,30 @@ extern "C" s32 Port_GetCurrentWeather(void) {
         return WEATHER_TYPE_CLEAR;
     }
     return CurrentWeather();
+}
+
+extern "C" s32 Port_GetWeatherAmbient(WeatherAmbient* out) {
+    if (out == nullptr || !Port_FeatureInt("graphics.weather_cycle.ambient_tint", 0)) {
+        return 0;
+    }
+
+    WeatherAmbient tint = {};
+    switch (Port_GetCurrentWeather()) {
+        case WEATHER_TYPE_RAIN:
+            tint = { 142, 162, 184, 42, 70 };
+            break;
+        case WEATHER_TYPE_THUNDERSTORM:
+            tint = { 105, 120, 145, 70, 190 };
+            break;
+        case WEATHER_TYPE_SNOW:
+            tint = { 205, 218, 235, 28, 80 };
+            break;
+        default:
+            return 0;
+    }
+
+    *out = tint;
+    return 1;
 }
 
 extern "C" void Port_WeatherDrawSkyOverlay(void) {

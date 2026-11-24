@@ -91,6 +91,7 @@ static const Def sDefs[] = {
     FEATURE_INT("graphics.weather_cycle.seed_source", CVAR_ENHANCEMENT("Graphics.WeatherCycle.SeedSource"), 1),
     FEATURE_INT("graphics.weather_cycle.force_weather", CVAR_ENHANCEMENT("Graphics.WeatherCycle.ForceWeather"), 0),
     FEATURE_TOGGLE("graphics.weather_cycle.thunder_sound", CVAR_ENHANCEMENT("Graphics.WeatherCycle.ThunderSound"), 0),
+    FEATURE_TOGGLE("graphics.weather_cycle.ambient_tint", CVAR_ENHANCEMENT("Graphics.WeatherCycle.AmbientTint"), 0),
     FEATURE_INT("graphics.interpolation_fps", CVAR_SETTING("InterpolationFPS"), 30),
     FEATURE_TOGGLE("graphics.match_refresh_rate", CVAR_SETTING("MatchRefreshRate"), 0),
     FEATURE_INT("graphics.texture_cache", "gGraphics.TextureCache", 0),

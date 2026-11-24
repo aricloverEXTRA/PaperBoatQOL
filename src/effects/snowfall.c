@@ -67,11 +67,6 @@ EffectInstance* snowfall_main(s32 arg0, s32 arg1) {
     data->timeLeft = 100;
     data->lifeTime = 0;
     data->unk_28 = 255;
-    if (arg0 == SNOWFALL_VARIANT_RAIN) {
-        data->unk_28 = 175;
-    } else if (arg0 == SNOWFALL_VARIANT_STORM) {
-        data->unk_28 = 205;
-    }
     data->unk_04 = arg0;
     data->unk_2C = arg1;
     data->unk_00 = 1;
@@ -220,7 +215,7 @@ static void snowfall_appendGfxRain(SnowfallFXData* data, u8 alpha, s32 count) {
     gDPSetCombineMode(gMainGfxPos++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
     gDPSetPrimColor(gMainGfxPos++, 0, 0, 180, 220, 255, alpha);
     gDPLoadTextureTile(
-        gMainGfxPos++, iwa_dropwater_btif, G_IM_FMT_I, G_IM_SIZ_8b, 32, 64, 0, 0, 31, 63, 0,
+        gMainGfxPos++, tik_t_taki1tif, G_IM_FMT_IA, G_IM_SIZ_16b, 32, 64, 0, 0, 31, 63, 0,
         G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD,
         G_TX_NOLOD
     );
@@ -240,19 +235,19 @@ static void snowfall_appendGfxRain(SnowfallFXData* data, u8 alpha, s32 count) {
         }
 
         memset(verts, 0, sizeof(*verts));
-        verts[0].v.ob[0] = -4; verts[0].v.ob[1] =  38; verts[0].v.ob[2] = 0;
+        verts[0].v.ob[0] = -2; verts[0].v.ob[1] =  12; verts[0].v.ob[2] = 0;
         verts[0].v.tc[0] = 0;  verts[0].v.tc[1] = 0;
         verts[0].v.cn[0] = 255; verts[0].v.cn[1] = 255; verts[0].v.cn[2] = 255; verts[0].v.cn[3] = 255;
 
-        verts[1].v.ob[0] = -4; verts[1].v.ob[1] = -38; verts[1].v.ob[2] = 0;
+        verts[1].v.ob[0] = -2; verts[1].v.ob[1] = -12; verts[1].v.ob[2] = 0;
         verts[1].v.tc[0] = 0;  verts[1].v.tc[1] = 63 * 32;
         verts[1].v.cn[0] = 255; verts[1].v.cn[1] = 255; verts[1].v.cn[2] = 255; verts[1].v.cn[3] = 255;
 
-        verts[2].v.ob[0] =  4; verts[2].v.ob[1] =  38; verts[2].v.ob[2] = 0;
+        verts[2].v.ob[0] =  2; verts[2].v.ob[1] =  12; verts[2].v.ob[2] = 0;
         verts[2].v.tc[0] = 31 * 32; verts[2].v.tc[1] = 0;
         verts[2].v.cn[0] = 255; verts[2].v.cn[1] = 255; verts[2].v.cn[2] = 255; verts[2].v.cn[3] = 255;
 
-        verts[3].v.ob[0] =  4; verts[3].v.ob[1] = -38; verts[3].v.ob[2] = 0;
+        verts[3].v.ob[0] =  2; verts[3].v.ob[1] = -12; verts[3].v.ob[2] = 0;
         verts[3].v.tc[0] = 31 * 32; verts[3].v.tc[1] = 63 * 32;
         verts[3].v.cn[0] = 255; verts[3].v.cn[1] = 255; verts[3].v.cn[2] = 255; verts[3].v.cn[3] = 255;
 
